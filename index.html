@@ -260,28 +260,107 @@ if (tg) {
   tg.setBackgroundColor('#0a0a0a');
 }
 
-const PACKAGES = [
-  { id:1,  flag:"🌍", name:"Global Starter",   region:"Весь мир",    continent:"global",      gb:1,  days:7,  price:6.49  },
-  { id:2,  flag:"🌍", name:"Global Traveler",  region:"Весь мир",    continent:"global",      gb:3,  days:30, price:15.59, featured:true },
-  { id:3,  flag:"🌍", name:"Global Explorer",  region:"Весь мир",    continent:"global",      gb:5,  days:30, price:23.39 },
-  { id:4,  flag:"🌍", name:"Global Unlimited", region:"Весь мир",    continent:"global",      gb:10, days:30, price:35.00 },
-  { id:5,  flag:"🇪🇺", name:"Europe Plus",     region:"Европа",      continent:"europe",      gb:2,  days:14, price:10.39 },
-  { id:6,  flag:"🇪🇺", name:"Europe Pro",      region:"Европа",      continent:"europe",      gb:5,  days:30, price:19.49, featured:true },
-  { id:7,  flag:"🇹🇷", name:"Турция",          region:"Турция",      continent:"europe",      gb:5,  days:30, price:9.09  },
-  { id:8,  flag:"🇩🇪", name:"Германия",        region:"Германия",    continent:"europe",      gb:3,  days:14, price:11.69 },
-  { id:9,  flag:"🇬🇧", name:"Великобритания",  region:"Великобритания", continent:"europe",   gb:3,  days:14, price:12.99 },
-  { id:10, flag:"🇹🇭", name:"Таиланд",         region:"Таиланд",     continent:"asia",        gb:5,  days:30, price:9.74  },
-  { id:11, flag:"🇯🇵", name:"Япония",          region:"Япония",      continent:"asia",        gb:3,  days:14, price:11.69 },
-  { id:12, flag:"🇸🇬", name:"Сингапур",        region:"Сингапур",    continent:"asia",        gb:3,  days:14, price:10.39 },
-  { id:13, flag:"🇮🇩", name:"Индонезия",       region:"Индонезия",   continent:"asia",        gb:3,  days:14, price:7.79  },
-  { id:14, flag:"🇮🇳", name:"Индия",           region:"Индия",       continent:"asia",        gb:3,  days:14, price:8.44  },
-  { id:15, flag:"🇺🇸", name:"США",             region:"США",         continent:"america",     gb:3,  days:15, price:12.99 },
-  { id:16, flag:"🇨🇦", name:"Канада",          region:"Канада",      continent:"america",     gb:3,  days:15, price:11.69 },
-  { id:17, flag:"🇦🇪", name:"ОАЭ",             region:"ОАЭ",         continent:"middle_east", gb:3,  days:14, price:11.69 },
-  { id:18, flag:"🇸🇦", name:"Саудовская Аравия", region:"Саудовская Аравия", continent:"middle_east", gb:3, days:14, price:12.99 },
-  { id:19, flag:"🇿🇦", name:"ЮАР",             region:"ЮАР",         continent:"africa",      gb:2,  days:14, price:9.09  },
-  { id:20, flag:"🇪🇬", name:"Египет",          region:"Египет",      continent:"africa",      gb:2,  days:14, price:8.44  },
-];
+// API URL — после деплоя на Vercel замени на свой URL
+const API_URL = "https://linkora-esim-api-jakj.vercel.app";
+
+let PACKAGES = [];
+let CONTINENTS = [];
+let loadingPackages = false;
+
+async function loadGlobalPackages() {
+  if (loadingPackages) return;
+  loadingPackages = true;
+  showLoading();
+  try {
+    const res = await fetch(`${API_URL}/api/packages?type=global`);
+    const data = await res.json();
+    if (data.ok) {
+      PACKAGES = data.data.map(p => ({ ...p, continent: "global", region: p.country }));
+    }
+  } catch(e) {
+    console.error("Ошибка загрузки пакетов:", e);
+  }
+  loadingPackages = false;
+  hideLoading();
+  loadGlobalPackages();
+loadContinents();
+}
+
+async function loadContinents() {
+  try {
+    const res = await fetch(`${API_URL}/api/packages?type=continents`);
+    const data = await res.json();
+    if (data.ok) {
+      CONTINENTS = data.data;
+      renderContinentTabs();
+    }
+  } catch(e) {
+    console.error("Ошибка загрузки континентов:", e);
+  }
+}
+
+async function loadCountryPackages(countryId, countryName, countryCode) {
+  showLoading();
+  try {
+    const res = await fetch(`${API_URL}/api/packages?type=country&id=${countryId}&name=${encodeURIComponent(countryName)}&code=${countryCode}`);
+    const data = await res.json();
+    if (data.ok) {
+      return data.data.map(p => ({ ...p, region: countryName }));
+    }
+  } catch(e) {
+    console.error("Ошибка загрузки пакетов страны:", e);
+  } finally {
+    hideLoading();
+  }
+  return [];
+}
+
+function showLoading() {
+  document.getElementById("packages").innerHTML = '<div class="empty"><div style="font-size:32px;margin-bottom:10px;">⏳</div><div>Загружаю пакеты...</div></div>';
+}
+function hideLoading() {}
+
+function renderContinentTabs() {
+  const CONT_FLAGS = { "Asia":"🌏","Europe":"🇪🇺","North America":"🌎","South America":"🌎","Africa":"🌍","Oceania":"🌏","Middle East":"🕌" };
+  const tabs = document.getElementById("tabs");
+  const extra = CONTINENTS.map(c =>
+    `<div class="tab" onclick="filterContinent(this,'${c.id}')">${CONT_FLAGS[c.name]||'🌐'} ${c.name}</div>`
+  ).join('');
+  tabs.innerHTML = `
+    <div class="tab active" onclick="filterTab(this,'all')">Все</div>
+    <div class="tab" onclick="filterTab(this,'global')">🌍 Глобальные</div>
+    ${extra}
+  `;
+}
+
+async function filterContinent(el, continentId) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+
+  // Показываем список стран
+  const res = await fetch(`${API_URL}/api/packages?type=countries&id=${continentId}`);
+  const data = await res.json();
+  const countries = data.data || [];
+
+  document.getElementById("packages").innerHTML = countries.map(c => {
+    const code = (c.image_url||"").split("/").pop().replace(".png","").toUpperCase();
+    const flag = code.length===2 ? [...code].map(ch=>String.fromCodePoint(0x1F1E6+ch.charCodeAt(0)-65)).join("") : "🌐";
+    return `<div class="pkg-card" onclick="selectCountry(${c.id},'${c.name.replace(/'/g,"\'")}','${code}')">
+      <div class="pkg-left">
+        <div class="pkg-flag">${flag}</div>
+        <div><div class="pkg-name">${c.name}</div><div class="pkg-meta">Нажми для просмотра тарифов</div></div>
+      </div>
+      <div class="pkg-right" style="color:#4ade80;font-size:20px;">›</div>
+    </div>`;
+  }).join('') || '<div class="empty"><div>Нет стран</div></div>';
+}
+
+async function selectCountry(id, name, code) {
+  const pkgs = await loadCountryPackages(id, name, code);
+  PACKAGES = pkgs;
+  activeContinent = "country";
+  renderPackages();
+}
 
 let activeContinent = "all";
 let searchQuery = "";
@@ -321,11 +400,18 @@ function renderPackages() {
   `).join('');
 }
 
-function filterTab(el, val) {
+async function filterTab(el, val) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   activeContinent = val;
-  renderPackages();
+
+  if (val === 'global') {
+    await loadGlobalPackages();
+  } else if (val === 'all') {
+    await loadGlobalPackages();
+  } else {
+    renderPackages();
+  }
 }
 
 function filterPackages() {
