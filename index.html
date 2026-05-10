@@ -258,24 +258,7 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
     <div class="payment-pkg-price" id="payPrice"></div>
   </div>
   <div class="payment-methods-title">Способ оплаты</div>
-  <div class="payment-methods">
-    <button class="payment-method-btn" id="btn-stars" type="button">
-      <div class="payment-method-icon">⭐</div>
-      <div class="payment-method-info">
-        <div class="payment-method-name">Telegram Stars</div>
-        <div class="payment-method-desc">Мгновенно · Прямо в Telegram</div>
-      </div>
-      <div class="payment-method-arrow">›</div>
-    </button>
-    <button class="payment-method-btn" id="btn-crypto" type="button">
-      <div class="payment-method-icon">💎</div>
-      <div class="payment-method-info">
-        <div class="payment-method-name">Crypto (USDT/TON/BTC)</div>
-        <div class="payment-method-desc">Через @CryptoBot</div>
-      </div>
-      <div class="payment-method-arrow">›</div>
-    </button>
-  </div>
+  <div class="payment-methods" id="paymentMethodsList"></div>
 </div>
 
 <!-- Processing overlay -->
@@ -552,6 +535,27 @@ function openPaymentScreen(pkg) {
   document.getElementById("payName").textContent = pkg.name;
   document.getElementById("payMeta").textContent = (pkg.unlimited ? "∞ Безлимит" : pkg.gb + " GB") + " · " + pkg.days + " дней";
   document.getElementById("payPrice").textContent = "$" + pkg.price.toFixed(2);
+
+  // Создаём кнопки динамически
+  const methods = [
+    { id: "stars",  icon: "⭐", name: "Telegram Stars",    desc: "Мгновенно · Прямо в Telegram" },
+    { id: "crypto", icon: "💎", name: "Crypto (USDT/TON/BTC)", desc: "Через @CryptoBot" },
+  ];
+  const list = document.getElementById("paymentMethodsList");
+  list.innerHTML = "";
+  methods.forEach(function(m) {
+    const btn = document.createElement("button");
+    btn.className = "payment-method-btn";
+    btn.type = "button";
+    btn.innerHTML = `<div class="payment-method-icon">${m.icon}</div><div class="payment-method-info"><div class="payment-method-name">${m.name}</div><div class="payment-method-desc">${m.desc}</div></div><div class="payment-method-arrow">›</div>`;
+    btn.addEventListener("click", function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      selectPayment(m.id);
+    });
+    list.appendChild(btn);
+  });
+
   document.getElementById("paymentScreen").classList.add("open");
   if (tg) tg.BackButton.show();
 }
@@ -615,17 +619,7 @@ if (tg) {
 loadGlobalPackages();
 loadContinents();
 
-// Payment button listeners
-document.getElementById("btn-stars").addEventListener("click", function(e) {
-  e.stopPropagation();
-  alert("Stars нажат. tg=" + (!!tg) + " sendData=" + (tg && !!tg.sendData) + " ver=" + (tg && tg.version));
-  selectPayment("stars");
-});
-document.getElementById("btn-crypto").addEventListener("click", function(e) {
-  e.stopPropagation();
-  alert("Crypto нажат. tg=" + (!!tg) + " sendData=" + (tg && !!tg.sendData) + " ver=" + (tg && tg.version));
-  selectPayment("crypto");
-});
+
 </script>
 </body>
 </html>
