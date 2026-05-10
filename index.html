@@ -100,37 +100,22 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
 .pay-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
 .pay-chip { font-size: 11px; padding: 4px 12px; border: 0.5px solid #1f3d1f; border-radius: 20px; color: #4ade80; background: #0d1a0d; }
 
-/* Payment screen */
-.payment-screen { display: none; position: fixed; inset: 0; background: #0a0a0a; z-index: 200; overflow-y: auto; padding-bottom: 40px; touch-action: pan-y; }
-.payment-screen.open { display: block; }
-.payment-header { padding: 16px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 0.5px solid #1a2a1a; }
-.payment-back { background: #111; border: 0.5px solid #1a2a1a; border-radius: 10px; color: #4ade80; cursor: pointer; font-size: 18px; padding: 7px 10px; }
-.payment-title { font-size: 17px; font-weight: 600; }
-.payment-pkg { margin: 20px; background: #0d1a0d; border: 0.5px solid #1f3d1f; border-radius: 16px; padding: 20px; text-align: center; }
-.payment-pkg-flag { font-size: 48px; margin-bottom: 10px; }
-.payment-pkg-name { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
-.payment-pkg-meta { font-size: 13px; color: #6b7280; margin-bottom: 16px; }
-.payment-pkg-price { font-size: 32px; font-weight: 700; color: #4ade80; }
-.payment-methods-title { font-size: 12px; color: #4b5563; font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px; padding: 0 20px; margin-bottom: 12px; }
-.payment-methods { padding: 0 20px; display: flex; flex-direction: column; gap: 10px; position: relative; z-index: 10; }
-.payment-method-btn { display: flex; align-items: center; gap: 14px; background: #111; border: 0.5px solid #1a2a1a; border-radius: 14px; padding: 16px 18px; cursor: pointer; transition: border-color 0.15s, background 0.15s; width: 100%; text-align: left; color: #fff; font-family: inherit; position: relative; z-index: 10; -webkit-tap-highlight-color: rgba(74,222,128,0.2); touch-action: manipulation; }
-.payment-method-btn:active { background: #0d1a0d; border-color: #4ade80; }
-.payment-method-icon { font-size: 24px; width: 32px; text-align: center; }
-.payment-method-info { flex: 1; }
-.payment-method-name { font-size: 15px; font-weight: 500; color: #fff; margin-bottom: 2px; }
-.payment-method-desc { font-size: 12px; color: #6b7280; }
-.payment-method-arrow { color: #4ade80; font-size: 18px; }
-.payment-processing { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 300; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
-.payment-processing.show { display: flex; }
-.payment-processing-icon { font-size: 48px; animation: pulse 1s infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
-.payment-processing-text { font-size: 16px; color: #fff; }
-.payment-success { display: none; position: fixed; inset: 0; background: #0a0a0a; z-index: 400; align-items: center; justify-content: center; flex-direction: column; gap: 16px; padding: 40px; text-align: center; }
-.payment-success.show { display: flex; }
-.payment-success-icon { font-size: 64px; }
-.payment-success-title { font-size: 22px; font-weight: 700; }
-.payment-success-sub { font-size: 14px; color: #6b7280; line-height: 1.6; }
-.payment-success-btn { background: #4ade80; color: #0a0a0a; border: none; border-radius: 14px; padding: 14px 32px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+/* Payment modal */
+.pay-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 300; }
+.pay-overlay.open { display: block; }
+.pay-modal { position: fixed; bottom: 0; left: 0; right: 0; background: #111; border-radius: 20px 20px 0 0; border: 0.5px solid #1a2a1a; z-index: 301; padding: 0 0 40px; }
+.pay-handle { width: 36px; height: 4px; background: #2a2a2a; border-radius: 2px; margin: 12px auto 16px; }
+.pay-pkg-info { text-align: center; padding: 0 20px 16px; border-bottom: 0.5px solid #1a2a1a; }
+.pay-pkg-flag { font-size: 40px; margin-bottom: 8px; }
+.pay-pkg-name { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.pay-pkg-meta { font-size: 13px; color: #6b7280; margin-bottom: 8px; }
+.pay-pkg-price { font-size: 28px; font-weight: 700; color: #4ade80; }
+.pay-methods-label { font-size: 11px; color: #4b5563; text-transform: uppercase; letter-spacing: 0.8px; padding: 16px 20px 8px; }
+.pay-btn { display: flex; align-items: center; gap: 14px; margin: 0 20px 10px; background: #0d1a0d; border: 0.5px solid #1f3d1f; border-radius: 14px; padding: 14px 16px; cursor: pointer; width: calc(100% - 40px); text-align: left; color: #fff; font-family: inherit; -webkit-tap-highlight-color: rgba(74,222,128,0.3); }
+.pay-btn:active { background: #1a3a1a; }
+.pay-btn-icon { font-size: 22px; width: 30px; text-align: center; }
+.pay-btn-name { font-size: 15px; font-weight: 500; flex: 1; }
+.pay-btn-arr { color: #4ade80; font-size: 20px; }
 
 /* Orders page */
 .page { display: none; padding: 16px 20px; }
@@ -245,34 +230,27 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
   </nav>
 </div>
 
-<!-- Payment Screen -->
-<div class="payment-screen" id="paymentScreen">
-  <div class="payment-header">
-    <button class="payment-back" onclick="closePaymentScreen()">←</button>
-    <div class="payment-title">Оплата</div>
+<!-- Payment Modal -->
+<div class="pay-overlay" id="payOverlay" onclick="closePaymentScreen()"></div>
+<div class="pay-modal" id="payModal" style="display:none;">
+  <div class="pay-handle"></div>
+  <div class="pay-pkg-info">
+    <div class="pay-pkg-flag" id="payFlag"></div>
+    <div class="pay-pkg-name" id="payName"></div>
+    <div class="pay-pkg-meta" id="payMeta"></div>
+    <div class="pay-pkg-price" id="payPrice"></div>
   </div>
-  <div class="payment-pkg">
-    <div class="payment-pkg-flag" id="payFlag"></div>
-    <div class="payment-pkg-name" id="payName"></div>
-    <div class="payment-pkg-meta" id="payMeta"></div>
-    <div class="payment-pkg-price" id="payPrice"></div>
-  </div>
-  <div class="payment-methods-title">Способ оплаты</div>
-  <div class="payment-methods" id="paymentMethodsList"></div>
-</div>
-
-<!-- Processing overlay -->
-<div class="payment-processing" id="paymentProcessing">
-  <div class="payment-processing-icon">⏳</div>
-  <div class="payment-processing-text">Обрабатываю платёж...</div>
-</div>
-
-<!-- Success screen -->
-<div class="payment-success" id="paymentSuccess">
-  <div class="payment-success-icon">✅</div>
-  <div class="payment-success-title">eSIM готова!</div>
-  <div class="payment-success-sub">QR-код и инструкция по активации отправлены в бот @esimruu_bot</div>
-  <button class="payment-success-btn" onclick="closeSuccess()">Отлично!</button>
+  <div class="pay-methods-label">Способ оплаты</div>
+  <button class="pay-btn" id="payStars">
+    <span class="pay-btn-icon">⭐</span>
+    <span class="pay-btn-name">Telegram Stars</span>
+    <span class="pay-btn-arr">›</span>
+  </button>
+  <button class="pay-btn" id="payCrypto">
+    <span class="pay-btn-icon">💎</span>
+    <span class="pay-btn-name">Crypto (USDT / TON / BTC)</span>
+    <span class="pay-btn-arr">›</span>
+  </button>
 </div>
 
 <!-- Modal -->
@@ -531,48 +509,23 @@ function handleBuy() {
 }
 
 function openPaymentScreen(pkg) {
-  document.getElementById("payFlag").textContent = pkg.flag;
+  document.getElementById("payFlag").textContent = pkg.flag || "";
   document.getElementById("payName").textContent = pkg.name;
   document.getElementById("payMeta").textContent = (pkg.unlimited ? "∞ Безлимит" : pkg.gb + " GB") + " · " + pkg.days + " дней";
   document.getElementById("payPrice").textContent = "$" + pkg.price.toFixed(2);
-
-  // Создаём кнопки динамически
-  const methods = [
-    { id: "stars",  icon: "⭐", name: "Telegram Stars",    desc: "Мгновенно · Прямо в Telegram" },
-    { id: "crypto", icon: "💎", name: "Crypto (USDT/TON/BTC)", desc: "Через @CryptoBot" },
-  ];
-  const list = document.getElementById("paymentMethodsList");
-  list.innerHTML = "";
-  methods.forEach(function(m) {
-    const btn = document.createElement("button");
-    btn.className = "payment-method-btn";
-    btn.type = "button";
-    btn.innerHTML = `<div class="payment-method-icon">${m.icon}</div><div class="payment-method-info"><div class="payment-method-name">${m.name}</div><div class="payment-method-desc">${m.desc}</div></div><div class="payment-method-arrow">›</div>`;
-    btn.addEventListener("click", function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      selectPayment(m.id);
-    });
-    btn.addEventListener("touchend", function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      selectPayment(m.id);
-    });
-    list.appendChild(btn);
-  });
-
-  document.getElementById("paymentScreen").classList.add("open");
-  if (tg) tg.BackButton.show();
+  document.getElementById("payOverlay").classList.add("open");
+  document.getElementById("payModal").style.display = "block";
+  if (tg && tg.BackButton) tg.BackButton.show();
 }
 
 function closePaymentScreen() {
-  document.getElementById("paymentScreen").classList.remove("open");
-  if (tg) tg.BackButton.hide();
+  document.getElementById("payOverlay").classList.remove("open");
+  document.getElementById("payModal").style.display = "none";
+  if (tg && tg.BackButton) tg.BackButton.hide();
 }
 
 async function selectPayment(method) {
   if (!selectedPkg) return;
-
   const pkgData = {
     action: "pay",
     id: String(selectedPkg.id),
@@ -583,21 +536,14 @@ async function selectPayment(method) {
     unlimited: selectedPkg.unlimited || false,
     method: method
   };
-
-  const dataStr = JSON.stringify(pkgData);
-
   if (tg && tg.sendData) {
-    tg.sendData(dataStr);
-  } else if (tg) {
-    alert("sendData недоступен. Версия: " + (tg.version || "?"));
+    tg.sendData(JSON.stringify(pkgData));
   } else {
-    alert("Откройте через кнопку в боте @esimruu_bot");
+    alert("Откройте через кнопку 🛍 в боте @esimruu_bot");
   }
 }
 
-function closeSuccess() {
-  document.getElementById("paymentSuccess").classList.remove("show");
-}
+
 
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -613,7 +559,7 @@ function openSupport() {
 
 if (tg) {
   tg.BackButton.onClick(function() {
-    if (document.getElementById("paymentScreen").classList.contains("open")) {
+    if (document.getElementById("payModal").style.display === "block") {
       closePaymentScreen();
     } else if (document.getElementById("modal").classList.contains("open")) {
       closeModal();
@@ -623,6 +569,9 @@ if (tg) {
 
 loadGlobalPackages();
 loadContinents();
+
+document.getElementById("payStars").onclick = function() { selectPayment("stars"); };
+document.getElementById("payCrypto").onclick = function() { selectPayment("crypto"); };
 
 
 </script>
