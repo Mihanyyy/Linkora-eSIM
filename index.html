@@ -565,6 +565,7 @@ async function selectPayment(method) {
   if (!selectedPkg) return;
 
   const pkgData = {
+    action: "pay",
     id: String(selectedPkg.id),
     name: selectedPkg.name,
     gb: selectedPkg.unlimited ? -1 : selectedPkg.gb,
@@ -574,18 +575,19 @@ async function selectPayment(method) {
     method: method
   };
 
-  const json = JSON.stringify(pkgData);
-  const encoded = btoa(unescape(encodeURIComponent(json)))
-    .replace(/\+/g, "_").replace(/\//g, "-").replace(/=/g, "");
-
   closePaymentScreen();
 
-  if (tg && tg.openTelegramLink) {
-    // Сначала открываем бота, потом закрываем приложение
-    tg.openTelegramLink("https://t.me/esimruu_bot?start=pay_" + encoded);
-    setTimeout(() => { if (tg.close) tg.close(); }, 800);
+  // sendData — единственный надёжный способ передать данные боту
+  if (tg && tg.sendData) {
+    try {
+      tg.sendData(JSON.stringify(pkgData));
+    } catch(e) {
+      console.error("sendData failed:", e);
+      // Fallback — закрываем и открываем бота
+      if (tg.close) tg.close();
+    }
   } else {
-    window.open("https://t.me/esimruu_bot?start=pay_" + encoded, "_blank");
+    alert("Откройте магазин через кнопку в боте @esimruu_bot");
   }
 }
 
