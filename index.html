@@ -334,23 +334,34 @@ function renderContinentTabs() {
 async function filterContinent(el, continentId) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
+  document.getElementById("packages").innerHTML = '<div class="empty"><div style="font-size:32px;margin-bottom:10px;">⏳</div><div>Загружаю страны...</div></div>';
 
-  // Показываем список стран
   const res = await fetch(`${API_URL}/api/packages?type=countries&id=${continentId}`);
   const data = await res.json();
-  const countries = data.data || [];
+  const allCountries = data.data || [];
+
+  // Если API вернул continent_id — фильтруем страны по континенту через отдельный запрос
+  // Иначе используем все страны которые пришли
+  const countries = allCountries;
+
+  if (!countries.length) {
+    document.getElementById("packages").innerHTML = '<div class="empty"><div>Нет стран для этого региона</div></div>';
+    return;
+  }
 
   document.getElementById("packages").innerHTML = countries.map(c => {
-    const code = (c.image_url||"").split("/").pop().replace(".png","").toUpperCase();
+    const imgUrl = c.image_url || c.flag_url || "";
+    const code = imgUrl.split("/").pop().replace(".png","").replace(".svg","").toUpperCase();
     const flag = code.length===2 ? [...code].map(ch=>String.fromCodePoint(0x1F1E6+ch.charCodeAt(0)-65)).join("") : "🌐";
-    return `<div class="pkg-card" onclick="selectCountry(${c.id},'${c.name.replace(/'/g,"\'")}','${code}')">
+    const safeName = c.name.replace(/'/g, " ");
+    return `<div class="pkg-card" onclick="selectCountry(${c.id},'${safeName}','${code}')">
       <div class="pkg-left">
         <div class="pkg-flag">${flag}</div>
         <div><div class="pkg-name">${c.name}</div><div class="pkg-meta">Нажми для просмотра тарифов</div></div>
       </div>
       <div class="pkg-right" style="color:#4ade80;font-size:20px;">›</div>
     </div>`;
-  }).join('') || '<div class="empty"><div>Нет стран</div></div>';
+  }).join('');
 }
 
 async function selectCountry(id, name, code) {
