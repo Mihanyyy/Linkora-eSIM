@@ -263,23 +263,15 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
       <div class="payment-method-icon">⭐</div>
       <div class="payment-method-info">
         <div class="payment-method-name">Telegram Stars</div>
-        <div class="payment-method-desc">Мгновенно · Без карты</div>
+        <div class="payment-method-desc">Мгновенно · Прямо в Telegram</div>
       </div>
       <div class="payment-method-arrow">›</div>
     </div>
     <div class="payment-method-btn" onclick="selectPayment('crypto')">
       <div class="payment-method-icon">💎</div>
       <div class="payment-method-info">
-        <div class="payment-method-name">Crypto (USDT/TON)</div>
+        <div class="payment-method-name">Crypto (USDT/TON/BTC)</div>
         <div class="payment-method-desc">Через @CryptoBot</div>
-      </div>
-      <div class="payment-method-arrow">›</div>
-    </div>
-    <div class="payment-method-btn" onclick="selectPayment('stripe')">
-      <div class="payment-method-icon">💳</div>
-      <div class="payment-method-info">
-        <div class="payment-method-name">Банковская карта</div>
-        <div class="payment-method-desc">Visa / Mastercard</div>
       </div>
       <div class="payment-method-arrow">›</div>
     </div>
@@ -418,37 +410,48 @@ function renderContinentTabs() {
   `;
 }
 
+let currentRequest = null;
+
 async function filterContinent(el, continentId) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   document.getElementById("packages").innerHTML = '<div class="empty"><div style="font-size:32px;margin-bottom:10px;">⏳</div><div>Загружаю страны...</div></div>';
 
-  const res = await fetch(`${API_URL}/api/packages?type=countries&id=${continentId}`);
-  const data = await res.json();
-  const allCountries = data.data || [];
+  // Отменяем предыдущий запрос
+  if (currentRequest) currentRequest.cancelled = true;
+  const thisRequest = { cancelled: false };
+  currentRequest = thisRequest;
 
-  // Если API вернул continent_id — фильтруем страны по континенту через отдельный запрос
-  // Иначе используем все страны которые пришли
-  const countries = allCountries;
+  try {
+    const res = await fetch(`${API_URL}/api/packages?type=countries&id=${continentId}`);
+    if (thisRequest.cancelled) return; // Если переключились — игнорируем
+    const data = await res.json();
+    if (thisRequest.cancelled) return;
+    const countries = data.data || [];
 
-  if (!countries.length) {
-    document.getElementById("packages").innerHTML = '<div class="empty"><div>Нет стран для этого региона</div></div>';
-    return;
+    if (!countries.length) {
+      document.getElementById("packages").innerHTML = '<div class="empty"><div>Нет стран для этого региона</div></div>';
+      return;
+    }
+
+    document.getElementById("packages").innerHTML = countries.map(c => {
+      const imgUrl = c.image_url || c.flag_url || "";
+      const code = imgUrl.split("/").pop().replace(".png","").replace(".svg","").toUpperCase();
+      const flag = code.length===2 ? [...code].map(ch=>String.fromCodePoint(0x1F1E6+ch.charCodeAt(0)-65)).join("") : "🌐";
+      const safeName = c.name.replace(/'/g, " ");
+      return `<div class="pkg-card" onclick="selectCountry('${c.id}','${safeName}','${code}')">
+        <div class="pkg-left">
+          <div class="pkg-flag">${flag}</div>
+          <div><div class="pkg-name">${c.name}</div><div class="pkg-meta">Нажми для просмотра тарифов</div></div>
+        </div>
+        <div class="pkg-right" style="color:#4ade80;font-size:20px;">›</div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    if (!thisRequest.cancelled) {
+      document.getElementById("packages").innerHTML = '<div class="empty"><div>Ошибка загрузки. Попробуй ещё раз.</div></div>';
+    }
   }
-
-  document.getElementById("packages").innerHTML = countries.map(c => {
-    const imgUrl = c.image_url || c.flag_url || "";
-    const code = imgUrl.split("/").pop().replace(".png","").replace(".svg","").toUpperCase();
-    const flag = code.length===2 ? [...code].map(ch=>String.fromCodePoint(0x1F1E6+ch.charCodeAt(0)-65)).join("") : "🌐";
-    const safeName = c.name.replace(/'/g, " ");
-    return `<div class="pkg-card" onclick="selectCountry('${c.id}','${safeName}','${code}')">
-      <div class="pkg-left">
-        <div class="pkg-flag">${flag}</div>
-        <div><div class="pkg-name">${c.name}</div><div class="pkg-meta">Нажми для просмотра тарифов</div></div>
-      </div>
-      <div class="pkg-right" style="color:#4ade80;font-size:20px;">›</div>
-    </div>`;
-  }).join('');
 }
 
 async function selectCountry(id, name, code) {
@@ -497,13 +500,12 @@ function renderPackages() {
 }
 
 async function filterTab(el, val) {
+  if (currentRequest) currentRequest.cancelled = true;
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   activeContinent = val;
 
-  if (val === 'global') {
-    await loadGlobalPackages();
-  } else if (val === 'all') {
+  if (val === 'global' || val === 'all') {
     await loadGlobalPackages();
   } else {
     renderPackages();
@@ -562,7 +564,6 @@ function closePaymentScreen() {
 async function selectPayment(method) {
   if (!selectedPkg) return;
 
-  // Для Stars и Crypto — открываем бота с параметром
   const pkgData = {
     id: String(selectedPkg.id),
     name: selectedPkg.name,
@@ -573,13 +574,18 @@ async function selectPayment(method) {
     method: method
   };
 
-  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(pkgData)))).replace(/[+/=]/g, c => ({'+':"_",'/':"-","=":""}[c])).substring(0, 64);
+  const json = JSON.stringify(pkgData);
+  const encoded = btoa(unescape(encodeURIComponent(json)))
+    .replace(/\+/g, "_").replace(/\//g, "-").replace(/=/g, "");
 
   closePaymentScreen();
 
-  if (tg) {
-    tg.openTelegramLink(`https://t.me/esimruu_bot?start=pay_${encoded}`);
-    setTimeout(() => tg.close(), 600);
+  if (tg && tg.openTelegramLink) {
+    // Сначала открываем бота, потом закрываем приложение
+    tg.openTelegramLink("https://t.me/esimruu_bot?start=pay_" + encoded);
+    setTimeout(() => { if (tg.close) tg.close(); }, 800);
+  } else {
+    window.open("https://t.me/esimruu_bot?start=pay_" + encoded, "_blank");
   }
 }
 
