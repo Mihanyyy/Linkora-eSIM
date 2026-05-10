@@ -100,6 +100,38 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
 .pay-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
 .pay-chip { font-size: 11px; padding: 4px 12px; border: 0.5px solid #1f3d1f; border-radius: 20px; color: #4ade80; background: #0d1a0d; }
 
+/* Payment screen */
+.payment-screen { display: none; position: fixed; inset: 0; background: #0a0a0a; z-index: 200; overflow-y: auto; padding-bottom: 40px; }
+.payment-screen.open { display: block; }
+.payment-header { padding: 16px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 0.5px solid #1a2a1a; }
+.payment-back { background: #111; border: 0.5px solid #1a2a1a; border-radius: 10px; color: #4ade80; cursor: pointer; font-size: 18px; padding: 7px 10px; }
+.payment-title { font-size: 17px; font-weight: 600; }
+.payment-pkg { margin: 20px; background: #0d1a0d; border: 0.5px solid #1f3d1f; border-radius: 16px; padding: 20px; text-align: center; }
+.payment-pkg-flag { font-size: 48px; margin-bottom: 10px; }
+.payment-pkg-name { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+.payment-pkg-meta { font-size: 13px; color: #6b7280; margin-bottom: 16px; }
+.payment-pkg-price { font-size: 32px; font-weight: 700; color: #4ade80; }
+.payment-methods-title { font-size: 12px; color: #4b5563; font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px; padding: 0 20px; margin-bottom: 12px; }
+.payment-methods { padding: 0 20px; display: flex; flex-direction: column; gap: 10px; }
+.payment-method-btn { display: flex; align-items: center; gap: 14px; background: #111; border: 0.5px solid #1a2a1a; border-radius: 14px; padding: 16px 18px; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+.payment-method-btn:active { background: #0d1a0d; border-color: #4ade80; }
+.payment-method-icon { font-size: 24px; width: 32px; text-align: center; }
+.payment-method-info { flex: 1; }
+.payment-method-name { font-size: 15px; font-weight: 500; color: #fff; margin-bottom: 2px; }
+.payment-method-desc { font-size: 12px; color: #6b7280; }
+.payment-method-arrow { color: #4ade80; font-size: 18px; }
+.payment-processing { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 300; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
+.payment-processing.show { display: flex; }
+.payment-processing-icon { font-size: 48px; animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+.payment-processing-text { font-size: 16px; color: #fff; }
+.payment-success { display: none; position: fixed; inset: 0; background: #0a0a0a; z-index: 400; align-items: center; justify-content: center; flex-direction: column; gap: 16px; padding: 40px; text-align: center; }
+.payment-success.show { display: flex; }
+.payment-success-icon { font-size: 64px; }
+.payment-success-title { font-size: 22px; font-weight: 700; }
+.payment-success-sub { font-size: 14px; color: #6b7280; line-height: 1.6; }
+.payment-success-btn { background: #4ade80; color: #0a0a0a; border: none; border-radius: 14px; padding: 14px 32px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; }
+
 /* Orders page */
 .page { display: none; padding: 16px 20px; }
 .page.active { display: block; }
@@ -211,6 +243,61 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
       Поддержка
     </button>
   </nav>
+</div>
+
+<!-- Payment Screen -->
+<div class="payment-screen" id="paymentScreen">
+  <div class="payment-header">
+    <button class="payment-back" onclick="closePaymentScreen()">←</button>
+    <div class="payment-title">Оплата</div>
+  </div>
+  <div class="payment-pkg">
+    <div class="payment-pkg-flag" id="payFlag"></div>
+    <div class="payment-pkg-name" id="payName"></div>
+    <div class="payment-pkg-meta" id="payMeta"></div>
+    <div class="payment-pkg-price" id="payPrice"></div>
+  </div>
+  <div class="payment-methods-title">Способ оплаты</div>
+  <div class="payment-methods">
+    <div class="payment-method-btn" onclick="selectPayment('stars')">
+      <div class="payment-method-icon">⭐</div>
+      <div class="payment-method-info">
+        <div class="payment-method-name">Telegram Stars</div>
+        <div class="payment-method-desc">Мгновенно · Без карты</div>
+      </div>
+      <div class="payment-method-arrow">›</div>
+    </div>
+    <div class="payment-method-btn" onclick="selectPayment('crypto')">
+      <div class="payment-method-icon">💎</div>
+      <div class="payment-method-info">
+        <div class="payment-method-name">Crypto (USDT/TON)</div>
+        <div class="payment-method-desc">Через @CryptoBot</div>
+      </div>
+      <div class="payment-method-arrow">›</div>
+    </div>
+    <div class="payment-method-btn" onclick="selectPayment('stripe')">
+      <div class="payment-method-icon">💳</div>
+      <div class="payment-method-info">
+        <div class="payment-method-name">Банковская карта</div>
+        <div class="payment-method-desc">Visa / Mastercard</div>
+      </div>
+      <div class="payment-method-arrow">›</div>
+    </div>
+  </div>
+</div>
+
+<!-- Processing overlay -->
+<div class="payment-processing" id="paymentProcessing">
+  <div class="payment-processing-icon">⏳</div>
+  <div class="payment-processing-text">Обрабатываю платёж...</div>
+</div>
+
+<!-- Success screen -->
+<div class="payment-success" id="paymentSuccess">
+  <div class="payment-success-icon">✅</div>
+  <div class="payment-success-title">eSIM готова!</div>
+  <div class="payment-success-sub">QR-код и инструкция по активации отправлены в бот @esimruu_bot</div>
+  <button class="payment-success-btn" onclick="closeSuccess()">Отлично!</button>
 </div>
 
 <!-- Modal -->
@@ -455,29 +542,49 @@ function handleOverlayClick(e) {
 function handleBuy() {
   if (!selectedPkg) return;
   closeModal();
+  openPaymentScreen(selectedPkg);
+}
 
-  // Кодируем ID пакета в base64 чтобы передать через start параметр
+function openPaymentScreen(pkg) {
+  document.getElementById("payFlag").textContent = pkg.flag;
+  document.getElementById("payName").textContent = pkg.name;
+  document.getElementById("payMeta").textContent = (pkg.unlimited ? "∞ Безлимит" : pkg.gb + " GB") + " · " + pkg.days + " дней";
+  document.getElementById("payPrice").textContent = "$" + pkg.price.toFixed(2);
+  document.getElementById("paymentScreen").classList.add("open");
+  if (tg) tg.BackButton.show();
+}
+
+function closePaymentScreen() {
+  document.getElementById("paymentScreen").classList.remove("open");
+  if (tg) tg.BackButton.hide();
+}
+
+async function selectPayment(method) {
+  if (!selectedPkg) return;
+
+  // Для Stars и Crypto — открываем бота с параметром
   const pkgData = {
     id: String(selectedPkg.id),
     name: selectedPkg.name,
-    gb: selectedPkg.gb,
+    gb: selectedPkg.unlimited ? -1 : selectedPkg.gb,
     days: selectedPkg.days,
     price: selectedPkg.price,
-    unlimited: selectedPkg.unlimited || false
+    unlimited: selectedPkg.unlimited || false,
+    method: method
   };
 
-  // Сохраняем в sessionStorage чтобы бот мог получить
-  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(pkgData)))).replace(/=/g,'').substring(0, 50);
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(pkgData)))).replace(/[+/=]/g, c => ({'+':"_",'/':"-","=":""}[c])).substring(0, 64);
 
-  if (tg && tg.openTelegramLink) {
-    // Закрываем Mini App и открываем бота с командой покупки
-    tg.close();
-    setTimeout(() => {
-      tg.openTelegramLink(`https://t.me/esimruu_bot?start=buy_${encoded}`);
-    }, 300);
-  } else {
-    alert("Откройте бота @esimruu_bot в Telegram для оплаты");
+  closePaymentScreen();
+
+  if (tg) {
+    tg.openTelegramLink(`https://t.me/esimruu_bot?start=pay_${encoded}`);
+    setTimeout(() => tg.close(), 600);
   }
+}
+
+function closeSuccess() {
+  document.getElementById("paymentSuccess").classList.remove("show");
 }
 
 function showPage(name) {
@@ -494,7 +601,9 @@ function openSupport() {
 
 if (tg) {
   tg.BackButton.onClick(function() {
-    if (document.getElementById("modal").classList.contains("open")) {
+    if (document.getElementById("paymentScreen").classList.contains("open")) {
+      closePaymentScreen();
+    } else if (document.getElementById("modal").classList.contains("open")) {
       closeModal();
     }
   });
