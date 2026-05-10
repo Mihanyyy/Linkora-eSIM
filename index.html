@@ -455,13 +455,20 @@ function handleOverlayClick(e) {
 function handleBuy() {
   if (!selectedPkg) return;
   closeModal();
-  if (tg) {
+  if (tg && tg.sendData) {
+    // Отправляем данные боту и закрываем Mini App
     tg.sendData(JSON.stringify({
       action: "buy",
-      package_id: selectedPkg.id,
+      package_id: String(selectedPkg.id),
       name: selectedPkg.name,
-      price: selectedPkg.price
+      gb: selectedPkg.gb,
+      days: selectedPkg.days,
+      price: selectedPkg.price,
+      unlimited: selectedPkg.unlimited || false
     }));
+  } else {
+    // Fallback для браузера
+    alert("Откройте бота в Telegram для оплаты: @esimruu_bot");
   }
 }
 
