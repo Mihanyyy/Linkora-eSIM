@@ -455,20 +455,28 @@ function handleOverlayClick(e) {
 function handleBuy() {
   if (!selectedPkg) return;
   closeModal();
-  if (tg && tg.sendData) {
-    // Отправляем данные боту и закрываем Mini App
-    tg.sendData(JSON.stringify({
-      action: "buy",
-      package_id: String(selectedPkg.id),
-      name: selectedPkg.name,
-      gb: selectedPkg.gb,
-      days: selectedPkg.days,
-      price: selectedPkg.price,
-      unlimited: selectedPkg.unlimited || false
-    }));
+
+  // Кодируем ID пакета в base64 чтобы передать через start параметр
+  const pkgData = {
+    id: String(selectedPkg.id),
+    name: selectedPkg.name,
+    gb: selectedPkg.gb,
+    days: selectedPkg.days,
+    price: selectedPkg.price,
+    unlimited: selectedPkg.unlimited || false
+  };
+
+  // Сохраняем в sessionStorage чтобы бот мог получить
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(pkgData)))).replace(/=/g,'').substring(0, 50);
+
+  if (tg && tg.openTelegramLink) {
+    // Закрываем Mini App и открываем бота с командой покупки
+    tg.close();
+    setTimeout(() => {
+      tg.openTelegramLink(`https://t.me/esimruu_bot?start=buy_${encoded}`);
+    }, 300);
   } else {
-    // Fallback для браузера
-    alert("Откройте бота в Telegram для оплаты: @esimruu_bot");
+    alert("Откройте бота @esimruu_bot в Telegram для оплаты");
   }
 }
 
