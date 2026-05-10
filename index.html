@@ -575,22 +575,14 @@ async function selectPayment(method) {
     method: method
   };
 
-  closePaymentScreen();
-
   const dataStr = JSON.stringify(pkgData);
 
-  if (tg) {
-    if (tg.sendData) {
-      try {
-        tg.sendData(dataStr);
-      } catch(e) {
-        alert("Ошибка sendData: " + e.message);
-      }
-    } else {
-      alert("sendData недоступен. Версия WebApp: " + (tg.version || "неизвестна"));
-    }
+  if (tg && tg.sendData) {
+    tg.sendData(dataStr);
+  } else if (tg) {
+    alert("sendData недоступен. Версия: " + (tg.version || "?"));
   } else {
-    alert("Telegram WebApp не найден. Откройте через бота.");
+    alert("Откройте через кнопку в боте @esimruu_bot");
   }
 }
 
