@@ -616,8 +616,16 @@ loadGlobalPackages();
 loadContinents();
 
 // Payment button listeners
-document.getElementById("btn-stars").addEventListener("click", function() { selectPayment("stars"); });
-document.getElementById("btn-crypto").addEventListener("click", function() { selectPayment("crypto"); });
+document.getElementById("btn-stars").addEventListener("click", function(e) {
+  e.stopPropagation();
+  alert("Stars нажат. tg=" + (!!tg) + " sendData=" + (tg && !!tg.sendData) + " ver=" + (tg && tg.version));
+  selectPayment("stars");
+});
+document.getElementById("btn-crypto").addEventListener("click", function(e) {
+  e.stopPropagation();
+  alert("Crypto нажат. tg=" + (!!tg) + " sendData=" + (tg && !!tg.sendData) + " ver=" + (tg && tg.version));
+  selectPayment("crypto");
+});
 </script>
 </body>
 </html>
