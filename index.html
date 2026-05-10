@@ -354,7 +354,7 @@ async function filterContinent(el, continentId) {
     const code = imgUrl.split("/").pop().replace(".png","").replace(".svg","").toUpperCase();
     const flag = code.length===2 ? [...code].map(ch=>String.fromCodePoint(0x1F1E6+ch.charCodeAt(0)-65)).join("") : "🌐";
     const safeName = c.name.replace(/'/g, " ");
-    return `<div class="pkg-card" onclick="selectCountry(${c.id},'${safeName}','${code}')">
+    return `<div class="pkg-card" onclick="selectCountry('${c.id}','${safeName}','${code}')">
       <div class="pkg-left">
         <div class="pkg-flag">${flag}</div>
         <div><div class="pkg-name">${c.name}</div><div class="pkg-meta">Нажми для просмотра тарифов</div></div>
@@ -378,9 +378,9 @@ let currentPage = "catalog";
 
 function renderPackages() {
   const filtered = PACKAGES.filter(p => {
-    const matchC = activeContinent === "all" || p.continent === activeContinent;
+    const matchC = activeContinent === "all" || activeContinent === "country" || p.continent === activeContinent;
     const q = searchQuery.toLowerCase();
-    const matchS = !q || p.name.toLowerCase().includes(q) || p.region.toLowerCase().includes(q);
+    const matchS = !q || p.name.toLowerCase().includes(q) || (p.region||"").toLowerCase().includes(q);
     return matchC && matchS;
   });
 
@@ -392,13 +392,13 @@ function renderPackages() {
   }
 
   document.getElementById("packages").innerHTML = filtered.map(p => `
-    <div class="pkg-card ${p.featured ? 'featured' : ''}" onclick="openModal(${p.id})">
+    <div class="pkg-card ${p.featured ? 'featured' : ''}" onclick="openModal('${p.id}')">
       <div class="pkg-left">
         <div class="pkg-flag">${p.flag}</div>
         <div>
           ${p.featured ? '<div class="featured-badge">Популярный</div>' : ''}
           <div class="pkg-name">${p.name}</div>
-          <div class="pkg-meta">${p.gb} GB<span class="pkg-dot">·</span>${p.days} дней<span class="pkg-dot">·</span>${p.region}</div>
+          <div class="pkg-meta">${p.unlimited ? '∞ Безлимит' : p.gb + ' GB'}<span class="pkg-dot">·</span>${p.days} дней<span class="pkg-dot">·</span>${p.region||p.country}</div>
         </div>
       </div>
       <div class="pkg-right">
@@ -429,12 +429,12 @@ function filterPackages() {
 }
 
 function openModal(id) {
-  selectedPkg = PACKAGES.find(p => p.id === id);
+  selectedPkg = PACKAGES.find(p => String(p.id) === String(id));
   if (!selectedPkg) return;
   document.getElementById("mFlag").textContent = selectedPkg.flag;
   document.getElementById("mName").textContent = selectedPkg.name;
   document.getElementById("mRegion").textContent = selectedPkg.region;
-  document.getElementById("mData").textContent = selectedPkg.gb + " GB";
+  document.getElementById("mData").textContent = selectedPkg.unlimited ? "∞ Безлимит" : selectedPkg.gb + " GB";
   document.getElementById("mDays").textContent = selectedPkg.days + " дней";
   document.getElementById("mCoverage").textContent = selectedPkg.region;
   document.getElementById("mPrice").textContent = "$" + selectedPkg.price.toFixed(2);
