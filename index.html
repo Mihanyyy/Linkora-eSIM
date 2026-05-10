@@ -519,16 +519,25 @@ function doPayment(method) {
     unlimited: selectedPkg.unlimited || false,
     method: method
   };
+  var dataStr = JSON.stringify(pkgData);
+  var tgApp = window.Telegram && window.Telegram.WebApp;
+
+  if (tgApp && tgApp.sendData) {
+    try {
+      tgApp.sendData(dataStr);
+      return;
+    } catch(e) {}
+  }
+
+  // Fallback для мобильного Telegram
   var json = JSON.stringify(pkgData);
   var encoded = btoa(unescape(encodeURIComponent(json)))
-    .replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+    .split("+").join("-").split("/").join("_").split("=").join("");
   var url = "https://t.me/esimruu_bot?start=pay_" + encoded;
-  
-  var tgApp = window.Telegram && window.Telegram.WebApp;
-  if (tgApp) {
+  if (tgApp && tgApp.openTelegramLink) {
     tgApp.openTelegramLink(url);
   } else {
-    window.open(url, "_blank");
+    window.location.href = url;
   }
 }
 
