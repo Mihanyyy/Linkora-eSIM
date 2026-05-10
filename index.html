@@ -577,17 +577,20 @@ async function selectPayment(method) {
 
   closePaymentScreen();
 
-  // sendData — единственный надёжный способ передать данные боту
-  if (tg && tg.sendData) {
-    try {
-      tg.sendData(JSON.stringify(pkgData));
-    } catch(e) {
-      console.error("sendData failed:", e);
-      // Fallback — закрываем и открываем бота
-      if (tg.close) tg.close();
+  const dataStr = JSON.stringify(pkgData);
+
+  if (tg) {
+    if (tg.sendData) {
+      try {
+        tg.sendData(dataStr);
+      } catch(e) {
+        alert("Ошибка sendData: " + e.message);
+      }
+    } else {
+      alert("sendData недоступен. Версия WebApp: " + (tg.version || "неизвестна"));
     }
   } else {
-    alert("Откройте магазин через кнопку в боте @esimruu_bot");
+    alert("Telegram WebApp не найден. Откройте через бота.");
   }
 }
 
