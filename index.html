@@ -281,9 +281,7 @@ async function loadGlobalPackages() {
     console.error("Ошибка загрузки пакетов:", e);
   }
   loadingPackages = false;
-  hideLoading();
-  loadGlobalPackages();
-loadContinents();
+  renderPackages();
 }
 
 async function loadContinents() {
@@ -476,7 +474,8 @@ if (tg) {
   });
 }
 
-renderPackages();
+loadGlobalPackages();
+loadContinents();
 </script>
 </body>
 </html>
