@@ -279,10 +279,17 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
           <div class="price-big" id="mPrice"></div>
           <div class="price-sub" id="mPerDay"></div>
         </div>
-        <button class="buy-btn" onclick="handleBuy()">Купить eSIM</button>
-        <div class="pay-row">
-          <span class="pay-chip">⭐ Stars</span>
-          <span class="pay-chip">💎 USDT</span>
+        <div id="buySection">
+          <button class="buy-btn" onclick="handleBuy()">Купить eSIM</button>
+          <div class="pay-row">
+            <span class="pay-chip">⭐ Stars</span>
+            <span class="pay-chip">💎 USDT</span>
+          </div>
+        </div>
+        <div id="paySection" style="display:none;">
+          <p style="font-size:13px;color:#6b7280;margin-bottom:12px;text-align:center;">Выбери способ оплаты — приложение закроется и бот пришлёт счёт</p>
+          <button class="buy-btn" style="margin-bottom:10px;" onclick="doPayment('stars')">⭐ Telegram Stars</button>
+          <button class="buy-btn" style="background:#0d2d0d;color:#4ade80;border:1px solid #1f4d1f;" onclick="doPayment('crypto')">💎 Crypto (USDT/TON)</button>
         </div>
       </div>
     </div>
@@ -494,6 +501,8 @@ function openModal(id) {
 
 function closeModal() {
   document.getElementById("modal").classList.remove("open");
+  document.getElementById("buySection").style.display = "block";
+  document.getElementById("paySection").style.display = "none";
   if (tg) tg.BackButton.hide();
 }
 
@@ -503,14 +512,24 @@ function handleOverlayClick(e) {
 
 function handleBuy() {
   if (!selectedPkg) return;
-  closeModal();
-  openPaymentScreen(selectedPkg);
+
+  // Показываем кнопки выбора оплаты прямо в модалке
+  document.getElementById("buySection").style.display = "none";
+  document.getElementById("paySection").style.display = "block";
 }
 
 function doPayment(method) {
   if (!selectedPkg) return;
+  var tgApp = window.Telegram && window.Telegram.WebApp;
+  var userId = tgApp && tgApp.initDataUnsafe && tgApp.initDataUnsafe.user
+    ? tgApp.initDataUnsafe.user.id : null;
+
+  if (!userId) {
+    alert("Не удалось определить пользователя. Откройте через бота.");
+    return;
+  }
+
   var pkgData = {
-    action: "pay",
     id: String(selectedPkg.id),
     name: selectedPkg.name,
     gb: selectedPkg.unlimited ? -1 : selectedPkg.gb,
@@ -519,26 +538,20 @@ function doPayment(method) {
     unlimited: selectedPkg.unlimited || false,
     method: method
   };
-  var dataStr = JSON.stringify(pkgData);
-  var tgApp = window.Telegram && window.Telegram.WebApp;
 
-  if (tgApp && tgApp.sendData) {
-    try {
-      tgApp.sendData(dataStr);
-      return;
-    } catch(e) {}
-  }
+  // Показываем что обрабатываем
+  document.getElementById("paySection").innerHTML = '<p style="text-align:center;color:#4ade80;padding:20px;">⏳ Обрабатываю...</p>';
 
-  // Fallback для мобильного Telegram
-  var json = JSON.stringify(pkgData);
-  var encoded = btoa(unescape(encodeURIComponent(json)))
-    .split("+").join("-").split("/").join("_").split("=").join("");
-  var url = "https://t.me/esimruu_bot?start=pay_" + encoded;
-  if (tgApp && tgApp.openTelegramLink) {
-    tgApp.openTelegramLink(url);
-  } else {
-    window.location.href = url;
-  }
+  fetch(API_URL + "/api/pending", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ telegram_id: userId, pkg: pkgData })
+  }).then(function() {
+    if (tgApp) tgApp.close();
+  }).catch(function() {
+    // Даже если ошибка — закрываем
+    if (tgApp) tgApp.close();
+  });
 }
 
 function openPaymentScreen(pkg) {
