@@ -401,23 +401,59 @@ async function filterContinent(el, continentId) {
       return;
     }
 
-    document.getElementById("packages").innerHTML = countries.map(c => {
-      const imgUrl = c.image_url || c.flag_url || "";
-      const code = imgUrl.split("/").pop().replace(".png","").replace(".svg","").toUpperCase();
-      const flag = code.length===2 ? [...code].map(ch=>String.fromCodePoint(0x1F1E6+ch.charCodeAt(0)-65)).join("") : "🌐";
-      const safeName = c.name.replace(/'/g, " ");
-      return `<div class="pkg-card" onclick="selectCountry('${c.id}','${safeName}','${code}')">
-        <div class="pkg-left">
-          <div class="pkg-flag">${flag}</div>
-          <div><div class="pkg-name">${c.name}</div><div class="pkg-meta">Нажми для просмотра тарифов</div></div>
-        </div>
-        <div class="pkg-right" style="color:#4ade80;font-size:20px;">›</div>
-      </div>`;
-    }).join('');
+    // Кнопка региональных тарифов вверху
+  const continentObj = CONTINENTS.find(c => String(c.id) === String(continentId));
+  const contName = continentObj ? (continentObj.name_ru || continentObj.name) : "Регион";
+  const contFlag = continentObj ? (continentObj.flag || "🌐") : "🌐";
+
+  const regionalBtn = `<div class="pkg-card featured" onclick="loadRegionalPackages('${continentId}','${contName}','${contFlag}')">
+    <div class="pkg-left">
+      <div class="pkg-flag">${contFlag}</div>
+      <div>
+        <div class="featured-badge">Региональные</div>
+        <div class="pkg-name">${contName} — все страны</div>
+        <div class="pkg-meta">Один тариф для всего региона</div>
+      </div>
+    </div>
+    <div class="pkg-right" style="color:#4ade80;font-size:20px;">›</div>
+  </div>`;
+
+  const countriesHtml = countries.map(c => {
+    const imgUrl = c.image_url || c.flag_url || "";
+    const code = imgUrl.split("/").pop().replace(".png","").replace(".svg","").toUpperCase();
+    const flag = code.length===2 ? [...code].map(ch=>String.fromCodePoint(0x1F1E6+ch.charCodeAt(0)-65)).join("") : "🌐";
+    const safeName = c.name.replace(/'/g, " ");
+    return `<div class="pkg-card" onclick="selectCountry('${c.id}','${safeName}','${code}')">
+      <div class="pkg-left">
+        <div class="pkg-flag">${flag}</div>
+        <div><div class="pkg-name">${c.name}</div><div class="pkg-meta">Нажми для просмотра тарифов</div></div>
+      </div>
+      <div class="pkg-right" style="color:#4ade80;font-size:20px;">›</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById("packages").innerHTML = regionalBtn + countriesHtml;
   } catch(e) {
     if (!thisRequest.cancelled) {
       document.getElementById("packages").innerHTML = '<div class="empty"><div>Ошибка загрузки. Попробуй ещё раз.</div></div>';
     }
+  }
+}
+
+async function loadRegionalPackages(continentId, continentName, continentFlag) {
+  document.getElementById("packages").innerHTML = '<div class="empty"><div style="font-size:32px;margin-bottom:10px;">⏳</div><div>Загружаю региональные тарифы...</div></div>';
+  try {
+    const res = await fetch(`${API_URL}/api/packages?type=regional&id=${continentId}`);
+    const data = await res.json();
+    if (!data.ok || !data.data.length) {
+      document.getElementById("packages").innerHTML = '<div class="empty"><div>Нет региональных тарифов</div></div>';
+      return;
+    }
+    PACKAGES = data.data.map(p => ({ ...p, region: continentName, continent: "regional" }));
+    activeContinent = "regional";
+    renderPackages();
+  } catch(e) {
+    document.getElementById("packages").innerHTML = '<div class="empty"><div>Ошибка загрузки</div></div>';
   }
 }
 
