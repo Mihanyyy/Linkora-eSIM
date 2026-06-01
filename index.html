@@ -716,9 +716,17 @@ let currentRequest = null;
 
 function renderTabs() {
   const CONT_FLAGS = { "Asia":"🌏","Europe":"🇪🇺","North America":"🌎","South America":"🌎","Africa":"🌍","Oceania":"🌏","Middle East":"🕌" };
+  const CONT_NAMES = {
+    ru: { "Asia":"Азия","Europe":"Европа","North America":"Северная Америка","South America":"Южная Америка","Africa":"Африка","Oceania":"Океания","Middle East":"Ближний Восток" },
+    en: { "Asia":"Asia","Europe":"Europe","North America":"North America","South America":"South America","Africa":"Africa","Oceania":"Oceania","Middle East":"Middle East" },
+    zh: { "Asia":"亚洲","Europe":"欧洲","North America":"北美洲","South America":"南美洲","Africa":"非洲","Oceania":"大洋洲","Middle East":"中东" },
+    es: { "Asia":"Asia","Europe":"Europa","North America":"América del Norte","South America":"América del Sur","Africa":"África","Oceania":"Oceanía","Middle East":"Oriente Medio" },
+    de: { "Asia":"Asien","Europe":"Europa","North America":"Nordamerika","South America":"Südamerika","Africa":"Afrika","Oceania":"Ozeanien","Middle East":"Naher Osten" },
+  };
+  const names = CONT_NAMES[currentLang] || CONT_NAMES.ru;
   const tabs = document.getElementById("tabs");
   const extra = CONTINENTS.map(c =>
-    `<div class="tab" onclick="filterContinent(this,'${c.id}')">${CONT_FLAGS[c.name]||'🌐'} ${c.name}</div>`
+    `<div class="tab" onclick="filterContinent(this,'${c.id}')">${CONT_FLAGS[c.name]||'🌐'} ${names[c.name]||c.name}</div>`
   ).join('');
   tabs.innerHTML = `
     <div class="tab ${activeContinent==='all'?'active':''}" onclick="filterTab(this,'all')">${t('tab-all')}</div>
