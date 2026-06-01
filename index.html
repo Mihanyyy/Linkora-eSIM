@@ -37,17 +37,14 @@ body {
   inset: 0;
 }
 
-/* Canvas */
 #canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5; }
 
-/* App shell */
 .app {
   position: fixed; inset: 0; z-index: 1;
   display: flex; flex-direction: column;
   overflow: hidden;
 }
 
-/* Header */
 .header {
   flex-shrink: 0;
   padding: 14px 20px 12px;
@@ -73,6 +70,7 @@ body {
   animation: pulse 3s infinite;
 }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.header-right { display: flex; align-items: center; gap: 8px; }
 .header-btn {
   background: rgba(82,183,136,0.08);
   border: 1px solid var(--border);
@@ -85,7 +83,49 @@ body {
 }
 .header-btn:active { background: rgba(82,183,136,0.15); }
 
-/* Scrollable content */
+/* Language switcher */
+.lang-switcher { position: relative; }
+.lang-btn {
+  background: rgba(82,183,136,0.08);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--gray);
+  padding: 7px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-family: var(--sans);
+  display: flex; align-items: center; gap: 4px;
+  white-space: nowrap;
+}
+.lang-btn:active { background: rgba(82,183,136,0.15); }
+.lang-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: rgba(5,13,7,0.98);
+  border: 1px solid rgba(82,183,136,0.2);
+  border-radius: 12px;
+  padding: 4px;
+  min-width: 120px;
+  z-index: 1000;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.6);
+}
+.lang-menu.open { display: block; }
+.lang-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--gray);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.lang-item:hover { background: rgba(82,183,136,0.1); color: var(--mist); }
+.lang-item.active { color: var(--glow); background: rgba(82,183,136,0.08); }
+
 .scroll-area {
   flex: 1;
   overflow-y: auto;
@@ -95,12 +135,9 @@ body {
 }
 .scroll-area::-webkit-scrollbar { display: none; }
 
-/* Hero banner */
 .hero-banner {
   padding: 28px 20px 24px;
-  background: linear-gradient(180deg,
-    rgba(45,106,79,0.15) 0%,
-    rgba(10,26,12,0.4) 100%);
+  background: linear-gradient(180deg, rgba(45,106,79,0.15) 0%, rgba(10,26,12,0.4) 100%);
   border-bottom: 1px solid var(--border);
   position: relative; overflow: hidden;
 }
@@ -119,179 +156,57 @@ body {
   letter-spacing: 1.5px; text-transform: uppercase;
   margin-bottom: 14px;
 }
-.hero-badge span {
-  width: 4px; height: 4px; border-radius: 50%;
-  background: var(--leaf);
-  box-shadow: 0 0 5px var(--leaf);
-  animation: pulse 2s infinite;
-}
-.hero-title {
-  font-family: var(--serif);
-  font-size: 32px; font-weight: 300;
-  line-height: 1.05; margin-bottom: 10px;
-}
+.hero-badge span { width: 4px; height: 4px; border-radius: 50%; background: var(--leaf); box-shadow: 0 0 5px var(--leaf); animation: pulse 2s infinite; }
+.hero-title { font-family: var(--serif); font-size: 32px; font-weight: 300; line-height: 1.05; margin-bottom: 10px; }
 .hero-title em { font-style: italic; color: var(--glow); }
 .hero-sub { font-size: 13px; color: var(--gray); margin-bottom: 18px; font-weight: 300; }
-.hero-stats {
-  display: flex; gap: 0;
-  background: rgba(10,26,12,0.5);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  overflow: hidden;
-}
-.h-stat {
-  flex: 1; text-align: center; padding: 12px 8px;
-  border-right: 1px solid var(--border);
-}
+.hero-stats { display: flex; gap: 0; background: rgba(10,26,12,0.5); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+.h-stat { flex: 1; text-align: center; padding: 12px 8px; border-right: 1px solid var(--border); }
 .h-stat:last-child { border-right: none; }
-.h-stat-val {
-  font-family: var(--serif);
-  font-size: 22px; font-weight: 300;
-  color: var(--glow); line-height: 1;
-}
+.h-stat-val { font-family: var(--serif); font-size: 22px; font-weight: 300; color: var(--glow); line-height: 1; }
 .h-stat-lbl { font-size: 9px; color: var(--gray); letter-spacing: 1px; text-transform: uppercase; margin-top: 3px; }
 
-/* Tabs */
-.tabs-wrap {
-  padding: 14px 20px 0;
-  background: rgba(5,13,7,0.6);
-}
-.tabs {
-  display: flex; gap: 8px;
-  overflow-x: auto; padding-bottom: 12px;
-  scrollbar-width: none;
-}
+.tabs-wrap { padding: 14px 20px 0; background: rgba(5,13,7,0.6); }
+.tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; scrollbar-width: none; }
 .tabs::-webkit-scrollbar { display: none; }
-.tab {
-  flex-shrink: 0;
-  padding: 7px 16px;
-  background: rgba(10,26,12,0.8);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  font-size: 12px; color: var(--gray);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.3s var(--ease);
-  font-weight: 400; letter-spacing: 0.3px;
-}
-.tab.active {
-  background: rgba(45,106,79,0.3);
-  border-color: rgba(82,183,136,0.5);
-  color: var(--glow);
-}
+.tab { flex-shrink: 0; padding: 7px 16px; background: rgba(10,26,12,0.8); border: 1px solid var(--border); border-radius: 100px; font-size: 12px; color: var(--gray); cursor: pointer; white-space: nowrap; transition: all 0.3s var(--ease); font-weight: 400; letter-spacing: 0.3px; }
+.tab.active { background: rgba(45,106,79,0.3); border-color: rgba(82,183,136,0.5); color: var(--glow); }
 .tab:active { transform: scale(0.95); }
 
-/* Section header */
-.section-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 16px 20px 10px;
-}
-.section-title {
-  font-size: 11px; color: var(--gray);
-  letter-spacing: 2px; text-transform: uppercase;
-}
+.section-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px 10px; }
+.section-title { font-size: 11px; color: var(--gray); letter-spacing: 2px; text-transform: uppercase; }
 .section-count { font-size: 12px; color: var(--leaf); }
 
-/* Package cards */
 .packages { padding: 0 16px 24px; display: flex; flex-direction: column; gap: 10px; }
-
-.pkg-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 16px;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: space-between;
-  backdrop-filter: blur(8px);
-  transition: all 0.3s var(--ease);
-  position: relative; overflow: hidden;
-}
-.pkg-card::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--leaf), transparent);
-  opacity: 0; transition: opacity 0.3s;
-}
+.pkg-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; backdrop-filter: blur(8px); transition: all 0.3s var(--ease); position: relative; overflow: hidden; }
+.pkg-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--leaf), transparent); opacity: 0; transition: opacity 0.3s; }
 .pkg-card:active { transform: scale(0.98); background: rgba(26,51,32,0.6); border-color: rgba(82,183,136,0.3); }
-.pkg-card.featured {
-  border-color: rgba(82,183,136,0.3);
-  background: linear-gradient(135deg, rgba(26,51,32,0.7) 0%, rgba(10,26,12,0.8) 100%);
-}
+.pkg-card.featured { border-color: rgba(82,183,136,0.3); background: linear-gradient(135deg, rgba(26,51,32,0.7) 0%, rgba(10,26,12,0.8) 100%); }
 .pkg-card.featured::after { opacity: 1; }
 .pkg-left { display: flex; align-items: center; gap: 14px; }
 .pkg-flag { font-size: 28px; line-height: 1; width: 36px; text-align: center; }
-.pkg-featured-badge {
-  display: inline-block;
-  font-size: 9px; padding: 2px 8px;
-  background: rgba(82,183,136,0.15);
-  border: 1px solid rgba(82,183,136,0.3);
-  border-radius: 100px;
-  color: var(--glow);
-  margin-bottom: 4px;
-  letter-spacing: 1px; text-transform: uppercase;
-}
+.pkg-featured-badge { display: inline-block; font-size: 9px; padding: 2px 8px; background: rgba(82,183,136,0.15); border: 1px solid rgba(82,183,136,0.3); border-radius: 100px; color: var(--glow); margin-bottom: 4px; letter-spacing: 1px; text-transform: uppercase; }
 .pkg-name { font-size: 14px; font-weight: 500; color: var(--white); margin-bottom: 3px; }
 .pkg-meta { font-size: 12px; color: var(--gray); }
 .pkg-right { text-align: right; flex-shrink: 0; }
-.pkg-price {
-  font-family: var(--serif);
-  font-size: 22px; font-weight: 300;
-  color: var(--glow); line-height: 1;
-}
+.pkg-price { font-family: var(--serif); font-size: 22px; font-weight: 300; color: var(--glow); line-height: 1; }
 .pkg-per { font-size: 10px; color: var(--gray); margin-top: 3px; }
 
-/* Empty state */
-.empty {
-  text-align: center; padding: 48px 20px;
-  color: var(--gray);
-}
+.empty { text-align: center; padding: 48px 20px; color: var(--gray); }
 .empty-icon { font-size: 36px; margin-bottom: 14px; opacity: 0.5; }
 .empty p { font-size: 14px; font-weight: 300; }
 
-/* Bottom nav */
-.bottom-nav {
-  flex-shrink: 0;
-  background: rgba(5,13,7,0.95);
-  backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border);
-  display: flex;
-  padding: 10px 0 env(safe-area-inset-bottom, 12px);
-}
-.nav-item {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; gap: 4px;
-  background: none; border: none;
-  color: rgba(107,158,122,0.5);
-  font-size: 10px; letter-spacing: 0.5px;
-  cursor: pointer; padding: 4px 0;
-  transition: color 0.3s;
-  font-family: var(--sans);
-  text-transform: uppercase;
-}
+.bottom-nav { flex-shrink: 0; background: rgba(5,13,7,0.95); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; padding: 6px 0 env(safe-area-inset-bottom, 6px); }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; color: rgba(107,158,122,0.5); font-size: 10px; letter-spacing: 0.5px; cursor: pointer; padding: 4px 0; transition: color 0.3s; font-family: var(--sans); text-transform: uppercase; }
 .nav-item.active { color: var(--glow); }
 .nav-item svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 
-/* Pages */
 .page { display: none; flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 .page.active { display: flex; flex-direction: column; }
 
-/* Modal overlay */
-.modal-overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.7);
-  z-index: 200; align-items: flex-end; justify-content: center;
-  backdrop-filter: blur(4px);
-}
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; align-items: flex-end; justify-content: center; backdrop-filter: blur(4px); }
 .modal-overlay.open { display: flex; }
-.modal {
-  background: linear-gradient(180deg, #0d1f10 0%, #050d07 100%);
-  border: 1px solid var(--border);
-  border-bottom: none;
-  border-radius: 24px 24px 0 0;
-  width: 100%; max-height: 88vh;
-  overflow-y: auto;
-  padding-bottom: env(safe-area-inset-bottom, 24px);
-}
+.modal { background: linear-gradient(180deg, #0d1f10 0%, #050d07 100%); border: 1px solid var(--border); border-bottom: none; border-radius: 24px 24px 0 0; width: 100%; max-height: 88vh; overflow-y: auto; padding-bottom: env(safe-area-inset-bottom, 24px); }
 .modal-handle { width: 36px; height: 3px; background: rgba(82,183,136,0.3); border-radius: 2px; margin: 14px auto 0; }
 .modal-close-row { display: flex; justify-content: flex-end; padding: 8px 16px 0; }
 .modal-close { background: rgba(82,183,136,0.08); border: 1px solid var(--border); border-radius: 8px; color: var(--gray); cursor: pointer; padding: 6px 12px; font-size: 13px; font-family: var(--sans); }
@@ -301,85 +216,27 @@ body {
 .modal-region { font-size: 13px; color: var(--gray); }
 .modal-body { padding: 20px 24px; }
 .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-.detail-card {
-  background: rgba(26,51,32,0.4);
-  border: 1px solid rgba(82,183,136,0.12);
-  border-radius: 12px; padding: 14px;
-}
+.detail-card { background: rgba(26,51,32,0.4); border: 1px solid rgba(82,183,136,0.12); border-radius: 12px; padding: 14px; }
 .detail-card-label { font-size: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
 .detail-card-val { font-family: var(--serif); font-size: 20px; font-weight: 300; color: var(--glow); }
 .detail-rows { margin-bottom: 24px; }
-.detail-row {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid rgba(82,183,136,0.07);
-  font-size: 13px;
-}
+.detail-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(82,183,136,0.07); font-size: 13px; }
 .detail-row:last-child { border-bottom: none; }
 .detail-row-label { color: var(--gray); font-weight: 300; }
 .detail-row-val { color: var(--white); font-weight: 400; }
-.buy-wrap { }
-.price-big {
-  font-family: var(--serif);
-  font-size: 44px; font-weight: 300;
-  color: var(--glow); margin-bottom: 4px;
-}
+.price-big { font-family: var(--serif); font-size: 44px; font-weight: 300; color: var(--glow); margin-bottom: 4px; }
 .price-per { font-size: 13px; color: var(--gray); margin-bottom: 20px; }
-
-/* Buy section in modal */
-#buySection, #paySection { }
-.buy-btn {
-  display: block; width: 100%;
-  padding: 16px;
-  background: linear-gradient(135deg, var(--emerald), var(--leaf));
-  color: var(--white); border: none;
-  border-radius: 14px;
-  font-size: 15px; font-weight: 500;
-  cursor: pointer; margin-bottom: 12px;
-  font-family: var(--sans);
-  box-shadow: 0 4px 20px rgba(82,183,136,0.3);
-  transition: all 0.3s var(--ease);
-}
+.buy-btn { display: block; width: 100%; padding: 16px; background: linear-gradient(135deg, var(--emerald), var(--leaf)); color: var(--white); border: none; border-radius: 14px; font-size: 15px; font-weight: 500; cursor: pointer; margin-bottom: 12px; font-family: var(--sans); box-shadow: 0 4px 20px rgba(82,183,136,0.3); transition: all 0.3s var(--ease); }
 .buy-btn:active { transform: scale(0.98); opacity: 0.9; }
 .pay-methods { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-.pay-chip {
-  font-size: 11px; padding: 4px 12px;
-  background: rgba(82,183,136,0.08);
-  border: 1px solid rgba(82,183,136,0.2);
-  border-radius: 100px; color: var(--glow);
-  letter-spacing: 0.5px;
-}
-.pay-btn {
-  display: block; width: 100%;
-  padding: 16px;
-  border: none; border-radius: 14px;
-  font-size: 15px; font-weight: 500;
-  cursor: pointer; margin-bottom: 10px;
-  font-family: var(--sans);
-  transition: all 0.3s;
-}
-.pay-btn-stars {
-  background: linear-gradient(135deg, #1a4a2e, #2d6a4f);
-  color: var(--white);
-  border: 1px solid rgba(82,183,136,0.3);
-  box-shadow: 0 4px 16px rgba(82,183,136,0.2);
-}
-.pay-btn-crypto {
-  background: rgba(26,51,32,0.5);
-  color: var(--glow);
-  border: 1px solid rgba(82,183,136,0.2);
-}
+.pay-chip { font-size: 11px; padding: 4px 12px; background: rgba(82,183,136,0.08); border: 1px solid rgba(82,183,136,0.2); border-radius: 100px; color: var(--glow); letter-spacing: 0.5px; }
+.pay-btn { display: block; width: 100%; padding: 16px; border: none; border-radius: 14px; font-size: 15px; font-weight: 500; cursor: pointer; margin-bottom: 10px; font-family: var(--sans); transition: all 0.3s; }
+.pay-btn-stars { background: linear-gradient(135deg, #1a4a2e, #2d6a4f); color: var(--white); border: 1px solid rgba(82,183,136,0.3); box-shadow: 0 4px 16px rgba(82,183,136,0.2); }
+.pay-btn-crypto { background: rgba(26,51,32,0.5); color: var(--glow); border: 1px solid rgba(82,183,136,0.2); }
 .pay-btn:active { transform: scale(0.98); }
 
-/* Orders page */
 .orders-wrap { padding: 20px 16px; }
-.order-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px; padding: 16px;
-  margin-bottom: 10px;
-  backdrop-filter: blur(8px);
-}
+.order-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 10px; backdrop-filter: blur(8px); }
 .order-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 .order-name { font-size: 14px; font-weight: 500; }
 .order-status { font-size: 10px; padding: 3px 10px; border-radius: 100px; letter-spacing: 0.5px; }
@@ -387,36 +244,12 @@ body {
 .status-pending { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
 .order-meta { font-size: 12px; color: var(--gray); }
 
-/* Support page */
 .support-wrap { padding: 20px 16px; }
-.support-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px; padding: 24px;
-  margin-bottom: 12px; text-align: center;
-  backdrop-filter: blur(8px);
-}
+.support-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 12px; text-align: center; backdrop-filter: blur(8px); }
 .support-icon { font-size: 36px; margin-bottom: 12px; }
 .support-title { font-family: var(--serif); font-size: 22px; font-weight: 300; color: var(--mist); margin-bottom: 8px; }
 .support-text { font-size: 13px; color: var(--gray); line-height: 1.7; font-weight: 300; }
-.support-btn {
-  display: block; width: 100%; margin-top: 16px;
-  padding: 14px;
-  background: linear-gradient(135deg, var(--emerald), var(--leaf));
-  color: var(--white); border: none;
-  border-radius: 12px;
-  font-size: 14px; font-weight: 500;
-  cursor: pointer; font-family: var(--sans);
-  box-shadow: 0 4px 16px rgba(82,183,136,0.25);
-}
-
-/* Payment processing */
-.pay-processing {
-  text-align: center; padding: 20px;
-  color: var(--glow); font-size: 14px;
-  font-weight: 300; font-family: var(--serif);
-  font-size: 18px;
-}
+.support-btn { display: block; width: 100%; margin-top: 16px; padding: 14px; background: linear-gradient(135deg, var(--emerald), var(--leaf)); color: var(--white); border: none; border-radius: 12px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: var(--sans); box-shadow: 0 4px 16px rgba(82,183,136,0.25); }
 </style>
 </head>
 <body>
@@ -424,96 +257,93 @@ body {
 <canvas id="canvas"></canvas>
 
 <div class="app">
-  <!-- HEADER -->
   <div class="header">
     <div class="header-logo">
       <div class="logo-dot"></div>
       Linkora
     </div>
-    <button class="header-btn" onclick="showPage('orders')" title="Заказы">📋</button>
+    <div class="header-right">
+      <!-- Language switcher -->
+      <div class="lang-switcher" id="langSwitcher">
+        <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">🇷🇺 RU ▾</button>
+        <div class="lang-menu" id="langMenu">
+          <div class="lang-item active" data-lang="ru" onclick="setLang('ru')">🇷🇺 RU</div>
+          <div class="lang-item" data-lang="en" onclick="setLang('en')">🇬🇧 EN</div>
+          <div class="lang-item" data-lang="zh" onclick="setLang('zh')">🇨🇳 ZH</div>
+          <div class="lang-item" data-lang="es" onclick="setLang('es')">🇪🇸 ES</div>
+          <div class="lang-item" data-lang="de" onclick="setLang('de')">🇩🇪 DE</div>
+        </div>
+      </div>
+      <button class="header-btn" onclick="showPage('orders')" title="Заказы">📋</button>
+    </div>
   </div>
 
-  <!-- PAGE: CATALOG -->
+  <!-- CATALOG -->
   <div id="page-catalog" class="page active">
     <div class="scroll-area" id="catalogScroll">
-      <!-- Hero -->
       <div class="hero-banner">
-        <div class="hero-badge"><span></span>200+ стран</div>
-        <h1 class="hero-title">Свобода быть<br><em>онлайн везде</em></h1>
-        <p class="hero-sub">eSIM для путешествий — активация за 1 минуту</p>
+        <div class="hero-badge"><span></span><span id="t-hero-badge">200+ стран</span></div>
+        <h1 class="hero-title"><span id="t-hero-t1">Свобода быть</span><br><em id="t-hero-em">онлайн везде</em></h1>
+        <p class="hero-sub" id="t-hero-sub">eSIM для путешествий — активация за 1 минуту</p>
         <div class="hero-stats">
-          <div class="h-stat"><div class="h-stat-val">200+</div><div class="h-stat-lbl">Стран</div></div>
-          <div class="h-stat"><div class="h-stat-val">5G</div><div class="h-stat-lbl">Скорость</div></div>
-          <div class="h-stat"><div class="h-stat-val">24/7</div><div class="h-stat-lbl">Поддержка</div></div>
+          <div class="h-stat"><div class="h-stat-val">200+</div><div class="h-stat-lbl" id="t-stat-countries">Стран</div></div>
+          <div class="h-stat"><div class="h-stat-val">5G</div><div class="h-stat-lbl" id="t-stat-speed">Скорость</div></div>
+          <div class="h-stat"><div class="h-stat-val">24/7</div><div class="h-stat-lbl" id="t-stat-support">Поддержка</div></div>
         </div>
       </div>
 
-      <!-- Search -->
       <div style="padding:14px 16px 0;">
         <div style="position:relative;">
           <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--leaf);font-size:14px;pointer-events:none;">🔍</span>
-          <input type="text" id="searchInput" placeholder="Поиск страны или тарифа..."
-            oninput="filterPackages()"
+          <input type="text" id="searchInput" oninput="filterPackages()"
             style="width:100%;background:rgba(10,26,12,0.8);border:1px solid var(--border);border-radius:12px;padding:11px 16px 11px 40px;color:var(--white);font-size:14px;outline:none;font-family:var(--sans);">
         </div>
       </div>
 
-      <!-- Tabs -->
       <div class="tabs-wrap">
-        <div class="tabs" id="tabs">
-          <div class="tab active" onclick="filterTab(this,'all')">Все</div>
-          <div class="tab" onclick="filterTab(this,'global')">🌍 Глобальные</div>
-        </div>
+        <div class="tabs" id="tabs"></div>
       </div>
 
-      <!-- Section header -->
       <div class="section-header">
-        <div class="section-title">Тарифы</div>
+        <div class="section-title" id="t-section-rates">Тарифы</div>
         <div class="section-count" id="pkgCount"></div>
       </div>
 
-      <!-- Packages -->
       <div class="packages" id="packages"></div>
     </div>
   </div>
 
-  <!-- PAGE: ORDERS -->
+  <!-- ORDERS -->
   <div id="page-orders" class="page">
     <div class="scroll-area">
       <div class="orders-wrap">
         <div style="margin-bottom:20px;">
-          <div style="font-size:11px;color:var(--gray);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">История</div>
-          <div style="font-family:var(--serif);font-size:28px;font-weight:300;color:var(--mist);">Мои <em style="font-style:italic;color:var(--glow);">заказы</em></div>
+          <div style="font-size:11px;color:var(--gray);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;" id="t-orders-tag">История</div>
+          <div style="font-family:var(--serif);font-size:28px;font-weight:300;color:var(--mist);" id="t-orders-title"></div>
         </div>
-        <div id="orders-list">
-          <div class="empty">
-            <div class="empty-icon">🌿</div>
-            <p>Заказов пока нет</p>
-            <p style="font-size:12px;margin-top:6px;opacity:0.6;">Купи первую eSIM!</p>
-          </div>
-        </div>
+        <div id="orders-list"></div>
       </div>
     </div>
   </div>
 
-  <!-- PAGE: SUPPORT -->
+  <!-- SUPPORT -->
   <div id="page-support" class="page">
     <div class="scroll-area">
       <div class="support-wrap">
         <div style="margin-bottom:20px;">
-          <div style="font-size:11px;color:var(--gray);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;">Помощь</div>
-          <div style="font-family:var(--serif);font-size:28px;font-weight:300;color:var(--mist);">Поддержка <em style="font-style:italic;color:var(--glow);">24/7</em></div>
+          <div style="font-size:11px;color:var(--gray);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;" id="t-support-tag">Помощь</div>
+          <div style="font-family:var(--serif);font-size:28px;font-weight:300;color:var(--mist);" id="t-support-title"></div>
         </div>
         <div class="support-card">
           <div class="support-icon">🌿</div>
-          <div class="support-title">Служба поддержки</div>
-          <p class="support-text">Мы на связи круглосуточно. Ответим на все вопросы по активации и использованию eSIM.</p>
-          <button class="support-btn" onclick="openSupport()">Написать в поддержку</button>
+          <div class="support-title" id="t-support-card-title">Служба поддержки</div>
+          <p class="support-text" id="t-support-text">Мы на связи круглосуточно. Ответим на все вопросы по активации и использованию eSIM.</p>
+          <button class="support-btn" onclick="openSupport()" id="t-support-btn">Написать в поддержку</button>
         </div>
         <div class="support-card">
           <div class="support-icon">📱</div>
-          <div class="support-title">Как активировать</div>
-          <p class="support-text">
+          <div class="support-title" id="t-activate-title">Как активировать</div>
+          <p class="support-text" id="t-activate-text">
             <strong style="color:var(--mist);">iPhone:</strong> Настройки → Сотовая связь → Добавить план → QR<br><br>
             <strong style="color:var(--mist);">Android:</strong> Настройки → Сеть → SIM → Добавить eSIM → QR
           </p>
@@ -526,15 +356,15 @@ body {
   <nav class="bottom-nav">
     <button class="nav-item active" id="nav-catalog" onclick="showPage('catalog')">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-      Каталог
+      <span id="t-nav-catalog">Каталог</span>
     </button>
     <button class="nav-item" id="nav-orders" onclick="showPage('orders')">
       <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-      Заказы
+      <span id="t-nav-orders">Заказы</span>
     </button>
     <button class="nav-item" id="nav-support" onclick="showPage('support')">
       <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      Поддержка
+      <span id="t-nav-support">Поддержка</span>
     </button>
   </nav>
 </div>
@@ -543,7 +373,7 @@ body {
 <div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-close-row"><button class="modal-close" onclick="closeModal()">✕ Закрыть</button></div>
+    <div class="modal-close-row"><button class="modal-close" onclick="closeModal()" id="t-close-btn">✕ Закрыть</button></div>
     <div class="modal-hero">
       <div class="modal-flag" id="mFlag"></div>
       <div class="modal-name" id="mName"></div>
@@ -551,28 +381,28 @@ body {
     </div>
     <div class="modal-body">
       <div class="detail-grid">
-        <div class="detail-card"><div class="detail-card-label">Данные</div><div class="detail-card-val" id="mData"></div></div>
-        <div class="detail-card"><div class="detail-card-label">Срок</div><div class="detail-card-val" id="mDays"></div></div>
+        <div class="detail-card"><div class="detail-card-label" id="t-modal-data">Данные</div><div class="detail-card-val" id="mData"></div></div>
+        <div class="detail-card"><div class="detail-card-label" id="t-modal-days">Срок</div><div class="detail-card-val" id="mDays"></div></div>
       </div>
       <div class="detail-rows">
-        <div class="detail-row"><span class="detail-row-label">🌐 Покрытие</span><span class="detail-row-val" id="mCoverage"></span></div>
-        <div class="detail-row"><span class="detail-row-label">📶 Сеть</span><span class="detail-row-val">5G / LTE</span></div>
-        <div class="detail-row"><span class="detail-row-label">⚡ Активация</span><span class="detail-row-val">Мгновенная</span></div>
-        <div class="detail-row"><span class="detail-row-label">📲 Устройство</span><span class="detail-row-val">iPhone / Android</span></div>
+        <div class="detail-row"><span class="detail-row-label">🌐 <span id="t-modal-coverage">Покрытие</span></span><span class="detail-row-val" id="mCoverage"></span></div>
+        <div class="detail-row"><span class="detail-row-label">📶 <span id="t-modal-network">Сеть</span></span><span class="detail-row-val">5G / LTE</span></div>
+        <div class="detail-row"><span class="detail-row-label">⚡ <span id="t-modal-activation">Активация</span></span><span class="detail-row-val" id="t-modal-instant">Мгновенная</span></div>
+        <div class="detail-row"><span class="detail-row-label">📲 <span id="t-modal-device">Устройство</span></span><span class="detail-row-val" id="t-modal-devices-val">iPhone / Android</span></div>
       </div>
-      <div class="buy-wrap">
+      <div>
         <div class="price-big" id="mPrice"></div>
         <div class="price-per" id="mPerDay"></div>
         <div id="buySection">
-          <button class="buy-btn" onclick="handleBuy()">Купить eSIM</button>
+          <button class="buy-btn" onclick="handleBuy()" id="t-buy-btn">Купить eSIM</button>
           <div class="pay-methods">
             <span class="pay-chip">⭐ Stars</span>
             <span class="pay-chip">💎 USDT</span>
           </div>
         </div>
         <div id="paySection" style="display:none;">
-          <button class="pay-btn pay-btn-stars" id="payStars">⭐ Telegram Stars</button>
-          <button class="pay-btn pay-btn-crypto" id="payCrypto">💎 Crypto (USDT/TON)</button>
+          <button class="pay-btn pay-btn-stars" id="payStars">⭐ <span id="t-pay-stars">Telegram Stars</span></button>
+          <button class="pay-btn pay-btn-crypto" id="payCrypto">💎 <span id="t-pay-crypto">Crypto (USDT/TON)</span></button>
         </div>
       </div>
     </div>
@@ -580,22 +410,307 @@ body {
 </div>
 
 <script>
+// ── TRANSLATIONS ──────────────────────────────────────
+const I18N = {
+  ru: {
+    'hero-badge': '200+ стран',
+    'hero-t1': 'Свобода быть',
+    'hero-em': 'онлайн везде',
+    'hero-sub': 'eSIM для путешествий — активация за 1 минуту',
+    'stat-countries': 'Стран', 'stat-speed': 'Скорость', 'stat-support': 'Поддержка',
+    'section-rates': 'Тарифы',
+    'nav-catalog': 'Каталог', 'nav-orders': 'Заказы', 'nav-support': 'Поддержка',
+    'orders-tag': 'История', 'orders-t1': 'Мои', 'orders-em': 'заказы',
+    'support-tag': 'Помощь', 'support-t1': 'Поддержка', 'support-em': '24/7',
+    'support-card-title': 'Служба поддержки',
+    'support-text': 'Мы на связи круглосуточно. Ответим на все вопросы по активации и использованию eSIM.',
+    'support-btn': 'Написать в поддержку',
+    'activate-title': 'Как активировать',
+    'activate-text-iphone': 'Настройки → Сотовая связь → Добавить план → QR',
+    'activate-text-android': 'Настройки → Сеть → SIM → Добавить eSIM → QR',
+    'close-btn': '✕ Закрыть',
+    'modal-data': 'Данные', 'modal-days': 'Срок',
+    'modal-coverage': 'Покрытие', 'modal-network': 'Сеть',
+    'modal-activation': 'Активация', 'modal-instant': 'Мгновенная',
+    'modal-device': 'Устройство', 'modal-devices-val': 'iPhone / Android',
+    'buy-btn': 'Купить eSIM',
+    'pay-stars': 'Telegram Stars', 'pay-crypto': 'Crypto (USDT/TON)',
+    'tab-all': 'Все', 'tab-global': '🌍 Глобальные',
+    'loading': 'Загружаю...', 'loading-countries': 'Загружаю страны...',
+    'loading-regional': 'Загружаю региональные тарифы...',
+    'tap-rates': 'Нажми для просмотра тарифов',
+    'regional-sub': 'Один тариф для всего региона',
+    'regional-badge': 'Региональные', 'all-countries': 'все страны',
+    'no-regional': 'Нет региональных тарифов',
+    'load-error': 'Ошибка загрузки. Попробуй ещё раз.',
+    'not-found': 'Ничего не найдено',
+    'no-orders': 'Заказов пока нет', 'buy-first': 'Купи первую eSIM!',
+    'search-ph': 'Поиск страны или тарифа...',
+    'per-day': 'день', 'rates-count': 'тарифов',
+    'processing': '⏳ Обрабатываю...',
+    'open-via-bot': 'Откройте через кнопку 🛍 в боте @esimruu_bot',
+  },
+  en: {
+    'hero-badge': '200+ countries',
+    'hero-t1': 'Freedom to be',
+    'hero-em': 'online everywhere',
+    'hero-sub': 'eSIM for travelers — activation in 1 minute',
+    'stat-countries': 'Countries', 'stat-speed': 'Speed', 'stat-support': 'Support',
+    'section-rates': 'Plans',
+    'nav-catalog': 'Catalog', 'nav-orders': 'Orders', 'nav-support': 'Support',
+    'orders-tag': 'History', 'orders-t1': 'My', 'orders-em': 'orders',
+    'support-tag': 'Help', 'support-t1': 'Support', 'support-em': '24/7',
+    'support-card-title': 'Support Service',
+    'support-text': 'We are available around the clock. We will answer all questions about activation and use of eSIM.',
+    'support-btn': 'Contact Support',
+    'activate-title': 'How to activate',
+    'activate-text-iphone': 'Settings → Cellular → Add Plan → QR',
+    'activate-text-android': 'Settings → Network → SIM → Add eSIM → QR',
+    'close-btn': '✕ Close',
+    'modal-data': 'Data', 'modal-days': 'Period',
+    'modal-coverage': 'Coverage', 'modal-network': 'Network',
+    'modal-activation': 'Activation', 'modal-instant': 'Instant',
+    'modal-device': 'Device', 'modal-devices-val': 'iPhone / Android',
+    'buy-btn': 'Buy eSIM',
+    'pay-stars': 'Telegram Stars', 'pay-crypto': 'Crypto (USDT/TON)',
+    'tab-all': 'All', 'tab-global': '🌍 Global',
+    'loading': 'Loading...', 'loading-countries': 'Loading countries...',
+    'loading-regional': 'Loading regional plans...',
+    'tap-rates': 'Tap to see plans',
+    'regional-sub': 'One plan for the whole region',
+    'regional-badge': 'Regional', 'all-countries': 'all countries',
+    'no-regional': 'No regional plans',
+    'load-error': 'Loading error. Please try again.',
+    'not-found': 'Nothing found',
+    'no-orders': 'No orders yet', 'buy-first': 'Buy your first eSIM!',
+    'search-ph': 'Search country or plan...',
+    'per-day': 'day', 'rates-count': 'plans',
+    'processing': '⏳ Processing...',
+    'open-via-bot': 'Open via button 🛍 in bot @esimruu_bot',
+  },
+  zh: {
+    'hero-badge': '200+国家',
+    'hero-t1': '随时随地',
+    'hero-em': '自由上网',
+    'hero-sub': '旅行者的eSIM — 1分钟激活',
+    'stat-countries': '国家', 'stat-speed': '速度', 'stat-support': '支持',
+    'section-rates': '套餐',
+    'nav-catalog': '目录', 'nav-orders': '订单', 'nav-support': '支持',
+    'orders-tag': '历史', 'orders-t1': '我的', 'orders-em': '订单',
+    'support-tag': '帮助', 'support-t1': '客服', 'support-em': '24/7',
+    'support-card-title': '客服中心',
+    'support-text': '我们全天候在线，随时解答eSIM激活和使用的所有问题。',
+    'support-btn': '联系客服',
+    'activate-title': '如何激活',
+    'activate-text-iphone': '设置 → 蜂窝网络 → 添加套餐 → 二维码',
+    'activate-text-android': '设置 → 网络 → SIM → 添加eSIM → 二维码',
+    'close-btn': '✕ 关闭',
+    'modal-data': '流量', 'modal-days': '有效期',
+    'modal-coverage': '覆盖', 'modal-network': '网络',
+    'modal-activation': '激活', 'modal-instant': '即时',
+    'modal-device': '设备', 'modal-devices-val': 'iPhone / Android',
+    'buy-btn': '购买eSIM',
+    'pay-stars': 'Telegram Stars', 'pay-crypto': '加密货币',
+    'tab-all': '全部', 'tab-global': '🌍 全球',
+    'loading': '加载中...', 'loading-countries': '加载国家...',
+    'loading-regional': '加载区域套餐...',
+    'tap-rates': '点击查看套餐',
+    'regional-sub': '整个地区一个套餐',
+    'regional-badge': '区域', 'all-countries': '所有国家',
+    'no-regional': '暂无区域套餐',
+    'load-error': '加载错误，请重试。',
+    'not-found': '未找到结果',
+    'no-orders': '暂无订单', 'buy-first': '购买您的第一个eSIM！',
+    'search-ph': '搜索国家或套餐...',
+    'per-day': '天', 'rates-count': '套餐',
+    'processing': '⏳ 处理中...',
+    'open-via-bot': '通过机器人 @esimruu_bot 中的按钮 🛍 打开',
+  },
+  es: {
+    'hero-badge': '200+ países',
+    'hero-t1': 'Libertad de estar',
+    'hero-em': 'conectado',
+    'hero-sub': 'eSIM para viajeros — activación en 1 minuto',
+    'stat-countries': 'Países', 'stat-speed': 'Velocidad', 'stat-support': 'Soporte',
+    'section-rates': 'Planes',
+    'nav-catalog': 'Catálogo', 'nav-orders': 'Pedidos', 'nav-support': 'Soporte',
+    'orders-tag': 'Historial', 'orders-t1': 'Mis', 'orders-em': 'pedidos',
+    'support-tag': 'Ayuda', 'support-t1': 'Soporte', 'support-em': '24/7',
+    'support-card-title': 'Servicio de soporte',
+    'support-text': 'Estamos disponibles las 24 horas. Responderemos todas las preguntas sobre activación y uso de eSIM.',
+    'support-btn': 'Contactar soporte',
+    'activate-title': 'Cómo activar',
+    'activate-text-iphone': 'Ajustes → Datos móviles → Añadir plan → QR',
+    'activate-text-android': 'Ajustes → Red → SIM → Añadir eSIM → QR',
+    'close-btn': '✕ Cerrar',
+    'modal-data': 'Datos', 'modal-days': 'Período',
+    'modal-coverage': 'Cobertura', 'modal-network': 'Red',
+    'modal-activation': 'Activación', 'modal-instant': 'Instantánea',
+    'modal-device': 'Dispositivo', 'modal-devices-val': 'iPhone / Android',
+    'buy-btn': 'Comprar eSIM',
+    'pay-stars': 'Telegram Stars', 'pay-crypto': 'Cripto (USDT/TON)',
+    'tab-all': 'Todos', 'tab-global': '🌍 Global',
+    'loading': 'Cargando...', 'loading-countries': 'Cargando países...',
+    'loading-regional': 'Cargando planes regionales...',
+    'tap-rates': 'Toca para ver planes',
+    'regional-sub': 'Un plan para toda la región',
+    'regional-badge': 'Regional', 'all-countries': 'todos los países',
+    'no-regional': 'No hay planes regionales',
+    'load-error': 'Error de carga. Inténtalo de nuevo.',
+    'not-found': 'No encontrado',
+    'no-orders': 'Sin pedidos aún', 'buy-first': '¡Compra tu primer eSIM!',
+    'search-ph': 'Buscar país o plan...',
+    'per-day': 'día', 'rates-count': 'planes',
+    'processing': '⏳ Procesando...',
+    'open-via-bot': 'Abre mediante el botón 🛍 en el bot @esimruu_bot',
+  },
+  de: {
+    'hero-badge': '200+ Länder',
+    'hero-t1': 'Freiheit',
+    'hero-em': 'überall online',
+    'hero-sub': 'eSIM für Reisende — Aktivierung in 1 Minute',
+    'stat-countries': 'Länder', 'stat-speed': 'Geschwindigkeit', 'stat-support': 'Support',
+    'section-rates': 'Tarife',
+    'nav-catalog': 'Katalog', 'nav-orders': 'Bestellungen', 'nav-support': 'Support',
+    'orders-tag': 'Verlauf', 'orders-t1': 'Meine', 'orders-em': 'Bestellungen',
+    'support-tag': 'Hilfe', 'support-t1': 'Support', 'support-em': '24/7',
+    'support-card-title': 'Kundendienst',
+    'support-text': 'Wir sind rund um die Uhr erreichbar. Wir beantworten alle Fragen zur Aktivierung und Nutzung der eSIM.',
+    'support-btn': 'Support kontaktieren',
+    'activate-title': 'Wie aktivieren',
+    'activate-text-iphone': 'Einstellungen → Mobilfunk → Plan hinzufügen → QR',
+    'activate-text-android': 'Einstellungen → Netzwerk → SIM → eSIM hinzufügen → QR',
+    'close-btn': '✕ Schließen',
+    'modal-data': 'Daten', 'modal-days': 'Zeitraum',
+    'modal-coverage': 'Abdeckung', 'modal-network': 'Netzwerk',
+    'modal-activation': 'Aktivierung', 'modal-instant': 'Sofortig',
+    'modal-device': 'Gerät', 'modal-devices-val': 'iPhone / Android',
+    'buy-btn': 'eSIM kaufen',
+    'pay-stars': 'Telegram Stars', 'pay-crypto': 'Krypto (USDT/TON)',
+    'tab-all': 'Alle', 'tab-global': '🌍 Global',
+    'loading': 'Lädt...', 'loading-countries': 'Länder laden...',
+    'loading-regional': 'Regionale Tarife laden...',
+    'tap-rates': 'Tippen für Tarife',
+    'regional-sub': 'Ein Tarif für die gesamte Region',
+    'regional-badge': 'Regional', 'all-countries': 'alle Länder',
+    'no-regional': 'Keine regionalen Tarife',
+    'load-error': 'Ladefehler. Bitte erneut versuchen.',
+    'not-found': 'Nichts gefunden',
+    'no-orders': 'Noch keine Bestellungen', 'buy-first': 'Kaufe deine erste eSIM!',
+    'search-ph': 'Land oder Tarif suchen...',
+    'per-day': 'Tag', 'rates-count': 'Tarife',
+    'processing': '⏳ Verarbeite...',
+    'open-via-bot': 'Öffne über die Schaltfläche 🛍 im Bot @esimruu_bot',
+  }
+};
 
-// Telegram WebApp init
-const tg = window.Telegram && window.Telegram.WebApp;
-if (tg) {
-  tg.ready();
-  tg.expand();
-  tg.setHeaderColor('#0a0a0a');
-  tg.setBackgroundColor('#0a0a0a');
+const LANG_FLAGS = { ru:'🇷🇺', en:'🇬🇧', zh:'🇨🇳', es:'🇪🇸', de:'🇩🇪' };
+
+let currentLang = (function() {
+  const saved = localStorage.getItem('linkora_miniapp_lang');
+  if (saved && I18N[saved]) return saved;
+  const tgLang = window.Telegram?.WebApp?.initDataUnsafe?.user?.language_code || '';
+  const map = { ru:'ru', en:'en', zh:'zh', es:'es', de:'de' };
+  return map[tgLang.slice(0,2)] || 'ru';
+})();
+
+function t(key) { return (I18N[currentLang] || I18N.ru)[key] || key; }
+
+function applyLang() {
+  // Static elements
+  const els = {
+    't-hero-badge': 'hero-badge', 't-hero-t1': 'hero-t1', 't-hero-em': 'hero-em',
+    't-hero-sub': 'hero-sub', 't-stat-countries': 'stat-countries',
+    't-stat-speed': 'stat-speed', 't-stat-support': 'stat-support',
+    't-section-rates': 'section-rates',
+    't-nav-catalog': 'nav-catalog', 't-nav-orders': 'nav-orders', 't-nav-support': 'nav-support',
+    't-orders-tag': 'orders-tag',
+    't-support-tag': 'support-tag', 't-support-card-title': 'support-card-title',
+    't-support-text': 'support-text', 't-support-btn': 'support-btn',
+    't-activate-title': 'activate-title',
+    't-close-btn': 'close-btn', 't-modal-data': 'modal-data', 't-modal-days': 'modal-days',
+    't-modal-coverage': 'modal-coverage', 't-modal-network': 'modal-network',
+    't-modal-activation': 'modal-activation', 't-modal-instant': 'modal-instant',
+    't-modal-device': 'modal-device', 't-modal-devices-val': 'modal-devices-val',
+    't-buy-btn': 'buy-btn', 't-pay-stars': 'pay-stars', 't-pay-crypto': 'pay-crypto',
+  };
+  Object.entries(els).forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = t(key);
+  });
+
+  // Orders title
+  const ot = document.getElementById('t-orders-title');
+  if (ot) ot.innerHTML = `${t('orders-t1')} <em style="font-style:italic;color:var(--glow);">${t('orders-em')}</em>`;
+
+  // Support title
+  const st = document.getElementById('t-support-title');
+  if (st) st.innerHTML = `${t('support-t1')} <em style="font-style:italic;color:var(--glow);">${t('support-em')}</em>`;
+
+  // Activate text
+  const at = document.getElementById('t-activate-text');
+  if (at) at.innerHTML = `<strong style="color:var(--mist);">iPhone:</strong> ${t('activate-text-iphone')}<br><br><strong style="color:var(--mist);">Android:</strong> ${t('activate-text-android')}`;
+
+  // Search placeholder
+  const si = document.getElementById('searchInput');
+  if (si) si.placeholder = t('search-ph');
+
+  // Tabs
+  renderTabs();
+
+  // Lang button
+  const lb = document.getElementById('langBtn');
+  if (lb) lb.textContent = `${LANG_FLAGS[currentLang]} ${currentLang.toUpperCase()} ▾`;
+
+  // Active lang item
+  document.querySelectorAll('.lang-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.lang === currentLang);
+  });
+
+  // Re-render packages with new lang
+  renderPackages();
 }
 
-// API URL — после деплоя на Vercel замени на свой URL
-const API_URL = "https://linkora-esim-api-jakj.vercel.app";
+function setLang(lang) {
+  if (!I18N[lang]) return;
+  currentLang = lang;
+  localStorage.setItem('linkora_miniapp_lang', lang);
+  document.getElementById('langMenu').classList.remove('open');
+  applyLang();
+}
 
-let PACKAGES = [];
-let CONTINENTS = [];
-let loadingPackages = false;
+function toggleLangMenu() {
+  document.getElementById('langMenu').classList.toggle('open');
+}
+
+document.addEventListener('click', e => {
+  const sw = document.getElementById('langSwitcher');
+  if (sw && !sw.contains(e.target)) {
+    document.getElementById('langMenu').classList.remove('open');
+  }
+});
+
+// ── APP ──────────────────────────────────────────────────
+const tg = window.Telegram && window.Telegram.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
+
+const API_URL = "https://linkora-esim-api-jakj.vercel.app";
+let PACKAGES = [], CONTINENTS = [], loadingPackages = false;
+let activeContinent = "all", searchQuery = "", selectedPkg = null, currentPage = "catalog";
+let currentRequest = null;
+
+function renderTabs() {
+  const CONT_FLAGS = { "Asia":"🌏","Europe":"🇪🇺","North America":"🌎","South America":"🌎","Africa":"🌍","Oceania":"🌏","Middle East":"🕌" };
+  const tabs = document.getElementById("tabs");
+  const extra = CONTINENTS.map(c =>
+    `<div class="tab" onclick="filterContinent(this,'${c.id}')">${CONT_FLAGS[c.name]||'🌐'} ${c.name}</div>`
+  ).join('');
+  tabs.innerHTML = `
+    <div class="tab ${activeContinent==='all'?'active':''}" onclick="filterTab(this,'all')">${t('tab-all')}</div>
+    <div class="tab ${activeContinent==='global'?'active':''}" onclick="filterTab(this,'global')">${t('tab-global')}</div>
+    ${extra}
+  `;
+}
 
 async function loadGlobalPackages() {
   if (loadingPackages) return;
@@ -604,12 +719,8 @@ async function loadGlobalPackages() {
   try {
     const res = await fetch(`${API_URL}/api/packages?type=global`);
     const data = await res.json();
-    if (data.ok) {
-      PACKAGES = data.data.map(p => ({ ...p, continent: "global", region: p.country }));
-    }
-  } catch(e) {
-    console.error("Ошибка загрузки пакетов:", e);
-  }
+    if (data.ok) PACKAGES = data.data.map(p => ({ ...p, continent: "global", region: p.country }));
+  } catch(e) {}
   loadingPackages = false;
   renderPackages();
 }
@@ -618,126 +729,97 @@ async function loadContinents() {
   try {
     const res = await fetch(`${API_URL}/api/packages?type=continents`);
     const data = await res.json();
-    if (data.ok) {
-      CONTINENTS = data.data;
-      renderContinentTabs();
-    }
-  } catch(e) {
-    console.error("Ошибка загрузки континентов:", e);
-  }
+    if (data.ok) { CONTINENTS = data.data; renderTabs(); }
+  } catch(e) {}
 }
 
-async function loadCountryPackages(countryId, countryName, countryCode) {
+async function loadCountryPackages(id, name, code) {
   showLoading();
   try {
-    const res = await fetch(`${API_URL}/api/packages?type=country&id=${countryId}&name=${encodeURIComponent(countryName)}&code=${countryCode}`);
+    const res = await fetch(`${API_URL}/api/packages?type=country&id=${id}&name=${encodeURIComponent(name)}&code=${code}`);
     const data = await res.json();
-    if (data.ok) {
-      return data.data.map(p => ({ ...p, region: countryName }));
-    }
-  } catch(e) {
-    console.error("Ошибка загрузки пакетов страны:", e);
-  } finally {
-    hideLoading();
-  }
+    if (data.ok) return data.data.map(p => ({ ...p, region: name }));
+  } catch(e) {} finally { }
   return [];
 }
 
 function showLoading() {
-  document.getElementById("packages").innerHTML = '<div class="empty"><div class="empty-icon" style="animation:pulse 1.5s infinite;">🌿</div><p>Загружаю...</p></div>';
+  document.getElementById("packages").innerHTML = `<div class="empty"><div class="empty-icon" style="animation:pulse 1.5s infinite;">🌿</div><p>${t('loading')}</p></div>`;
 }
-function hideLoading() {}
-
-function renderContinentTabs() {
-  const CONT_FLAGS = { "Asia":"🌏","Europe":"🇪🇺","North America":"🌎","South America":"🌎","Africa":"🌍","Oceania":"🌏","Middle East":"🕌" };
-  const tabs = document.getElementById("tabs");
-  const extra = CONTINENTS.map(c =>
-    `<div class="tab" onclick="filterContinent(this,'${c.id}')">${CONT_FLAGS[c.name]||'🌐'} ${c.name}</div>`
-  ).join('');
-  tabs.innerHTML = `
-    <div class="tab active" onclick="filterTab(this,'all')">Все</div>
-    <div class="tab" onclick="filterTab(this,'global')">🌍 Глобальные</div>
-    ${extra}
-  `;
-}
-
-let currentRequest = null;
 
 async function filterContinent(el, continentId) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
-  document.getElementById("packages").innerHTML = '<div class="empty"><div style="font-size:32px;margin-bottom:10px;">⏳</div><div>Загружаю страны...</div></div>';
+  document.getElementById("packages").innerHTML = `<div class="empty"><div style="font-size:32px;margin-bottom:10px;">⏳</div><div>${t('loading-countries')}</div></div>`;
 
-  // Отменяем предыдущий запрос
   if (currentRequest) currentRequest.cancelled = true;
   const thisRequest = { cancelled: false };
   currentRequest = thisRequest;
 
   try {
     const res = await fetch(`${API_URL}/api/packages?type=countries&id=${continentId}`);
-    if (thisRequest.cancelled) return; // Если переключились — игнорируем
+    if (thisRequest.cancelled) return;
     const data = await res.json();
     if (thisRequest.cancelled) return;
     const countries = data.data || [];
 
     if (!countries.length) {
-      document.getElementById("packages").innerHTML = '<div class="empty"><div>Нет стран для этого региона</div></div>';
+      document.getElementById("packages").innerHTML = `<div class="empty"><div>${t('not-found')}</div></div>`;
       return;
     }
 
-    // Кнопка региональных тарифов вверху
-  const continentObj = CONTINENTS.find(c => String(c.id) === String(continentId));
-  const contName = continentObj ? (continentObj.name_ru || continentObj.name) : "Регион";
-  const contFlag = continentObj ? (continentObj.flag || "🌐") : "🌐";
+    const continentObj = CONTINENTS.find(c => String(c.id) === String(continentId));
+    const contName = continentObj ? (continentObj.name_ru || continentObj.name) : "";
+    const contFlag = continentObj ? (continentObj.flag || "🌐") : "🌐";
 
-  const regionalBtn = `<div class="pkg-card featured" onclick="loadRegionalPackages('${continentId}','${contName}','${contFlag}')">
-    <div class="pkg-left">
-      <div class="pkg-flag">${contFlag}</div>
-      <div>
-        <div class="pkg-featured-badge">Региональные</div>
-        <div class="pkg-name">${contName} — все страны</div>
-        <div class="pkg-meta">Один тариф для всего региона</div>
-      </div>
-    </div>
-    <div class="pkg-right" style="color:var(--glow);font-size:20px;font-family:var(--serif);">›</div>
-  </div>`;
-
-  const countriesHtml = countries.map(c => {
-    const imgUrl = c.image_url || c.flag_url || "";
-    const code = imgUrl.split("/").pop().replace(".png","").replace(".svg","").toUpperCase();
-    const flag = code.length===2 ? [...code].map(ch=>String.fromCodePoint(0x1F1E6+ch.charCodeAt(0)-65)).join("") : "🌐";
-    const safeName = c.name.replace(/'/g, " ");
-    return `<div class="pkg-card" onclick="selectCountry('${c.id}','${safeName}','${code}')">
+    const regionalBtn = `<div class="pkg-card featured" onclick="loadRegionalPackages('${continentId}','${contName}','${contFlag}')">
       <div class="pkg-left">
-        <div class="pkg-flag">${flag}</div>
-        <div><div class="pkg-name">${c.name}</div><div class="pkg-meta">Нажми для просмотра тарифов</div></div>
+        <div class="pkg-flag">${contFlag}</div>
+        <div>
+          <div class="pkg-featured-badge">${t('regional-badge')}</div>
+          <div class="pkg-name">${contName} — ${t('all-countries')}</div>
+          <div class="pkg-meta">${t('regional-sub')}</div>
+        </div>
       </div>
-      <div class="pkg-right" style="color:#4ade80;font-size:20px;">›</div>
+      <div class="pkg-right" style="color:var(--glow);font-size:20px;font-family:var(--serif);">›</div>
     </div>`;
-  }).join('');
 
-  document.getElementById("packages").innerHTML = regionalBtn + countriesHtml;
+    const countriesHtml = countries.map(c => {
+      const imgUrl = c.image_url || c.flag_url || "";
+      const code = imgUrl.split("/").pop().replace(".png","").replace(".svg","").toUpperCase();
+      const flag = code.length===2 ? [...code].map(ch=>String.fromCodePoint(0x1F1E6+ch.charCodeAt(0)-65)).join("") : "🌐";
+      const safeName = c.name.replace(/'/g, " ");
+      return `<div class="pkg-card" onclick="selectCountry('${c.id}','${safeName}','${code}')">
+        <div class="pkg-left">
+          <div class="pkg-flag">${flag}</div>
+          <div><div class="pkg-name">${c.name}</div><div class="pkg-meta">${t('tap-rates')}</div></div>
+        </div>
+        <div class="pkg-right" style="color:#4ade80;font-size:20px;">›</div>
+      </div>`;
+    }).join('');
+
+    document.getElementById("packages").innerHTML = regionalBtn + countriesHtml;
   } catch(e) {
     if (!thisRequest.cancelled) {
-      document.getElementById("packages").innerHTML = '<div class="empty"><div>Ошибка загрузки. Попробуй ещё раз.</div></div>';
+      document.getElementById("packages").innerHTML = `<div class="empty"><div>${t('load-error')}</div></div>`;
     }
   }
 }
 
 async function loadRegionalPackages(continentId, continentName, continentFlag) {
-  document.getElementById("packages").innerHTML = '<div class="empty"><div style="font-size:32px;margin-bottom:10px;">⏳</div><div>Загружаю региональные тарифы...</div></div>';
+  document.getElementById("packages").innerHTML = `<div class="empty"><div style="font-size:32px;margin-bottom:10px;">⏳</div><div>${t('loading-regional')}</div></div>`;
   try {
     const res = await fetch(`${API_URL}/api/packages?type=regional&id=${continentId}`);
     const data = await res.json();
     if (!data.ok || !data.data.length) {
-      document.getElementById("packages").innerHTML = '<div class="empty"><div>Нет региональных тарифов</div></div>';
+      document.getElementById("packages").innerHTML = `<div class="empty"><div>${t('no-regional')}</div></div>`;
       return;
     }
     PACKAGES = data.data.map(p => ({ ...p, region: continentName, continent: "regional" }));
     activeContinent = "regional";
     renderPackages();
   } catch(e) {
-    document.getElementById("packages").innerHTML = '<div class="empty"><div>Ошибка загрузки</div></div>';
+    document.getElementById("packages").innerHTML = `<div class="empty"><div>${t('load-error')}</div></div>`;
   }
 }
 
@@ -748,23 +830,18 @@ async function selectCountry(id, name, code) {
   renderPackages();
 }
 
-let activeContinent = "all";
-let searchQuery = "";
-let selectedPkg = null;
-let currentPage = "catalog";
-
 function renderPackages() {
   const filtered = PACKAGES.filter(p => {
-    const matchC = activeContinent === "all" || activeContinent === "country" || p.continent === activeContinent;
+    const matchC = activeContinent === "all" || activeContinent === "country" || activeContinent === "regional" || p.continent === activeContinent;
     const q = searchQuery.toLowerCase();
     const matchS = !q || p.name.toLowerCase().includes(q) || (p.region||"").toLowerCase().includes(q);
     return matchC && matchS;
   });
 
-  document.getElementById("pkgCount").textContent = filtered.length + " тарифов";
+  document.getElementById("pkgCount").textContent = filtered.length + " " + t('rates-count');
 
   if (!filtered.length) {
-    document.getElementById("packages").innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><div>Ничего не найдено</div></div>';
+    document.getElementById("packages").innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><div>${t('not-found')}</div></div>`;
     return;
   }
 
@@ -773,14 +850,14 @@ function renderPackages() {
       <div class="pkg-left">
         <div class="pkg-flag">${p.flag}</div>
         <div>
-          ${p.featured ? '<div class="pkg-featured-badge">Популярный</div>' : ''}
+          ${p.featured ? `<div class="pkg-featured-badge">${t('regional-badge')}</div>` : ''}
           <div class="pkg-name">${p.name}</div>
-          <div class="pkg-meta">${p.unlimited ? '∞ Безлимит' : p.gb + ' GB'} · ${p.days} дн · ${p.region||p.country}</div>
+          <div class="pkg-meta">${p.unlimited ? '∞' : p.gb + ' GB'} · ${p.days} ${t('per-day')} · ${p.region||p.country}</div>
         </div>
       </div>
       <div class="pkg-right">
         <div class="pkg-price">$${p.price.toFixed(2)}</div>
-        <div class="pkg-per">$${(p.price/p.days).toFixed(2)}/день</div>
+        <div class="pkg-per">$${(p.price/p.days).toFixed(2)}/${t('per-day')}</div>
       </div>
     </div>
   `).join('');
@@ -791,12 +868,8 @@ async function filterTab(el, val) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
   activeContinent = val;
-
-  if (val === 'global' || val === 'all') {
-    await loadGlobalPackages();
-  } else {
-    renderPackages();
-  }
+  if (val === 'global' || val === 'all') await loadGlobalPackages();
+  else renderPackages();
 }
 
 function filterPackages() {
@@ -810,11 +883,11 @@ function openModal(id) {
   document.getElementById("mFlag").textContent = selectedPkg.flag;
   document.getElementById("mName").textContent = selectedPkg.name;
   document.getElementById("mRegion").textContent = selectedPkg.region;
-  document.getElementById("mData").textContent = selectedPkg.unlimited ? "∞ Безлимит" : selectedPkg.gb + " GB";
-  document.getElementById("mDays").textContent = selectedPkg.days + " дней";
+  document.getElementById("mData").textContent = selectedPkg.unlimited ? "∞ " + t('regional-badge') : selectedPkg.gb + " GB";
+  document.getElementById("mDays").textContent = selectedPkg.days + " " + t('modal-days').toLowerCase();
   document.getElementById("mCoverage").textContent = selectedPkg.region;
   document.getElementById("mPrice").textContent = "$" + selectedPkg.price.toFixed(2);
-  document.getElementById("mPerDay").textContent = "$" + (selectedPkg.price / selectedPkg.days).toFixed(2) + " в день";
+  document.getElementById("mPerDay").textContent = "$" + (selectedPkg.price / selectedPkg.days).toFixed(2) + " / " + t('per-day');
   document.getElementById("modal").classList.add("open");
   if (tg) tg.BackButton.show();
 }
@@ -831,85 +904,20 @@ function handleOverlayClick(e) {
 }
 
 function handleBuy() {
-  if (!selectedPkg) return;
-
-  // Показываем кнопки выбора оплаты прямо в модалке
   document.getElementById("buySection").style.display = "none";
   document.getElementById("paySection").style.display = "block";
-}
-
-function doPayment(method) {
-  if (!selectedPkg) return;
-  var tgApp = window.Telegram && window.Telegram.WebApp;
-  var userId = tgApp && tgApp.initDataUnsafe && tgApp.initDataUnsafe.user
-    ? tgApp.initDataUnsafe.user.id : null;
-
-  if (!userId) {
-    alert("Не удалось определить пользователя. Откройте через бота.");
-    return;
-  }
-
-  var pkgData = {
-    id: String(selectedPkg.id),
-    name: selectedPkg.name,
-    gb: selectedPkg.unlimited ? -1 : selectedPkg.gb,
-    days: selectedPkg.days,
-    price: selectedPkg.price,
-    unlimited: selectedPkg.unlimited || false,
-    method: method
-  };
-
-  // Показываем что обрабатываем
-  document.getElementById("paySection").innerHTML = '<p style="text-align:center;color:#4ade80;padding:20px;">⏳ Обрабатываю...</p>';
-
-  fetch(API_URL + "/api/pending", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ telegram_id: userId, pkg: pkgData })
-  }).then(function() {
-    if (tgApp) tgApp.close();
-  }).catch(function() {
-    // Даже если ошибка — закрываем
-    if (tgApp) tgApp.close();
-  });
-}
-
-function openPaymentScreen(pkg) {
-  document.getElementById("payFlag").textContent = pkg.flag || "";
-  document.getElementById("payName").textContent = pkg.name;
-  document.getElementById("payMeta").textContent = (pkg.unlimited ? "∞ Безлимит" : pkg.gb + " GB") + " · " + pkg.days + " дней";
-  document.getElementById("payPrice").textContent = "$" + pkg.price.toFixed(2);
-  document.getElementById("payOverlay").classList.add("open");
-  document.getElementById("payModal").style.display = "block";
-  if (tg && tg.BackButton) tg.BackButton.show();
-}
-
-function closePaymentScreen() {
-  document.getElementById("payOverlay").classList.remove("open");
-  document.getElementById("payModal").style.display = "none";
-  if (tg && tg.BackButton) tg.BackButton.hide();
 }
 
 async function selectPayment(method) {
   if (!selectedPkg) return;
   const pkgData = {
-    action: "pay",
-    id: String(selectedPkg.id),
-    name: selectedPkg.name,
-    gb: selectedPkg.unlimited ? -1 : selectedPkg.gb,
-    days: selectedPkg.days,
-    price: selectedPkg.price,
-    unlimited: selectedPkg.unlimited || false,
-    method: method
+    action: "pay", id: String(selectedPkg.id), name: selectedPkg.name,
+    gb: selectedPkg.unlimited ? -1 : selectedPkg.gb, days: selectedPkg.days,
+    price: selectedPkg.price, unlimited: selectedPkg.unlimited || false, method
   };
-  if (tg && tg.sendData) {
-    tg.sendData(JSON.stringify(pkgData));
-  } else {
-    alert("Откройте через кнопку 🛍 в боте @esimruu_bot");
-  }
+  if (tg && tg.sendData) tg.sendData(JSON.stringify(pkgData));
+  else alert(t('open-via-bot'));
 }
-
-
 
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -917,6 +925,13 @@ function showPage(name) {
   document.getElementById('page-' + name).classList.add('active');
   document.getElementById('nav-' + name).classList.add('active');
   currentPage = name;
+
+  if (name === 'orders') renderOrders();
+}
+
+function renderOrders() {
+  const list = document.getElementById('orders-list');
+  list.innerHTML = `<div class="empty"><div class="empty-icon">🌿</div><p>${t('no-orders')}</p><p style="font-size:12px;margin-top:6px;opacity:0.6;">${t('buy-first')}</p></div>`;
 }
 
 function openSupport() {
@@ -925,87 +940,57 @@ function openSupport() {
 
 if (tg) {
   tg.BackButton.onClick(function() {
-    if (document.getElementById("payModal").style.display === "block") {
-      closePaymentScreen();
-    } else if (document.getElementById("modal").classList.contains("open")) {
-      closeModal();
-    }
+    if (document.getElementById("modal").classList.contains("open")) closeModal();
   });
 }
 
-loadGlobalPackages();
-loadContinents();
+document.getElementById("payStars").onclick = () => selectPayment("stars");
+document.getElementById("payCrypto").onclick = () => selectPayment("crypto");
 
-document.getElementById("payStars").onclick = function() { selectPayment("stars"); };
-document.getElementById("payCrypto").onclick = function() { selectPayment("crypto"); };
-
-
-
-/* ── PARTICLES ── */
+// ── PARTICLES ──────────────────────────────────────────
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
-
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
+function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
-
 class Particle {
   constructor() { this.reset(true); }
-  reset(init = false) {
-    this.x = Math.random() * canvas.width;
-    this.y = init ? Math.random() * canvas.height : canvas.height + 10;
-    this.size = Math.random() * 2.5 + 0.5;
-    this.speed = Math.random() * 0.3 + 0.08;
-    this.vx = (Math.random() - 0.5) * 0.3;
-    this.opacity = Math.random() * 0.35 + 0.05;
-    this.color = Math.random() > 0.5 ? '#52b788' : '#74c69d';
-    this.isLeaf = Math.random() > 0.6;
-    this.rot = Math.random() * Math.PI * 2;
-    this.rotSpeed = (Math.random() - 0.5) * 0.015;
+  reset(init=false) {
+    this.x=Math.random()*canvas.width; this.y=init?Math.random()*canvas.height:canvas.height+10;
+    this.size=Math.random()*2.5+0.5; this.speed=Math.random()*0.3+0.08;
+    this.vx=(Math.random()-0.5)*0.3; this.opacity=Math.random()*0.35+0.05;
+    this.color=Math.random()>0.5?'#52b788':'#74c69d';
+    this.isLeaf=Math.random()>0.6; this.rot=Math.random()*Math.PI*2;
+    this.rotSpeed=(Math.random()-0.5)*0.015;
   }
   update() {
-    this.y -= this.speed;
-    this.x += this.vx + Math.sin(this.y * 0.008) * 0.2;
-    this.rot += this.rotSpeed;
-    if (this.y < -10) this.reset();
+    this.y-=this.speed; this.x+=this.vx+Math.sin(this.y*0.008)*0.2;
+    this.rot+=this.rotSpeed; if(this.y<-10)this.reset();
   }
   draw() {
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    ctx.rotate(this.rot);
-    ctx.globalAlpha = this.opacity;
-    ctx.fillStyle = this.color;
-    if (this.isLeaf) {
-      ctx.beginPath();
-      ctx.ellipse(0, 0, this.size * 2.5, this.size, 0, 0, Math.PI * 2);
-      ctx.fill();
-    } else {
-      ctx.beginPath();
-      ctx.arc(0, 0, this.size * 0.5, 0, Math.PI * 2);
-      ctx.fill();
-    }
+    ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.rot);
+    ctx.globalAlpha=this.opacity; ctx.fillStyle=this.color;
+    if(this.isLeaf){ctx.beginPath();ctx.ellipse(0,0,this.size*2.5,this.size,0,0,Math.PI*2);ctx.fill();}
+    else{ctx.beginPath();ctx.arc(0,0,this.size*0.5,0,Math.PI*2);ctx.fill();}
     ctx.restore();
   }
 }
-
-for (let i = 0; i < 40; i++) particles.push(new Particle());
+for(let i=0;i<40;i++) particles.push(new Particle());
 function animateParticles() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  particles.forEach(p => { p.update(); p.draw(); });
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{p.update();p.draw();});
   requestAnimationFrame(animateParticles);
 }
 animateParticles();
 
-/* ── TG colors ── */
-const tgApp = window.Telegram && window.Telegram.WebApp;
-if (tgApp) {
-  try { tgApp.setHeaderColor('#050d07'); } catch(e){}
-  tgApp.setBackgroundColor && tgApp.setBackgroundColor('#050d07');
-}
+// Init
+applyLang();
+loadGlobalPackages();
+loadContinents();
+renderOrders();
+
+if(tg){ try{tg.setHeaderColor('#050d07');}catch(e){} tg.setBackgroundColor&&tg.setBackgroundColor('#050d07'); }
 </script>
 </body>
 </html>
