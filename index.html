@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Linkora eSIM</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://linkora-esim-api-jakj.vercel.app" crossorigin>
+<link rel="dns-prefetch" href="https://linkora-esim-api-jakj.vercel.app">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -207,7 +209,7 @@ body {
 .empty-icon { font-size: 36px; margin-bottom: 14px; opacity: 0.5; }
 .empty p { font-size: 14px; font-weight: 300; }
 
-.bottom-nav { flex-shrink: 0; background: rgba(5,13,7,0.95); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; padding: 8px 0 2px; }
+.bottom-nav { flex-shrink: 0; background: rgba(5,13,7,0.95); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; padding: 8px 0 calc(10px + env(safe-area-inset-bottom, 18px)); }
 .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; color: rgba(107,158,122,0.5); font-size: 10px; letter-spacing: 0.5px; cursor: pointer; padding: 4px 0; transition: color 0.3s; font-family: var(--sans); text-transform: uppercase; }
 .nav-item.active { color: var(--glow); }
 .nav-item svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
@@ -461,7 +463,7 @@ const I18N = {
     'not-found': 'Ничего не найдено',
     'no-orders': 'Заказов пока нет', 'buy-first': 'Купи первую eSIM!',
     'search-ph': 'Поиск страны или тарифа...',
-    'per-day': 'день', 'rates-count': 'тарифов',
+    'per-day': 'день', 'days-short': 'дн', 'rates-count': 'тарифов',
     'processing': '⏳ Обрабатываю...',
     'open-via-bot': 'Откройте через кнопку 🛍 в боте @esimruu_bot',
   },
@@ -499,7 +501,7 @@ const I18N = {
     'not-found': 'Nothing found',
     'no-orders': 'No orders yet', 'buy-first': 'Buy your first eSIM!',
     'search-ph': 'Search country or plan...',
-    'per-day': 'day', 'rates-count': 'plans',
+    'per-day': 'day', 'days-short': 'days', 'rates-count': 'plans',
     'processing': '⏳ Processing...',
     'open-via-bot': 'Open via button 🛍 in bot @esimruu_bot',
   },
@@ -537,7 +539,7 @@ const I18N = {
     'not-found': '未找到结果',
     'no-orders': '暂无订单', 'buy-first': '购买您的第一个eSIM！',
     'search-ph': '搜索国家或套餐...',
-    'per-day': '天', 'rates-count': '套餐',
+    'per-day': '天', 'days-short': '天', 'rates-count': '套餐',
     'processing': '⏳ 处理中...',
     'open-via-bot': '通过机器人 @esimruu_bot 中的按钮 🛍 打开',
   },
@@ -575,7 +577,7 @@ const I18N = {
     'not-found': 'No encontrado',
     'no-orders': 'Sin pedidos aún', 'buy-first': '¡Compra tu primer eSIM!',
     'search-ph': 'Buscar país o plan...',
-    'per-day': 'día', 'rates-count': 'planes',
+    'per-day': 'día', 'days-short': 'días', 'rates-count': 'planes',
     'processing': '⏳ Procesando...',
     'open-via-bot': 'Abre mediante el botón 🛍 en el bot @esimruu_bot',
   },
@@ -613,7 +615,7 @@ const I18N = {
     'not-found': 'Nichts gefunden',
     'no-orders': 'Noch keine Bestellungen', 'buy-first': 'Kaufe deine erste eSIM!',
     'search-ph': 'Land oder Tarif suchen...',
-    'per-day': 'Tag', 'rates-count': 'Tarife',
+    'per-day': 'Tag', 'days-short': 'Tage', 'rates-count': 'Tarife',
     'processing': '⏳ Verarbeite...',
     'open-via-bot': 'Öffne über die Schaltfläche 🛍 im Bot @esimruu_bot',
   }
@@ -735,24 +737,52 @@ function renderTabs() {
   `;
 }
 
+// --- Лёгкий кэш (ускоряет повторные открытия мини-аппа) ---
+const CACHE_TTL = 30 * 60 * 1000; // 30 минут
+function cacheGet(key) {
+  try {
+    const raw = localStorage.getItem('linkora_cache_' + key);
+    if (!raw) return null;
+    const obj = JSON.parse(raw);
+    if (Date.now() - obj.ts > CACHE_TTL) return null;
+    return obj.data;
+  } catch(e) { return null; }
+}
+function cacheSet(key, data) {
+  try { localStorage.setItem('linkora_cache_' + key, JSON.stringify({ ts: Date.now(), data })); } catch(e) {}
+}
+
 async function loadGlobalPackages() {
   if (loadingPackages) return;
   loadingPackages = true;
-  showLoading();
+
+  // 1) Мгновенно показываем из кэша, если он свежий
+  const cached = cacheGet('global');
+  if (cached && cached.length) { PACKAGES = cached; renderPackages(); }
+  else { showLoading(); }
+
+  // 2) Обновляем с сервера (в фоне, если кэш уже показан)
   try {
     const res = await fetch(`${API_URL}/api/packages?type=global`);
     const data = await res.json();
-    if (data.ok) PACKAGES = data.data.map(p => ({ ...p, continent: "global", region: p.country }));
+    if (data.ok) {
+      PACKAGES = data.data.map(p => ({ ...p, continent: "global", region: p.country }));
+      cacheSet('global', PACKAGES);
+    }
   } catch(e) {}
   loadingPackages = false;
   renderPackages();
 }
 
 async function loadContinents() {
+  // Мгновенно из кэша
+  const cached = cacheGet('continents');
+  if (cached && cached.length) { CONTINENTS = cached; renderTabs(); }
+  // Обновляем в фоне
   try {
     const res = await fetch(`${API_URL}/api/packages?type=continents`);
     const data = await res.json();
-    if (data.ok) { CONTINENTS = data.data; renderTabs(); }
+    if (data.ok) { CONTINENTS = data.data; cacheSet('continents', CONTINENTS); renderTabs(); }
   } catch(e) {}
 }
 
@@ -875,7 +905,7 @@ function renderPackages() {
         <div>
           ${p.featured ? `<div class="pkg-featured-badge">${t('regional-badge')}</div>` : ''}
           <div class="pkg-name">${p.name}</div>
-          <div class="pkg-meta">${p.unlimited ? '∞' : p.gb + ' GB'} · ${p.days} ${t('per-day')} · ${p.region||p.country}</div>
+          <div class="pkg-meta">${p.unlimited ? '∞' : p.gb + ' GB'} · ${p.days} ${t('days-short')} · ${p.region||p.country}</div>
         </div>
       </div>
       <div class="pkg-right">
