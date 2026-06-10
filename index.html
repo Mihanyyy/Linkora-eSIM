@@ -245,6 +245,7 @@ body {
 .pay-chip { font-size: 11px; padding: 4px 12px; background: rgba(82,183,136,0.08); border: 1px solid rgba(82,183,136,0.2); border-radius: 100px; color: var(--glow); letter-spacing: 0.5px; }
 .pay-btn { display: block; width: 100%; padding: 16px; border: none; border-radius: 14px; font-size: 15px; font-weight: 500; cursor: pointer; margin-bottom: 10px; font-family: var(--sans); transition: all 0.3s; }
 .pay-btn-stars { background: linear-gradient(135deg, #1a4a2e, #2d6a4f); color: var(--white); border: 1px solid rgba(82,183,136,0.3); box-shadow: 0 4px 16px rgba(82,183,136,0.2); }
+.stars-note { font-size: 11px; opacity: 0.55; text-align: center; margin: -6px 0 10px; line-height: 1.4; }
 .pay-btn-crypto { background: rgba(26,51,32,0.5); color: var(--glow); border: 1px solid rgba(82,183,136,0.2); }
 .pay-btn:active { transform: scale(0.98); }
 
@@ -419,7 +420,9 @@ body {
         </div>
         <div id="paySection" style="display:none;">
           <button class="pay-btn pay-btn-stars" id="payStars">⭐ <span id="t-pay-stars">Telegram Stars</span></button>
+          <div class="stars-note" id="starsNote"></div>
           <button class="pay-btn pay-btn-crypto" id="payCrypto">💎 <span id="t-pay-crypto">Crypto (USDT/TON)</span></button>
+          <div class="stars-note" id="cryptoNote"></div>
         </div>
       </div>
     </div>
@@ -452,6 +455,7 @@ const I18N = {
     'modal-device': 'Устройство', 'modal-devices-val': 'iPhone / Android',
     'buy-btn': 'Купить eSIM',
     'pay-stars': 'Telegram Stars', 'pay-crypto': 'Crypto (USDT/TON)',
+    'stars-note': '≈ {n} ⭐ · дороже цены в $ — комиссия Telegram', 'crypto-note': 'точная цена в $ — выгоднее',
     'tab-all': 'Все', 'tab-global': '🌍 Глобальные',
     'loading': 'Загружаю...', 'loading-countries': 'Загружаю страны...',
     'loading-regional': 'Загружаю региональные тарифы...',
@@ -490,6 +494,7 @@ const I18N = {
     'modal-device': 'Device', 'modal-devices-val': 'iPhone / Android',
     'buy-btn': 'Buy eSIM',
     'pay-stars': 'Telegram Stars', 'pay-crypto': 'Crypto (USDT/TON)',
+    'stars-note': '≈ {n} ⭐ · above $ price — Telegram fee', 'crypto-note': 'exact $ price — best value',
     'tab-all': 'All', 'tab-global': '🌍 Global',
     'loading': 'Loading...', 'loading-countries': 'Loading countries...',
     'loading-regional': 'Loading regional plans...',
@@ -528,6 +533,7 @@ const I18N = {
     'modal-device': '设备', 'modal-devices-val': 'iPhone / Android',
     'buy-btn': '购买eSIM',
     'pay-stars': 'Telegram Stars', 'pay-crypto': '加密货币',
+    'stars-note': '≈ {n} ⭐ · 高于美元价格 — Telegram手续费', 'crypto-note': '准确美元价格 — 更划算',
     'tab-all': '全部', 'tab-global': '🌍 全球',
     'loading': '加载中...', 'loading-countries': '加载国家...',
     'loading-regional': '加载区域套餐...',
@@ -566,6 +572,7 @@ const I18N = {
     'modal-device': 'Dispositivo', 'modal-devices-val': 'iPhone / Android',
     'buy-btn': 'Comprar eSIM',
     'pay-stars': 'Telegram Stars', 'pay-crypto': 'Cripto (USDT/TON)',
+    'stars-note': '≈ {n} ⭐ · más caro que en $ — comisión de Telegram', 'crypto-note': 'precio exacto en $ — más rentable',
     'tab-all': 'Todos', 'tab-global': '🌍 Global',
     'loading': 'Cargando...', 'loading-countries': 'Cargando países...',
     'loading-regional': 'Cargando planes regionales...',
@@ -604,6 +611,7 @@ const I18N = {
     'modal-device': 'Gerät', 'modal-devices-val': 'iPhone / Android',
     'buy-btn': 'eSIM kaufen',
     'pay-stars': 'Telegram Stars', 'pay-crypto': 'Krypto (USDT/TON)',
+    'stars-note': '≈ {n} ⭐ · teurer als $-Preis — Telegram-Gebühr', 'crypto-note': 'exakter $-Preis — günstiger',
     'tab-all': 'Alle', 'tab-global': '🌍 Global',
     'loading': 'Lädt...', 'loading-countries': 'Länder laden...',
     'loading-regional': 'Regionale Tarife laden...',
@@ -712,6 +720,16 @@ const tg = window.Telegram && window.Telegram.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
 const API_URL = "https://linkora-esim-api-jakj.vercel.app";
+const STARS_PER_USD = 80; // должен совпадать с payments.py в боте
+
+function updatePayNotes() {
+  if (!selectedPkg) return;
+  const stars = Math.max(50, Math.round(selectedPkg.price * STARS_PER_USD));
+  const sn = document.getElementById("starsNote");
+  const cn = document.getElementById("cryptoNote");
+  if (sn) sn.textContent = t('stars-note').replace('{n}', stars.toLocaleString());
+  if (cn) cn.textContent = t('crypto-note');
+}
 let PACKAGES = [], CONTINENTS = [], loadingPackages = false;
 let activeContinent = "all", searchQuery = "", selectedPkg = null, currentPage = "catalog";
 let currentRequest = null;
@@ -959,6 +977,7 @@ function handleOverlayClick(e) {
 function handleBuy() {
   document.getElementById("buySection").style.display = "none";
   document.getElementById("paySection").style.display = "block";
+  updatePayNotes();
 }
 
 let payInProgress = false;
