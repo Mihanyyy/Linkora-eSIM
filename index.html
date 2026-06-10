@@ -961,15 +961,47 @@ function handleBuy() {
   document.getElementById("paySection").style.display = "block";
 }
 
+let payInProgress = false;
+
 async function selectPayment(method) {
-  if (!selectedPkg) return;
+  if (!selectedPkg || payInProgress) return;
+
+  // sendData работает только из reply-кнопки клавиатуры.
+  // Наш мини-апп открывается inline-кнопкой, поэтому шлём заказ
+  // в API (/api/pending) — бот заберёт его в течение 5 секунд.
+  const userId = tg && tg.initDataUnsafe && tg.initDataUnsafe.user
+    ? tg.initDataUnsafe.user.id : null;
+  if (!userId) { alert(t('open-via-bot')); return; }
+
   const pkgData = {
     action: "pay", id: String(selectedPkg.id), name: selectedPkg.name,
     gb: selectedPkg.unlimited ? -1 : selectedPkg.gb, days: selectedPkg.days,
     price: selectedPkg.price, unlimited: selectedPkg.unlimited || false, method
   };
-  if (tg && tg.sendData) tg.sendData(JSON.stringify(pkgData));
-  else alert(t('open-via-bot'));
+
+  payInProgress = true;
+  const btnS = document.getElementById("payStars");
+  const btnC = document.getElementById("payCrypto");
+  btnS.disabled = true; btnC.disabled = true;
+  btnS.style.opacity = "0.5"; btnC.style.opacity = "0.5";
+
+  try {
+    const res = await fetch(`${API_URL}/api/pending`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ telegram_id: userId, pkg: pkgData })
+    });
+    if (!res.ok) throw new Error("API " + res.status);
+    if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred("success");
+    // Закрываем мини-апп — бот пришлёт инвойс/ссылку на оплату в чат
+    if (tg) tg.close();
+  } catch (e) {
+    alert("⚠️ Не удалось оформить заказ. Проверь интернет и попробуй ещё раз.");
+  } finally {
+    payInProgress = false;
+    btnS.disabled = false; btnC.disabled = false;
+    btnS.style.opacity = ""; btnC.style.opacity = "";
+  }
 }
 
 function showPage(name) {
