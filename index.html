@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Linkora eSIM</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="preconnect" href="https://linkora-esim-api-jakj.vercel.app" crossorigin>
@@ -264,6 +264,107 @@ body {
 .support-title { font-family: var(--serif); font-size: 22px; font-weight: 300; color: var(--mist); margin-bottom: 8px; }
 .support-text { font-size: 13px; color: var(--gray); line-height: 1.7; font-weight: 300; }
 .support-btn { display: block; width: 100%; margin-top: 16px; padding: 14px; background: linear-gradient(135deg, var(--emerald), var(--leaf)); color: var(--white); border: none; border-radius: 12px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: var(--sans); box-shadow: 0 4px 16px rgba(82,183,136,0.25); }
+
+/* ── v2: поиск, плитки регионов, списки стран, тарифы ───────────────── */
+.icon-btn { display: flex; align-items: center; justify-content: center; padding: 7px 9px; }
+.icon-btn svg, .lang-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.lang-menu { min-width: 140px; }
+.lang-item { font-size: 13px; }
+
+.hero-banner.compact { display: none; }
+
+.search-wrap { position: sticky; top: 0; z-index: 5; padding: 12px 16px 10px; background: rgba(5,13,7,0.92); backdrop-filter: blur(16px); }
+.search-box { position: relative; }
+.search-box svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; stroke: var(--leaf); fill: none; stroke-width: 1.8; stroke-linecap: round; pointer-events: none; }
+.search-input { width: 100%; background: rgba(10,26,12,0.85); border: 1px solid var(--border); border-radius: 12px; padding: 11px 40px 11px 40px; color: var(--white); font-size: 15px; outline: none; font-family: var(--sans); transition: border-color 0.2s; -webkit-appearance: none; appearance: none; }
+.search-input::placeholder { color: rgba(107,158,122,0.75); }
+.search-input:focus { border-color: rgba(82,183,136,0.5); }
+.search-clear { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; border: none; border-radius: 8px; background: none; color: var(--gray); font-size: 18px; line-height: 1; cursor: pointer; display: none; }
+.search-clear.on { display: block; }
+
+.tiles-wrap { padding: 4px 0 2px; }
+.tiles { display: flex; gap: 8px; overflow-x: auto; padding: 2px 16px 10px; scrollbar-width: none; }
+.tiles::-webkit-scrollbar { display: none; }
+.tile { flex: 0 0 auto; width: 84px; min-height: 92px; padding: 9px 6px 8px; background: rgba(10,26,12,0.8); border: 1px solid var(--border); border-radius: 14px; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; transition: all 0.25s var(--ease); font-family: var(--sans); color: var(--gray); }
+.tile:active { transform: scale(0.96); }
+.tile.active { background: rgba(45,106,79,0.3); border-color: rgba(82,183,136,0.55); color: var(--glow); }
+.tile .ricon img { opacity: 0.82; transition: opacity 0.25s; }
+.tile.active .ricon img { opacity: 1; }
+.tile-icon { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 26px; line-height: 1; }
+.tile-icon .ricon { width: 44px; height: 44px; }
+.tile-icon svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.tile-label { font-size: 11px; line-height: 1.25; text-align: center; letter-spacing: 0.2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+
+.ricon { display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
+.ricon img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+.block-head { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 20px 8px; }
+.block-title { font-size: 11px; color: var(--gray); letter-spacing: 2px; text-transform: uppercase; }
+.block-count { font-size: 12px; color: var(--leaf); }
+
+.pop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 0 16px 6px; }
+.pop-item { display: flex; align-items: center; gap: 10px; padding: 11px 12px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; cursor: pointer; min-width: 0; transition: all 0.25s var(--ease); }
+.pop-item:active { transform: scale(0.97); border-color: rgba(82,183,136,0.35); }
+.pop-item span.nm { font-size: 13.5px; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.flag { flex: 0 0 auto; width: 28px; height: 20px; border-radius: 4px; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; background: rgba(82,183,136,0.08); box-shadow: 0 0 0 1px rgba(183,228,199,0.14); font-size: 15px; line-height: 1; }
+.flag img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.flag.big { width: 64px; height: 46px; border-radius: 8px; font-size: 34px; }
+
+.rows { padding: 0 16px 20px; display: flex; flex-direction: column; gap: 6px; }
+.row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: all 0.25s var(--ease); min-width: 0; }
+.row:active { transform: scale(0.985); background: rgba(26,51,32,0.6); border-color: rgba(82,183,136,0.3); }
+.row .nm { flex: 1; min-width: 0; font-size: 14.5px; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row .sub { font-size: 12px; color: var(--gray); }
+.row .chev { flex: 0 0 auto; color: var(--leaf); font-size: 18px; font-family: var(--serif); opacity: 0.8; }
+.row.featured { border-color: rgba(82,183,136,0.32); background: linear-gradient(135deg, rgba(26,51,32,0.7) 0%, rgba(10,26,12,0.8) 100%); padding: 14px; }
+.row.featured .ricon { width: 44px; height: 44px; font-size: 28px; flex: 0 0 auto; }
+.row .col { flex: 1; min-width: 0; }
+.row .col .nm { display: block; }
+
+.crumb { display: flex; align-items: center; gap: 12px; padding: 6px 16px 4px; }
+.back-btn { flex: 0 0 auto; width: 36px; height: 36px; border-radius: 10px; background: rgba(82,183,136,0.08); border: 1px solid var(--border); color: var(--glow); font-size: 20px; font-family: var(--serif); line-height: 1; cursor: pointer; }
+.back-btn:active { background: rgba(82,183,136,0.16); }
+.crumb .ricon { width: 42px; height: 42px; font-size: 26px; flex: 0 0 auto; }
+.crumb-title { font-family: var(--serif); font-size: 24px; font-weight: 300; color: var(--mist); line-height: 1.15; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crumb-sub { font-size: 12px; color: var(--gray); }
+
+.lines { display: flex; gap: 8px; overflow-x: auto; padding: 10px 16px 2px; scrollbar-width: none; }
+.lines::-webkit-scrollbar { display: none; }
+.line-chip { flex: 0 0 auto; padding: 8px 14px; border-radius: 12px; background: rgba(10,26,12,0.8); border: 1px solid var(--border); color: var(--gray); font-size: 12.5px; font-family: var(--sans); cursor: pointer; text-align: left; line-height: 1.3; transition: all 0.25s var(--ease); }
+.line-chip b { display: block; font-weight: 500; color: var(--white); font-size: 13px; }
+.line-chip.active { background: rgba(45,106,79,0.3); border-color: rgba(82,183,136,0.55); }
+.line-chip.active b { color: var(--glow); }
+
+.cov { margin: 10px 16px 0; border: 1px solid var(--border); border-radius: 12px; background: rgba(10,26,12,0.55); }
+.cov summary { list-style: none; cursor: pointer; padding: 10px 14px; font-size: 12.5px; color: var(--glow); display: flex; justify-content: space-between; align-items: center; }
+.cov summary::-webkit-details-marker { display: none; }
+.cov summary::after { content: '›'; font-family: var(--serif); font-size: 18px; transition: transform 0.2s; }
+.cov[open] summary::after { transform: rotate(90deg); }
+.cov p { padding: 0 14px 12px; font-size: 12.5px; color: var(--gray); line-height: 1.65; font-weight: 300; }
+
+.plan { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: all 0.25s var(--ease); }
+.plan:active { transform: scale(0.985); background: rgba(26,51,32,0.6); border-color: rgba(82,183,136,0.3); }
+.plan-data { font-size: 17px; font-weight: 500; color: var(--white); line-height: 1.2; }
+.plan-data small { font-size: 11px; font-weight: 500; color: var(--glow); border: 1px solid rgba(82,183,136,0.3); border-radius: 100px; padding: 1px 7px; margin-left: 6px; vertical-align: 2px; letter-spacing: 0.5px; }
+.plan-meta { font-size: 12.5px; color: var(--gray); margin-top: 2px; }
+.plans { padding: 12px 16px 8px; display: flex; flex-direction: column; gap: 8px; }
+.ghost-btn { display: block; width: calc(100% - 32px); margin: 4px 16px 24px; padding: 12px; background: none; border: 1px dashed rgba(82,183,136,0.3); border-radius: 12px; color: var(--glow); font-size: 13px; font-family: var(--sans); cursor: pointer; }
+.ghost-btn:active { background: rgba(82,183,136,0.08); }
+.note { padding: 0 20px 6px; font-size: 12px; color: var(--gray); font-weight: 300; }
+
+.state { text-align: center; padding: 44px 24px; color: var(--gray); font-size: 14px; font-weight: 300; }
+.state .spin { width: 26px; height: 26px; margin: 0 auto 14px; border-radius: 50%; border: 2px solid rgba(82,183,136,0.18); border-top-color: var(--leaf); animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.state button { margin-top: 14px; padding: 9px 18px; border-radius: 10px; border: 1px solid var(--border); background: rgba(82,183,136,0.08); color: var(--glow); font-family: var(--sans); font-size: 13px; cursor: pointer; }
+
+.modal-flag { display: flex; justify-content: center; margin-bottom: 12px; font-size: 44px; }
+.modal-flag .ricon { width: 72px; height: 72px; font-size: 48px; }
+.detail-row.tap { cursor: pointer; }
+.m-cov { display: none; font-size: 12.5px; color: var(--gray); line-height: 1.65; font-weight: 300; padding: 0 0 12px; }
+.m-cov.open { display: block; }
+.pay-btn:disabled { opacity: 0.5; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
@@ -277,57 +378,54 @@ body {
       Linkora
     </div>
     <div class="header-right">
-      <!-- Language switcher -->
       <div class="lang-switcher" id="langSwitcher">
-        <button class="lang-btn" id="langBtn" onclick="toggleLangMenu()">🇷🇺 RU ▾</button>
+        <button class="lang-btn" id="langBtn" type="button">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18"/></svg>
+          <span id="langCode">RU</span>
+        </button>
         <div class="lang-menu" id="langMenu">
-          <div class="lang-item active" data-lang="ru" onclick="setLang('ru')">🇷🇺 RU</div>
-          <div class="lang-item" data-lang="en" onclick="setLang('en')">🇬🇧 EN</div>
-          <div class="lang-item" data-lang="zh" onclick="setLang('zh')">🇨🇳 ZH</div>
-          <div class="lang-item" data-lang="es" onclick="setLang('es')">🇪🇸 ES</div>
-          <div class="lang-item" data-lang="de" onclick="setLang('de')">🇩🇪 DE</div>
+          <div class="lang-item" data-lang="ru">Русский</div>
+          <div class="lang-item" data-lang="en">English</div>
+          <div class="lang-item" data-lang="zh">中文</div>
+          <div class="lang-item" data-lang="es">Español</div>
+          <div class="lang-item" data-lang="de">Deutsch</div>
         </div>
       </div>
-      <button class="header-btn" onclick="showPage('orders')" title="Заказы">📋</button>
+      <button class="header-btn icon-btn" id="ordersBtn" type="button" aria-label="Orders">
+        <svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+      </button>
     </div>
   </div>
 
   <!-- CATALOG -->
   <div id="page-catalog" class="page active">
     <div class="scroll-area" id="catalogScroll">
-      <div class="hero-banner">
+      <div class="hero-banner" id="hero">
         <div class="hero-badge">
           <span class="hero-badge-dot"></span>
-          <span id="t-hero-badge">200+ стран</span>
+          <span id="t-hero-badge"></span>
           <span class="hero-badge-dot"></span>
         </div>
-        <h1 class="hero-title"><span id="t-hero-t1">Свобода быть</span><br><em id="t-hero-em">онлайн везде</em></h1>
-        <p class="hero-sub" id="t-hero-sub">eSIM для путешествий — активация за 1 минуту</p>
+        <h1 class="hero-title"><span id="t-hero-t1"></span><br><em id="t-hero-em"></em></h1>
+        <p class="hero-sub" id="t-hero-sub"></p>
         <div class="hero-stats">
-          <div class="h-stat"><div class="h-stat-val">200+</div><div class="h-stat-lbl" id="t-stat-countries">Стран</div></div>
-          <div class="h-stat"><div class="h-stat-val">5G</div><div class="h-stat-lbl" id="t-stat-speed">Скорость</div></div>
-          <div class="h-stat"><div class="h-stat-val">24/7</div><div class="h-stat-lbl" id="t-stat-support">Поддержка</div></div>
+          <div class="h-stat"><div class="h-stat-val">200+</div><div class="h-stat-lbl" id="t-stat-countries"></div></div>
+          <div class="h-stat"><div class="h-stat-val">5G</div><div class="h-stat-lbl" id="t-stat-speed"></div></div>
+          <div class="h-stat"><div class="h-stat-val">24/7</div><div class="h-stat-lbl" id="t-stat-support"></div></div>
         </div>
       </div>
 
-      <div style="padding:14px 16px 0;">
-        <div style="position:relative;">
-          <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--leaf);font-size:14px;pointer-events:none;">🔍</span>
-          <input type="text" id="searchInput" oninput="filterPackages()"
-            style="width:100%;background:rgba(10,26,12,0.8);border:1px solid var(--border);border-radius:12px;padding:11px 16px 11px 40px;color:var(--white);font-size:14px;outline:none;font-family:var(--sans);">
+      <div class="search-wrap">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input type="text" inputmode="search" id="searchInput" class="search-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
+          <button class="search-clear" id="searchClear" type="button" aria-label="Clear">×</button>
         </div>
       </div>
 
-      <div class="tabs-wrap">
-        <div class="tabs" id="tabs"></div>
-      </div>
+      <div class="tiles-wrap"><div class="tiles" id="tiles"></div></div>
 
-      <div class="section-header">
-        <div class="section-title" id="t-section-rates">Тарифы</div>
-        <div class="section-count" id="pkgCount"></div>
-      </div>
-
-      <div class="packages" id="packages"></div>
+      <div id="content"></div>
     </div>
   </div>
 
@@ -336,10 +434,15 @@ body {
     <div class="scroll-area">
       <div class="orders-wrap">
         <div style="margin-bottom:20px;">
-          <div style="font-size:11px;color:var(--gray);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;" id="t-orders-tag">История</div>
+          <div style="font-size:11px;color:var(--gray);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;" id="t-orders-tag"></div>
           <div style="font-family:var(--serif);font-size:28px;font-weight:300;color:var(--mist);" id="t-orders-title"></div>
         </div>
-        <div id="orders-list"></div>
+        <div class="support-card">
+          <div class="support-icon">📦</div>
+          <div class="support-title" id="t-orders-card-title"></div>
+          <p class="support-text" id="t-orders-hint"></p>
+          <button class="support-btn" id="ordersClose" type="button"></button>
+        </div>
       </div>
     </div>
   </div>
@@ -349,22 +452,19 @@ body {
     <div class="scroll-area">
       <div class="support-wrap">
         <div style="margin-bottom:20px;">
-          <div style="font-size:11px;color:var(--gray);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;" id="t-support-tag">Помощь</div>
+          <div style="font-size:11px;color:var(--gray);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;" id="t-support-tag"></div>
           <div style="font-family:var(--serif);font-size:28px;font-weight:300;color:var(--mist);" id="t-support-title"></div>
         </div>
         <div class="support-card">
           <div class="support-icon">🌿</div>
-          <div class="support-title" id="t-support-card-title">Служба поддержки</div>
-          <p class="support-text" id="t-support-text">Мы на связи круглосуточно. Ответим на все вопросы по активации и использованию eSIM.</p>
-          <button class="support-btn" onclick="openSupport()" id="t-support-btn">Написать в поддержку</button>
+          <div class="support-title" id="t-support-card-title"></div>
+          <p class="support-text" id="t-support-text"></p>
+          <button class="support-btn" id="supportBtn" type="button"></button>
         </div>
         <div class="support-card">
           <div class="support-icon">📱</div>
-          <div class="support-title" id="t-activate-title">Как активировать</div>
-          <p class="support-text" id="t-activate-text">
-            <strong style="color:var(--mist);">iPhone:</strong> Настройки → Сотовая связь → Добавить план → QR<br><br>
-            <strong style="color:var(--mist);">Android:</strong> Настройки → Сеть → SIM → Добавить eSIM → QR
-          </p>
+          <div class="support-title" id="t-activate-title"></div>
+          <p class="support-text" id="t-activate-text"></p>
         </div>
       </div>
     </div>
@@ -372,26 +472,26 @@ body {
 
   <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
-    <button class="nav-item active" id="nav-catalog" onclick="showPage('catalog')">
+    <button class="nav-item active" id="nav-catalog" data-page="catalog" type="button">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-      <span id="t-nav-catalog">Каталог</span>
+      <span id="t-nav-catalog"></span>
     </button>
-    <button class="nav-item" id="nav-orders" onclick="showPage('orders')">
+    <button class="nav-item" id="nav-orders" data-page="orders" type="button">
       <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-      <span id="t-nav-orders">Заказы</span>
+      <span id="t-nav-orders"></span>
     </button>
-    <button class="nav-item" id="nav-support" onclick="showPage('support')">
+    <button class="nav-item" id="nav-support" data-page="support" type="button">
       <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      <span id="t-nav-support">Поддержка</span>
+      <span id="t-nav-support"></span>
     </button>
   </nav>
 </div>
 
 <!-- MODAL -->
-<div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
+<div class="modal-overlay" id="modal">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-close-row"><button class="modal-close" onclick="closeModal()" id="t-close-btn">✕ Закрыть</button></div>
+    <div class="modal-close-row"><button class="modal-close" id="t-close-btn" type="button"></button></div>
     <div class="modal-hero">
       <div class="modal-flag" id="mFlag"></div>
       <div class="modal-name" id="mName"></div>
@@ -399,29 +499,30 @@ body {
     </div>
     <div class="modal-body">
       <div class="detail-grid">
-        <div class="detail-card"><div class="detail-card-label" id="t-modal-data">Данные</div><div class="detail-card-val" id="mData"></div></div>
-        <div class="detail-card"><div class="detail-card-label" id="t-modal-days">Срок</div><div class="detail-card-val" id="mDays"></div></div>
+        <div class="detail-card"><div class="detail-card-label" id="t-modal-data"></div><div class="detail-card-val" id="mData"></div></div>
+        <div class="detail-card"><div class="detail-card-label" id="t-modal-days"></div><div class="detail-card-val" id="mDays"></div></div>
       </div>
       <div class="detail-rows">
-        <div class="detail-row"><span class="detail-row-label">🌐 <span id="t-modal-coverage">Покрытие</span></span><span class="detail-row-val" id="mCoverage"></span></div>
-        <div class="detail-row"><span class="detail-row-label">📶 <span id="t-modal-network">Сеть</span></span><span class="detail-row-val">5G / LTE</span></div>
-        <div class="detail-row"><span class="detail-row-label">⚡ <span id="t-modal-activation">Активация</span></span><span class="detail-row-val" id="t-modal-instant">Мгновенная</span></div>
-        <div class="detail-row"><span class="detail-row-label">📲 <span id="t-modal-device">Устройство</span></span><span class="detail-row-val" id="t-modal-devices-val">iPhone / Android</span></div>
+        <div class="detail-row" id="mCovRow"><span class="detail-row-label">🌐 <span id="t-modal-coverage"></span></span><span class="detail-row-val" id="mCoverage"></span></div>
+        <div class="m-cov" id="mCovList"></div>
+        <div class="detail-row"><span class="detail-row-label">📶 <span id="t-modal-network"></span></span><span class="detail-row-val">5G / LTE</span></div>
+        <div class="detail-row"><span class="detail-row-label">⚡ <span id="t-modal-activation"></span></span><span class="detail-row-val" id="t-modal-instant"></span></div>
+        <div class="detail-row"><span class="detail-row-label">📲 <span id="t-modal-device"></span></span><span class="detail-row-val" id="t-modal-devices-val"></span></div>
       </div>
       <div>
         <div class="price-big" id="mPrice"></div>
         <div class="price-per" id="mPerDay"></div>
         <div id="buySection">
-          <button class="buy-btn" onclick="handleBuy()" id="t-buy-btn">Купить eSIM</button>
+          <button class="buy-btn" id="t-buy-btn" type="button"></button>
           <div class="pay-methods">
             <span class="pay-chip">⭐ Stars</span>
             <span class="pay-chip">💎 USDT</span>
           </div>
         </div>
         <div id="paySection" style="display:none;">
-          <button class="pay-btn pay-btn-stars" id="payStars">⭐ <span id="t-pay-stars">Telegram Stars</span></button>
+          <button class="pay-btn pay-btn-stars" id="payStars" type="button">⭐ <span id="t-pay-stars"></span></button>
           <div class="stars-note" id="starsNote"></div>
-          <button class="pay-btn pay-btn-crypto" id="payCrypto">💎 <span id="t-pay-crypto">Crypto (USDT/TON)</span></button>
+          <button class="pay-btn pay-btn-crypto" id="payCrypto" type="button">💎 <span id="t-pay-crypto"></span></button>
           <div class="stars-note" id="cryptoNote"></div>
         </div>
       </div>
@@ -430,626 +531,1002 @@ body {
 </div>
 
 <script>
-// ── TRANSLATIONS ──────────────────────────────────────
+// ── ПЕРЕВОДЫ ───────────────────────────────────────────────────────────
 const I18N = {
   ru: {
-    'hero-badge': '200+ стран',
-    'hero-t1': 'Свобода быть',
-    'hero-em': 'онлайн везде',
+    'hero-badge': '200+ стран', 'hero-t1': 'Свобода быть', 'hero-em': 'онлайн везде',
     'hero-sub': 'eSIM для путешествий — активация за 1 минуту',
     'stat-countries': 'Стран', 'stat-speed': 'Скорость', 'stat-support': 'Поддержка',
-    'section-rates': 'Тарифы',
     'nav-catalog': 'Каталог', 'nav-orders': 'Заказы', 'nav-support': 'Поддержка',
     'orders-tag': 'История', 'orders-t1': 'Мои', 'orders-em': 'заказы',
+    'orders-card-title': 'Заказы — в чате с ботом',
+    'orders-hint': 'QR-коды и все купленные eSIM хранятся в чате с ботом. Закрой каталог и отправь боту команду /orders.',
+    'orders-btn': 'Закрыть каталог',
     'support-tag': 'Помощь', 'support-t1': 'Поддержка', 'support-em': '24/7',
     'support-card-title': 'Служба поддержки',
     'support-text': 'Мы на связи круглосуточно. Ответим на все вопросы по активации и использованию eSIM.',
     'support-btn': 'Написать в поддержку',
     'activate-title': 'Как активировать',
-    'activate-text-iphone': 'Настройки → Сотовая связь → Добавить план → QR',
-    'activate-text-android': 'Настройки → Сеть → SIM → Добавить eSIM → QR',
+    'activate-text-iphone': 'Настройки → Сотовая связь → Добавить eSIM → QR-код',
+    'activate-text-android': 'Настройки → Сеть и интернет → SIM-карты → Добавить eSIM',
     'close-btn': '✕ Закрыть',
-    'modal-data': 'Данные', 'modal-days': 'Срок',
-    'modal-coverage': 'Покрытие', 'modal-network': 'Сеть',
+    'modal-data': 'Интернет', 'modal-days': 'Срок', 'modal-coverage': 'Покрытие', 'modal-network': 'Сеть',
     'modal-activation': 'Активация', 'modal-instant': 'Мгновенная',
     'modal-device': 'Устройство', 'modal-devices-val': 'iPhone / Android',
-    'buy-btn': 'Купить eSIM',
-    'pay-stars': 'Telegram Stars', 'pay-crypto': 'Crypto (USDT/TON)',
+    'buy-btn': 'Купить eSIM', 'pay-stars': 'Telegram Stars', 'pay-crypto': 'Crypto (USDT)',
     'stars-note': '≈ {n} ⭐ · дороже цены в $ — комиссия Telegram', 'crypto-note': 'точная цена в $ — выгоднее',
-    'tab-all': 'Все', 'tab-global': '🌍 Глобальные',
-    'loading': 'Загружаю...', 'loading-countries': 'Загружаю страны...',
-    'loading-regional': 'Загружаю региональные тарифы...',
-    'tap-rates': 'Нажми для просмотра тарифов',
-    'regional-sub': 'Один тариф для всего региона',
-    'regional-badge': 'Региональные', 'all-countries': 'все страны',
-    'no-regional': 'Нет региональных тарифов',
-    'load-error': 'Ошибка загрузки. Попробуй ещё раз.',
-    'not-found': 'Ничего не найдено',
-    'no-orders': 'Заказов пока нет', 'buy-first': 'Купи первую eSIM!',
-    'search-ph': 'Поиск страны или тарифа...',
-    'per-day': 'день', 'days-short': 'дн', 'rates-count': 'тарифов',
-    'processing': '⏳ Обрабатываю...',
-    'open-via-bot': 'Откройте через кнопку 🛍 в боте @esimruu_bot',
+    'tile-all': 'Все', 'tile-global': 'Глобальные', 'world': 'Весь мир',
+    'popular': 'Популярные', 'all-countries-h': 'Все страны', 'countries-h': 'Страны',
+    'plans-h': 'Тарифы', 'results-h': 'Найдено',
+    'regional-badge': 'Региональные', 'all-countries': 'все страны', 'regional-sub': 'Один тариф для всего региона',
+    'loading': 'Загружаю…', 'load-error': 'Не получилось загрузить. Проверь интернет.', 'retry': 'Повторить',
+    'not-found': 'Ничего не найдено', 'no-plans': 'Для этого направления пока нет тарифов',
+    'search-ph': 'Страна или регион', 'per-day': 'день', 'unlimited': 'Безлимит', 'gb': 'ГБ',
+    'show-all': 'Показать все тарифы ({n})', 'show-best': 'Показать только лучшие',
+    'best-note': 'Показаны самые выгодные тарифы', 'cov-list': 'список стран', 'variant': 'Вариант', 'from': 'от', 'extra-h': 'Ещё в расширенном тарифе',
+    'open-via-bot': 'Открой каталог через кнопку 🛍 в боте @esimruu_bot',
+    'order-fail': 'Не удалось оформить заказ. Проверь интернет и попробуй ещё раз.',
   },
   en: {
-    'hero-badge': '200+ countries',
-    'hero-t1': 'Freedom to be',
-    'hero-em': 'online everywhere',
+    'hero-badge': '200+ countries', 'hero-t1': 'Freedom to be', 'hero-em': 'online everywhere',
     'hero-sub': 'eSIM for travelers — activation in 1 minute',
     'stat-countries': 'Countries', 'stat-speed': 'Speed', 'stat-support': 'Support',
-    'section-rates': 'Plans',
     'nav-catalog': 'Catalog', 'nav-orders': 'Orders', 'nav-support': 'Support',
     'orders-tag': 'History', 'orders-t1': 'My', 'orders-em': 'orders',
+    'orders-card-title': 'Orders live in the bot chat',
+    'orders-hint': 'QR codes and all purchased eSIMs are kept in the chat with the bot. Close the catalog and send the bot the /orders command.',
+    'orders-btn': 'Close catalog',
     'support-tag': 'Help', 'support-t1': 'Support', 'support-em': '24/7',
-    'support-card-title': 'Support Service',
-    'support-text': 'We are available around the clock. We will answer all questions about activation and use of eSIM.',
-    'support-btn': 'Contact Support',
+    'support-card-title': 'Customer support',
+    'support-text': 'We are available around the clock and will answer any question about activating and using your eSIM.',
+    'support-btn': 'Contact support',
     'activate-title': 'How to activate',
-    'activate-text-iphone': 'Settings → Cellular → Add Plan → QR',
-    'activate-text-android': 'Settings → Network → SIM → Add eSIM → QR',
+    'activate-text-iphone': 'Settings → Cellular → Add eSIM → QR code',
+    'activate-text-android': 'Settings → Network & internet → SIMs → Add eSIM',
     'close-btn': '✕ Close',
-    'modal-data': 'Data', 'modal-days': 'Period',
-    'modal-coverage': 'Coverage', 'modal-network': 'Network',
+    'modal-data': 'Data', 'modal-days': 'Validity', 'modal-coverage': 'Coverage', 'modal-network': 'Network',
     'modal-activation': 'Activation', 'modal-instant': 'Instant',
     'modal-device': 'Device', 'modal-devices-val': 'iPhone / Android',
-    'buy-btn': 'Buy eSIM',
-    'pay-stars': 'Telegram Stars', 'pay-crypto': 'Crypto (USDT/TON)',
-    'stars-note': '≈ {n} ⭐ · above $ price — Telegram fee', 'crypto-note': 'exact $ price — best value',
-    'tab-all': 'All', 'tab-global': '🌍 Global',
-    'loading': 'Loading...', 'loading-countries': 'Loading countries...',
-    'loading-regional': 'Loading regional plans...',
-    'tap-rates': 'Tap to see plans',
-    'regional-sub': 'One plan for the whole region',
-    'regional-badge': 'Regional', 'all-countries': 'all countries',
-    'no-regional': 'No regional plans',
-    'load-error': 'Loading error. Please try again.',
-    'not-found': 'Nothing found',
-    'no-orders': 'No orders yet', 'buy-first': 'Buy your first eSIM!',
-    'search-ph': 'Search country or plan...',
-    'per-day': 'day', 'days-short': 'days', 'rates-count': 'plans',
-    'processing': '⏳ Processing...',
-    'open-via-bot': 'Open via button 🛍 in bot @esimruu_bot',
+    'buy-btn': 'Buy eSIM', 'pay-stars': 'Telegram Stars', 'pay-crypto': 'Crypto (USDT)',
+    'stars-note': '≈ {n} ⭐ · above the $ price because of the Telegram fee', 'crypto-note': 'exact $ price — better value',
+    'tile-all': 'All', 'tile-global': 'Global', 'world': 'Worldwide',
+    'popular': 'Popular', 'all-countries-h': 'All countries', 'countries-h': 'Countries',
+    'plans-h': 'Plans', 'results-h': 'Found',
+    'regional-badge': 'Regional', 'all-countries': 'all countries', 'regional-sub': 'One plan for the whole region',
+    'loading': 'Loading…', 'load-error': 'Could not load. Check your connection.', 'retry': 'Try again',
+    'not-found': 'Nothing found', 'no-plans': 'No plans for this destination yet',
+    'search-ph': 'Country or region', 'per-day': 'day', 'unlimited': 'Unlimited', 'gb': 'GB',
+    'show-all': 'Show all plans ({n})', 'show-best': 'Show best plans only',
+    'best-note': 'Showing the best-value plans', 'cov-list': 'list of countries', 'variant': 'Option', 'from': 'from', 'extra-h': 'Also in the wider plan',
+    'open-via-bot': 'Open the catalog with the 🛍 button in the bot @esimruu_bot',
+    'order-fail': 'Could not place the order. Check your connection and try again.',
   },
   zh: {
-    'hero-badge': '200+国家',
-    'hero-t1': '随时随地',
-    'hero-em': '自由上网',
-    'hero-sub': '旅行者的eSIM — 1分钟激活',
-    'stat-countries': '国家', 'stat-speed': '速度', 'stat-support': '支持',
-    'section-rates': '套餐',
-    'nav-catalog': '目录', 'nav-orders': '订单', 'nav-support': '支持',
+    'hero-badge': '200+ 个国家和地区', 'hero-t1': '随时随地', 'hero-em': '自由上网',
+    'hero-sub': '旅行 eSIM — 1 分钟激活',
+    'stat-countries': '国家', 'stat-speed': '网速', 'stat-support': '客服',
+    'nav-catalog': '目录', 'nav-orders': '订单', 'nav-support': '客服',
     'orders-tag': '历史', 'orders-t1': '我的', 'orders-em': '订单',
+    'orders-card-title': '订单保存在机器人聊天中',
+    'orders-hint': '二维码和所有已购买的 eSIM 都保存在与机器人的聊天中。关闭目录并向机器人发送 /orders 命令。',
+    'orders-btn': '关闭目录',
     'support-tag': '帮助', 'support-t1': '客服', 'support-em': '24/7',
     'support-card-title': '客服中心',
-    'support-text': '我们全天候在线，随时解答eSIM激活和使用的所有问题。',
+    'support-text': '我们全天候在线，随时解答 eSIM 激活和使用的所有问题。',
     'support-btn': '联系客服',
     'activate-title': '如何激活',
-    'activate-text-iphone': '设置 → 蜂窝网络 → 添加套餐 → 二维码',
-    'activate-text-android': '设置 → 网络 → SIM → 添加eSIM → 二维码',
+    'activate-text-iphone': '设置 → 蜂窝网络 → 添加 eSIM → 二维码',
+    'activate-text-android': '设置 → 网络和互联网 → SIM 卡 → 添加 eSIM',
     'close-btn': '✕ 关闭',
-    'modal-data': '流量', 'modal-days': '有效期',
-    'modal-coverage': '覆盖', 'modal-network': '网络',
+    'modal-data': '流量', 'modal-days': '有效期', 'modal-coverage': '覆盖范围', 'modal-network': '网络',
     'modal-activation': '激活', 'modal-instant': '即时',
     'modal-device': '设备', 'modal-devices-val': 'iPhone / Android',
-    'buy-btn': '购买eSIM',
-    'pay-stars': 'Telegram Stars', 'pay-crypto': '加密货币',
-    'stars-note': '≈ {n} ⭐ · 高于美元价格 — Telegram手续费', 'crypto-note': '准确美元价格 — 更划算',
-    'tab-all': '全部', 'tab-global': '🌍 全球',
-    'loading': '加载中...', 'loading-countries': '加载国家...',
-    'loading-regional': '加载区域套餐...',
-    'tap-rates': '点击查看套餐',
-    'regional-sub': '整个地区一个套餐',
-    'regional-badge': '区域', 'all-countries': '所有国家',
-    'no-regional': '暂无区域套餐',
-    'load-error': '加载错误，请重试。',
-    'not-found': '未找到结果',
-    'no-orders': '暂无订单', 'buy-first': '购买您的第一个eSIM！',
-    'search-ph': '搜索国家或套餐...',
-    'per-day': '天', 'days-short': '天', 'rates-count': '套餐',
-    'processing': '⏳ 处理中...',
-    'open-via-bot': '通过机器人 @esimruu_bot 中的按钮 🛍 打开',
+    'buy-btn': '购买 eSIM', 'pay-stars': 'Telegram Stars', 'pay-crypto': '加密货币 (USDT)',
+    'stars-note': '≈ {n} ⭐ · 因 Telegram 手续费略高于美元价格', 'crypto-note': '按美元原价付款 — 更划算',
+    'tile-all': '全部', 'tile-global': '全球', 'world': '全球',
+    'popular': '热门', 'all-countries-h': '所有国家', 'countries-h': '国家',
+    'plans-h': '套餐', 'results-h': '搜索结果',
+    'regional-badge': '区域', 'all-countries': '所有国家', 'regional-sub': '一个套餐覆盖整个地区',
+    'loading': '加载中…', 'load-error': '加载失败，请检查网络。', 'retry': '重试',
+    'not-found': '未找到结果', 'no-plans': '该目的地暂无套餐',
+    'search-ph': '国家或地区', 'per-day': '天', 'unlimited': '无限流量', 'gb': 'GB',
+    'show-all': '显示全部套餐（{n}）', 'show-best': '只显示优选套餐',
+    'best-note': '已为您筛选最划算的套餐', 'cov-list': '国家列表', 'variant': '方案', 'from': '起', 'extra-h': '扩展套餐另含',
+    'open-via-bot': '请通过机器人 @esimruu_bot 中的 🛍 按钮打开目录',
+    'order-fail': '下单失败。请检查网络后重试。',
   },
   es: {
-    'hero-badge': '200+ países',
-    'hero-t1': 'Libertad de estar',
-    'hero-em': 'conectado',
+    'hero-badge': '200+ países', 'hero-t1': 'Libertad de estar', 'hero-em': 'conectado',
     'hero-sub': 'eSIM para viajeros — activación en 1 minuto',
     'stat-countries': 'Países', 'stat-speed': 'Velocidad', 'stat-support': 'Soporte',
-    'section-rates': 'Planes',
     'nav-catalog': 'Catálogo', 'nav-orders': 'Pedidos', 'nav-support': 'Soporte',
     'orders-tag': 'Historial', 'orders-t1': 'Mis', 'orders-em': 'pedidos',
+    'orders-card-title': 'Los pedidos están en el chat del bot',
+    'orders-hint': 'Los códigos QR y todas las eSIM compradas se guardan en el chat con el bot. Cierra el catálogo y envía al bot el comando /orders.',
+    'orders-btn': 'Cerrar el catálogo',
     'support-tag': 'Ayuda', 'support-t1': 'Soporte', 'support-em': '24/7',
-    'support-card-title': 'Servicio de soporte',
-    'support-text': 'Estamos disponibles las 24 horas. Responderemos todas las preguntas sobre activación y uso de eSIM.',
-    'support-btn': 'Contactar soporte',
+    'support-card-title': 'Atención al cliente',
+    'support-text': 'Estamos disponibles las 24 horas y respondemos cualquier duda sobre la activación y el uso de tu eSIM.',
+    'support-btn': 'Escribir a soporte',
     'activate-title': 'Cómo activar',
-    'activate-text-iphone': 'Ajustes → Datos móviles → Añadir plan → QR',
-    'activate-text-android': 'Ajustes → Red → SIM → Añadir eSIM → QR',
+    'activate-text-iphone': 'Ajustes → Datos móviles → Añadir eSIM → código QR',
+    'activate-text-android': 'Ajustes → Redes e Internet → SIM → Añadir eSIM',
     'close-btn': '✕ Cerrar',
-    'modal-data': 'Datos', 'modal-days': 'Período',
-    'modal-coverage': 'Cobertura', 'modal-network': 'Red',
-    'modal-activation': 'Activación', 'modal-instant': 'Instantánea',
+    'modal-data': 'Datos', 'modal-days': 'Duración', 'modal-coverage': 'Cobertura', 'modal-network': 'Red',
+    'modal-activation': 'Activación', 'modal-instant': 'Inmediata',
     'modal-device': 'Dispositivo', 'modal-devices-val': 'iPhone / Android',
-    'buy-btn': 'Comprar eSIM',
-    'pay-stars': 'Telegram Stars', 'pay-crypto': 'Cripto (USDT/TON)',
-    'stars-note': '≈ {n} ⭐ · más caro que en $ — comisión de Telegram', 'crypto-note': 'precio exacto en $ — más rentable',
-    'tab-all': 'Todos', 'tab-global': '🌍 Global',
-    'loading': 'Cargando...', 'loading-countries': 'Cargando países...',
-    'loading-regional': 'Cargando planes regionales...',
-    'tap-rates': 'Toca para ver planes',
-    'regional-sub': 'Un plan para toda la región',
-    'regional-badge': 'Regional', 'all-countries': 'todos los países',
-    'no-regional': 'No hay planes regionales',
-    'load-error': 'Error de carga. Inténtalo de nuevo.',
-    'not-found': 'No encontrado',
-    'no-orders': 'Sin pedidos aún', 'buy-first': '¡Compra tu primer eSIM!',
-    'search-ph': 'Buscar país o plan...',
-    'per-day': 'día', 'days-short': 'días', 'rates-count': 'planes',
-    'processing': '⏳ Procesando...',
-    'open-via-bot': 'Abre mediante el botón 🛍 en el bot @esimruu_bot',
+    'buy-btn': 'Comprar eSIM', 'pay-stars': 'Telegram Stars', 'pay-crypto': 'Cripto (USDT)',
+    'stars-note': '≈ {n} ⭐ · algo más caro que en $ por la comisión de Telegram', 'crypto-note': 'precio exacto en $ — sale más barato',
+    'tile-all': 'Todos', 'tile-global': 'Global', 'world': 'Todo el mundo',
+    'popular': 'Populares', 'all-countries-h': 'Todos los países', 'countries-h': 'Países',
+    'plans-h': 'Planes', 'results-h': 'Resultados',
+    'regional-badge': 'Regional', 'all-countries': 'todos los países', 'regional-sub': 'Un plan para toda la región',
+    'loading': 'Cargando…', 'load-error': 'No se pudo cargar. Revisa tu conexión.', 'retry': 'Reintentar',
+    'not-found': 'Sin resultados', 'no-plans': 'Aún no hay planes para este destino',
+    'search-ph': 'País o región', 'per-day': 'día', 'unlimited': 'Ilimitado', 'gb': 'GB',
+    'show-all': 'Ver todos los planes ({n})', 'show-best': 'Ver solo los mejores',
+    'best-note': 'Mostramos los planes con mejor precio', 'cov-list': 'lista de países', 'variant': 'Opción', 'from': 'desde', 'extra-h': 'Además en el plan ampliado',
+    'open-via-bot': 'Abre el catálogo con el botón 🛍 del bot @esimruu_bot',
+    'order-fail': 'No se pudo crear el pedido. Revisa tu conexión e inténtalo de nuevo.',
   },
   de: {
-    'hero-badge': '200+ Länder',
-    'hero-t1': 'Freiheit',
-    'hero-em': 'überall online',
+    'hero-badge': '200+ Länder', 'hero-t1': 'Freiheit,', 'hero-em': 'überall online',
     'hero-sub': 'eSIM für Reisende — Aktivierung in 1 Minute',
-    'stat-countries': 'Länder', 'stat-speed': 'Geschwindigkeit', 'stat-support': 'Support',
-    'section-rates': 'Tarife',
+    'stat-countries': 'Länder', 'stat-speed': 'Netz', 'stat-support': 'Support',
     'nav-catalog': 'Katalog', 'nav-orders': 'Bestellungen', 'nav-support': 'Support',
     'orders-tag': 'Verlauf', 'orders-t1': 'Meine', 'orders-em': 'Bestellungen',
+    'orders-card-title': 'Bestellungen findest du im Bot-Chat',
+    'orders-hint': 'QR-Codes und alle gekauften eSIMs liegen im Chat mit dem Bot. Schließe den Katalog und sende dem Bot den Befehl /orders.',
+    'orders-btn': 'Katalog schließen',
     'support-tag': 'Hilfe', 'support-t1': 'Support', 'support-em': '24/7',
-    'support-card-title': 'Kundendienst',
-    'support-text': 'Wir sind rund um die Uhr erreichbar. Wir beantworten alle Fragen zur Aktivierung und Nutzung der eSIM.',
+    'support-card-title': 'Kundenservice',
+    'support-text': 'Wir sind rund um die Uhr erreichbar und beantworten alle Fragen zur Aktivierung und Nutzung deiner eSIM.',
     'support-btn': 'Support kontaktieren',
-    'activate-title': 'Wie aktivieren',
-    'activate-text-iphone': 'Einstellungen → Mobilfunk → Plan hinzufügen → QR',
-    'activate-text-android': 'Einstellungen → Netzwerk → SIM → eSIM hinzufügen → QR',
+    'activate-title': 'So aktivierst du',
+    'activate-text-iphone': 'Einstellungen → Mobilfunk → eSIM hinzufügen → QR-Code',
+    'activate-text-android': 'Einstellungen → Netzwerk & Internet → SIM-Karten → eSIM hinzufügen',
     'close-btn': '✕ Schließen',
-    'modal-data': 'Daten', 'modal-days': 'Zeitraum',
-    'modal-coverage': 'Abdeckung', 'modal-network': 'Netzwerk',
-    'modal-activation': 'Aktivierung', 'modal-instant': 'Sofortig',
+    'modal-data': 'Daten', 'modal-days': 'Laufzeit', 'modal-coverage': 'Abdeckung', 'modal-network': 'Netz',
+    'modal-activation': 'Aktivierung', 'modal-instant': 'Sofort',
     'modal-device': 'Gerät', 'modal-devices-val': 'iPhone / Android',
-    'buy-btn': 'eSIM kaufen',
-    'pay-stars': 'Telegram Stars', 'pay-crypto': 'Krypto (USDT/TON)',
-    'stars-note': '≈ {n} ⭐ · teurer als $-Preis — Telegram-Gebühr', 'crypto-note': 'exakter $-Preis — günstiger',
-    'tab-all': 'Alle', 'tab-global': '🌍 Global',
-    'loading': 'Lädt...', 'loading-countries': 'Länder laden...',
-    'loading-regional': 'Regionale Tarife laden...',
-    'tap-rates': 'Tippen für Tarife',
-    'regional-sub': 'Ein Tarif für die gesamte Region',
-    'regional-badge': 'Regional', 'all-countries': 'alle Länder',
-    'no-regional': 'Keine regionalen Tarife',
-    'load-error': 'Ladefehler. Bitte erneut versuchen.',
-    'not-found': 'Nichts gefunden',
-    'no-orders': 'Noch keine Bestellungen', 'buy-first': 'Kaufe deine erste eSIM!',
-    'search-ph': 'Land oder Tarif suchen...',
-    'per-day': 'Tag', 'days-short': 'Tage', 'rates-count': 'Tarife',
-    'processing': '⏳ Verarbeite...',
-    'open-via-bot': 'Öffne über die Schaltfläche 🛍 im Bot @esimruu_bot',
-  }
+    'buy-btn': 'eSIM kaufen', 'pay-stars': 'Telegram Stars', 'pay-crypto': 'Krypto (USDT)',
+    'stars-note': '≈ {n} ⭐ · wegen der Telegram-Gebühr teurer als der $-Preis', 'crypto-note': 'exakter $-Preis — günstiger',
+    'tile-all': 'Alle', 'tile-global': 'Global', 'world': 'Weltweit',
+    'popular': 'Beliebt', 'all-countries-h': 'Alle Länder', 'countries-h': 'Länder',
+    'plans-h': 'Tarife', 'results-h': 'Gefunden',
+    'regional-badge': 'Regional', 'all-countries': 'alle Länder', 'regional-sub': 'Ein Tarif für die ganze Region',
+    'loading': 'Lädt…', 'load-error': 'Laden fehlgeschlagen. Prüfe deine Verbindung.', 'retry': 'Erneut versuchen',
+    'not-found': 'Nichts gefunden', 'no-plans': 'Für dieses Ziel gibt es noch keine Tarife',
+    'search-ph': 'Land oder Region', 'per-day': 'Tag', 'unlimited': 'Unbegrenzt', 'gb': 'GB',
+    'show-all': 'Alle Tarife anzeigen ({n})', 'show-best': 'Nur die besten anzeigen',
+    'best-note': 'Angezeigt werden die günstigsten Tarife', 'cov-list': 'Länderliste', 'variant': 'Option', 'from': 'ab', 'extra-h': 'Zusätzlich im erweiterten Tarif',
+    'open-via-bot': 'Öffne den Katalog über den Button 🛍 im Bot @esimruu_bot',
+    'order-fail': 'Die Bestellung konnte nicht erstellt werden. Prüfe deine Verbindung und versuche es erneut.',
+  },
 };
 
-const LANG_FLAGS = { ru:'🇷🇺', en:'🇬🇧', zh:'🇨🇳', es:'🇪🇸', de:'🇩🇪' };
+// Формы слов: [1, 2–4, 5+] для русского, [1, много] для остальных, одна форма для китайского
+const PLURALS = {
+  ru: { days: ['день', 'дня', 'дней'], countries: ['страна', 'страны', 'стран'], plans: ['тариф', 'тарифа', 'тарифов'] },
+  en: { days: ['day', 'days'], countries: ['country', 'countries'], plans: ['plan', 'plans'] },
+  zh: { days: ['天'], countries: ['个国家'], plans: ['个套餐'] },
+  es: { days: ['día', 'días'], countries: ['país', 'países'], plans: ['plan', 'planes'] },
+  de: { days: ['Tag', 'Tage'], countries: ['Land', 'Länder'], plans: ['Tarif', 'Tarife'] },
+};
 
-let currentLang = (function() {
-  const saved = localStorage.getItem('linkora_miniapp_lang');
-  if (saved && I18N[saved]) return saved;
-  const tgLang = window.Telegram?.WebApp?.initDataUnsafe?.user?.language_code || '';
-  const map = { ru:'ru', en:'en', zh:'zh', es:'es', de:'de' };
-  return map[tgLang.slice(0,2)] || 'ru';
+// Названия регионов (ключ — имя региона у поставщика)
+const REGION_NAMES = {
+  ru: { 'Asia': 'Азия', 'Europe': 'Европа', 'Africa': 'Африка', 'Oceania': 'Океания', 'North America': 'Северная Америка', 'South America': 'Южная Америка', 'Middle East': 'Ближний Восток', 'Caribbean': 'Карибы', 'GCC Middle East': 'Страны Залива', 'Latin America': 'Латинская Америка', 'Balkans': 'Балканы', 'Europe + Balkans': 'Европа + Балканы' },
+  en: { 'Asia': 'Asia', 'Europe': 'Europe', 'Africa': 'Africa', 'Oceania': 'Oceania', 'North America': 'North America', 'South America': 'South America', 'Middle East': 'Middle East', 'Caribbean': 'Caribbean', 'GCC Middle East': 'Gulf countries', 'Latin America': 'Latin America', 'Balkans': 'Balkans', 'Europe + Balkans': 'Europe + Balkans' },
+  zh: { 'Asia': '亚洲', 'Europe': '欧洲', 'Africa': '非洲', 'Oceania': '大洋洲', 'North America': '北美洲', 'South America': '南美洲', 'Middle East': '中东', 'Caribbean': '加勒比', 'GCC Middle East': '海湾国家', 'Latin America': '拉丁美洲', 'Balkans': '巴尔干', 'Europe + Balkans': '欧洲 + 巴尔干' },
+  es: { 'Asia': 'Asia', 'Europe': 'Europa', 'Africa': 'África', 'Oceania': 'Oceanía', 'North America': 'América del Norte', 'South America': 'América del Sur', 'Middle East': 'Oriente Medio', 'Caribbean': 'Caribe', 'GCC Middle East': 'Países del Golfo', 'Latin America': 'América Latina', 'Balkans': 'Balcanes', 'Europe + Balkans': 'Europa + Balcanes' },
+  de: { 'Asia': 'Asien', 'Europe': 'Europa', 'Africa': 'Afrika', 'Oceania': 'Ozeanien', 'North America': 'Nordamerika', 'South America': 'Südamerika', 'Middle East': 'Naher Osten', 'Caribbean': 'Karibik', 'GCC Middle East': 'Golfstaaten', 'Latin America': 'Lateinamerika', 'Balkans': 'Balkan', 'Europe + Balkans': 'Europa + Balkan' },
+};
+
+// Названия стран переводит сам браузер (Intl.DisplayNames). Здесь только поправки там, где
+// стандартное название непривычное или его нет. Ключ — код страны у поставщика.
+const COUNTRY_OVERRIDES = {
+  ru: { 'us': 'США', 'kr': 'Южная Корея', 'cd': 'ДР Конго', 'cg': 'Конго', 'hk': 'Гонконг', 'mo': 'Макао', 'ps': 'Палестина', 'mm': 'Мьянма', 'an': 'Нидерландские Антилы', 'us-hi': 'Гавайи', 'bq': 'Карибские Нидерланды' },
+  en: { 'tr': 'Turkey', 'ae': 'UAE', 'cd': 'DR Congo', 'cg': 'Congo', 'hk': 'Hong Kong', 'mo': 'Macao', 'ps': 'Palestine', 'mm': 'Myanmar', 'an': 'Netherlands Antilles', 'us-hi': 'Hawaii', 'ba': 'Bosnia & Herzegovina' },
+  zh: { 'hk': '香港', 'mo': '澳门', 'ps': '巴勒斯坦', 'an': '荷属安的列斯', 'us-hi': '夏威夷', 'ae': '阿联酋' },
+  es: { 'ae': 'Emiratos Árabes', 'hk': 'Hong Kong', 'mo': 'Macao', 'ps': 'Palestina', 'mm': 'Myanmar', 'an': 'Antillas Neerlandesas', 'us-hi': 'Hawái', 'cd': 'RD del Congo' },
+  de: { 'us': 'USA', 'ae': 'VAE', 'cd': 'DR Kongo', 'cg': 'Kongo', 'hk': 'Hongkong', 'mo': 'Macau', 'ps': 'Palästina', 'an': 'Niederländische Antillen', 'us-hi': 'Hawaii' },
+};
+
+// Как ещё люди называют страну в поиске: разговорные названия и главные города
+const SEARCH_ALIASES = {
+  'us': 'сша америка штаты usa нью-йорк', 'ae': 'оаэ эмираты дубай абу-даби uae dubai', 'gb': 'англия британия лондон uk england britain',
+  'tr': 'турция стамбул анталья turkey', 'th': 'тайланд таиланд пхукет бангкок паттайя', 'id': 'бали bali', 'kr': 'корея korea сеул',
+  'eg': 'хургада шарм каир', 'ge': 'тбилиси батуми', 'am': 'ереван', 'cz': 'чехия прага', 'nl': 'голландия holland амстердам',
+  'rs': 'белград', 'me': 'будва', 'es': 'барселона мадрид', 'it': 'рим милан', 'fr': 'париж', 'de': 'берлин мюнхен', 'lk': 'шри-ланка шриланка цейлон',
+  'in': 'гоа', 'do': 'доминикана', 'by': 'белоруссия', 'kg': 'киргизия', 'cn': 'пекин шанхай', 'jp': 'токио', 'vn': 'нячанг ханой',
+  'hk': 'гонконг', 'sg': 'сингапур', 'my': 'куала-лумпур', 'cy': 'кипр', 'gr': 'афины', 'pt': 'лиссабон', 'il': 'тель-авив', 'us-hi': 'гавайи',
+};
+
+// Что показать в блоке «Популярные» на главном экране (коды стран, порядок сохраняется)
+const POPULAR = ['tr', 'ae', 'th', 'eg', 'cn', 'vn', 'ge', 'id'];
+
+// ── НАСТРОЙКИ ──────────────────────────────────────────────────────────
+const API_URL = "https://linkora-esim-api-jakj.vercel.app";
+const STARS_PER_USD = 80;   // должно совпадать с STARS_PER_USD в .env бота
+const MIN_STARS = 50;
+
+// Какие тарифы считать «лучшими» (остальные открываются кнопкой «Показать все тарифы»)
+const BEST = {
+  maxGb: 20,                    // пакеты крупнее показываем только в полном списке
+  minData: 3,                   // но не меньше трёх пакетов с гигабайтами, если они есть
+  maxData: 6,
+  sameSizeTolerance: 1.15,      // при одном объёме берём самый длинный срок, если он дороже не более чем на 15%
+  unlimitedDays: [3, 7, 15, 30] // безлимит: сроки, ближайшие к этим
+};
+
+// Картинки для плиток регионов (папка icons рядом с приложением). Ключ — код региона, ww — весь мир.
+// Если картинки нет или она не загрузилась, показывается значок из REGION_EMOJI.
+const REGION_ICONS = {
+  ww: 'icons/global.png', eu: 'icons/europe.png', as: 'icons/asia.png', af: 'icons/africa.png',
+  oc: 'icons/oceania.png', na: 'icons/north-america.png', sa: 'icons/south-america.png',
+  me: 'icons/middle-east.png', cb: 'icons/caribbean.png', gc: 'icons/gulf.png',
+  la: 'icons/latin-america.png', bl: 'icons/balkans.png', eb: 'icons/europe.png',
+};
+const REGION_EMOJI = {
+  ww: '🌍', as: '🏯', eu: '🏰', af: '🦒', oc: '🏝️', na: '🗽', sa: '⛰️',
+  me: '🕌', cb: '🏖️', gc: '🏙️', la: '🌎', bl: '🏔️', eb: '🏰',
+};
+const NO_FLAG = { 'an': 1 };                 // для этих кодов файла флага нет
+const FLAG_ALIAS = { 'us-hi': 'us' };        // Гавайи — флаг США
+
+// ── TELEGRAM ───────────────────────────────────────────────────────────
+const tg = window.Telegram && window.Telegram.WebApp;
+if (tg) { try { tg.ready(); tg.expand(); } catch (e) {} }
+
+function notify(text) {
+  try { if (tg && tg.showAlert && tg.initData) { tg.showAlert(text); return; } } catch (e) {}
+  alert(text);
+}
+
+// ── ЯЗЫК ───────────────────────────────────────────────────────────────
+let currentLang = (function () {
+  try {
+    const saved = localStorage.getItem('linkora_miniapp_lang');
+    if (saved && I18N[saved]) return saved;
+  } catch (e) {}
+  const code = String((tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.language_code) || '')
+    .slice(0, 2).toLowerCase();
+  if (I18N[code]) return code;
+  return !code || ['uk', 'be', 'kk', 'uz', 'ky', 'tg', 'hy', 'az'].includes(code) ? 'ru' : 'en';
 })();
 
-function t(key) { return (I18N[currentLang] || I18N.ru)[key] || key; }
+function t(key) { return (I18N[currentLang] || I18N.ru)[key] || I18N.ru[key] || key; }
+
+function esc(value) {
+  return String(value == null ? '' : value).replace(/[&<>"']/g, ch =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+}
+
+function wordForm(n, key) {
+  const forms = (PLURALS[currentLang] || PLURALS.en)[key];
+  if (forms.length === 1) return forms[0];
+  let cat = n === 1 ? 'one' : 'other';
+  try { cat = new Intl.PluralRules(currentLang).select(n); } catch (e) {}
+  if (forms.length === 3) return cat === 'one' ? forms[0] : cat === 'few' ? forms[1] : forms[2];
+  return cat === 'one' ? forms[0] : forms[1];
+}
+// «30 дней», «37 стран», «9 тарифов» на текущем языке
+function count(n, key) { return n + (currentLang === 'zh' ? '' : ' ') + wordForm(n, key); }
+function money(v) { return '$' + Number(v).toFixed(2); }
+function priceFrom(v) { return currentLang === 'zh' ? money(v) + t('from') : t('from') + ' ' + money(v); }
+
+// ── СТРАНЫ И РЕГИОНЫ ───────────────────────────────────────────────────
+const KNOWN = new Map();      // id страны → { id, code, name }
+const BY_CODE = new Map();    // код → страна
+let ALL_COUNTRIES = [];       // полный список стран
+let CONTINENTS = [];
+
+function remember(list) {
+  const out = [];
+  for (const c of list || []) {
+    if (!c || c.id == null || !c.code) continue;
+    const item = { id: String(c.id), code: String(c.code).toLowerCase(), name: String(c.name || '') };
+    KNOWN.set(item.id, item);
+    if (!BY_CODE.has(item.code)) BY_CODE.set(item.code, item);
+    out.push(item);
+  }
+  return out;
+}
+
+const displayNamesCache = {};
+function displayNames(lang) {
+  if (!(lang in displayNamesCache)) {
+    try { displayNamesCache[lang] = new Intl.DisplayNames([lang], { type: 'region' }); }
+    catch (e) { displayNamesCache[lang] = null; }
+  }
+  return displayNamesCache[lang];
+}
+
+// Стандартное название страны на нужном языке (как его знает браузер) или ''
+function intlName(code, lang) {
+  if (!/^[a-z]{2}$/.test(code)) return '';
+  const dn = displayNames(lang);
+  if (!dn) return '';
+  try {
+    const name = dn.of(code.toUpperCase());
+    return name && name.toLowerCase() !== code ? name : '';
+  } catch (e) { return ''; }
+}
+
+function countryName(c, lang) {
+  lang = lang || currentLang;
+  const code = String(c.code || '').toLowerCase();
+  const fixed = (COUNTRY_OVERRIDES[lang] || {})[code];
+  if (fixed) return fixed;
+  const name = intlName(code, lang);
+  if (name) return lang === 'ru' ? name.replace(/о-ва/g, 'острова') : name;
+  return c.name || code.toUpperCase();
+}
+
+function regionName(cont, lang) {
+  lang = lang || currentLang;
+  if (!cont) return '';
+  if (cont.code === 'ww') return (I18N[lang] || I18N.ru)['world'];
+  return (REGION_NAMES[lang] || {})[cont.name] || cont.name;
+}
+
+function flagEmoji(code) {
+  const c = String(code || '').toUpperCase();
+  return /^[A-Z]{2}$/.test(c)
+    ? String.fromCodePoint(...[...c].map(ch => 0x1F1E6 + ch.charCodeAt(0) - 65))
+    : '🏝️';
+}
+
+// Флаг — картинка из папки flags рядом с приложением. Если файла нет, остаётся эмодзи.
+function flagHtml(code, big) {
+  let c = String(code || '').toLowerCase();
+  const emoji = flagEmoji(c);
+  c = FLAG_ALIAS[c] || c;
+  const cls = 'flag' + (big ? ' big' : '');
+  if (!/^[a-z]{2}$/.test(c) || NO_FLAG[c]) return `<span class="${cls}">${emoji}</span>`;
+  return `<span class="${cls}"><img src="flags/${c}.svg" alt="" loading="lazy" onerror="this.replaceWith('${emoji}')"></span>`;
+}
+
+function regionIconHtml(code) {
+  const src = REGION_ICONS[code];
+  if (src) return `<span class="ricon"><img src="${esc(src)}" alt="" onerror="this.replaceWith('${REGION_EMOJI[code] || '🌐'}')"></span>`;
+  return `<span class="ricon">${REGION_EMOJI[code] || '🌐'}</span>`;
+}
+
+const GLOBAL = { id: 'global', code: 'ww', name: 'Global' };
+function continentById(id) { return CONTINENTS.find(c => String(c.id) === String(id)); }
+
+// ── ПОИСК ──────────────────────────────────────────────────────────────
+function norm(s) {
+  return String(s || '').toLowerCase().replace(/ё/g, 'е')
+    .normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+}
+
+const searchIndex = new Map();   // id страны → строка со всеми названиями
+function searchText(c) {
+  if (!searchIndex.has(c.id)) {
+    const names = [];
+    for (const lang of Object.keys(I18N)) names.push(countryName(c, lang), intlName(c.code, lang));
+    searchIndex.set(c.id, ' ' + norm([c.name, c.code, SEARCH_ALIASES[c.code] || ''].concat(names).join(' ')) + ' ');
+  }
+  return searchIndex.get(c.id);
+}
+
+function rank(text, q) {       // 1 — слово начинается с запроса, 2 — запрос внутри слова, -1 — нет
+  if (text.includes(' ' + q)) return 1;
+  return text.includes(q) ? 2 : -1;
+}
+
+function search(query) {
+  const q = norm(query);
+  if (!q) return { regions: [], countries: [] };
+  const regions = [GLOBAL].concat(CONTINENTS).map(r => {
+    const text = ' ' + norm(Object.keys(I18N).map(lang => regionName(r, lang)).concat(
+      r.name, r.code === 'ww' ? Object.keys(I18N).map(l => I18N[l]['tile-global']) : []).join(' ')) + ' ';
+    return { r, k: rank(text, q) };
+  }).filter(x => x.k >= 0).sort((a, b) => a.k - b.k).map(x => x.r);
+  const pool = ALL_COUNTRIES.length ? ALL_COUNTRIES : Array.from(KNOWN.values());
+  const popular = code => { const i = POPULAR.indexOf(code); return i < 0 ? 99 : i; };
+  const countries = pool.map(c => {
+    let k = rank(searchText(c), q);
+    if (k > 0 && norm(countryName(c)).startsWith(q)) k = 0;   // название на языке экрана начинается с запроса
+    return { c, k };
+  }).filter(x => x.k >= 0)
+    .sort((a, b) => a.k - b.k || popular(a.c.code) - popular(b.c.code) ||
+      countryName(a.c).localeCompare(countryName(b.c), currentLang))
+    .map(x => x.c);
+  return { regions, countries };
+}
+
+// ── ЗАГРУЗКА ДАННЫХ ────────────────────────────────────────────────────
+const CACHE_PREFIX = 'linkora_v2_';
+function cacheGet(key, ttl) {
+  try {
+    const obj = JSON.parse(localStorage.getItem(CACHE_PREFIX + key) || 'null');
+    return obj && Date.now() - obj.ts < ttl ? obj.body : null;
+  } catch (e) { return null; }
+}
+function cacheSet(key, body) {
+  try { localStorage.setItem(CACHE_PREFIX + key, JSON.stringify({ ts: Date.now(), body })); } catch (e) {}
+}
+
+async function api(query, ttl, valid) {
+  ttl = ttl || 30 * 60 * 1000;
+  const hit = cacheGet(query, ttl);
+  if (hit) return hit;
+  const res = await fetch(`${API_URL}/api/packages?${query}`);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const body = await res.json();
+  if (!body || !body.ok || !Array.isArray(body.data)) throw new Error((body && body.error) || 'bad response');
+  if (valid && !valid(body.data)) throw new Error('unexpected response');
+  cacheSet(query, body);
+  return body;
+}
+
+async function loadContinents() {
+  try {
+    CONTINENTS = (await api('type=continents', 6 * 3600 * 1000)).data
+      .filter(c => c && c.id != null).map(c => ({ id: String(c.id), code: String(c.code || '').toLowerCase(), name: String(c.name || '') }));
+  } catch (e) {}
+  renderTiles();
+  if (searchQuery) render();
+}
+
+async function loadAllCountries() {
+  let list = [];
+  try {
+    // старая версия API на неизвестный type отдаёт тарифы, а не страны: такой ответ не берём
+    const isCountries = data => data.length > 0 && Boolean(data[0].code) && data[0].price == null;
+    list = (await api('type=all', 6 * 3600 * 1000, isCountries)).data;
+  } catch (e) {
+    try { list = (await api('type=countries&id=999', 6 * 3600 * 1000)).data; } catch (e2) { list = []; }
+  }
+  ALL_COUNTRIES = remember(list);
+  countriesState = ALL_COUNTRIES.length ? 'ok' : 'error';
+  if (view.kind === 'home' || searchQuery) render();
+}
+
+// ── ТАРИФЫ: разбор, линейки, отбор лучших ──────────────────────────────
+function normalizePackage(p) {
+  const raw = String(p.name || '');
+  const m = raw.match(/\bfor\s+\d+\s+Days?\s+for\s+(.+)$/i);
+  const unlimited = Boolean(p.unlimited) || Number(p.gb) < 0;
+  return {
+    id: String(p.id), raw, gb: unlimited ? -1 : Number(p.gb) || 0, days: Number(p.days) || 0,
+    price: Number(p.price) || 0, unlimited, plus: /unlimited\s+plus/i.test(raw),
+    product: m ? m[1].trim() : '', cv: Number.isInteger(p.cv) ? p.cv : null,
+  };
+}
+
+// Линейка = один продукт поставщика с одним списком стран.
+// У «Европы», например, две линейки с одинаковыми названиями: на 37 и на 46 стран.
+function buildLines(pkgs, coverage) {
+  const map = new Map();
+  for (const p of pkgs) {
+    const key = p.product + '#' + (p.cv == null ? '' : p.cv);
+    if (!map.has(key)) map.set(key, { key, product: p.product, cv: p.cv, pkgs: [] });
+    map.get(key).pkgs.push(p);
+  }
+  let lines = Array.from(map.values());
+  // Один-два тарифа с отдельным списком стран — не самостоятельная линейка: кладём их
+  // в полный список линейки с тем же названием. В «лучшие» они не попадают.
+  for (const small of lines.filter(l => l.pkgs.length <= 2)) {
+    const host = lines.filter(l => l !== small && l.product === small.product && l.pkgs.length > 2)
+      .sort((a, b) => b.pkgs.length - a.pkgs.length)[0];
+    if (!host) continue;
+    small.pkgs.forEach(p => { p.extra = true; host.pkgs.push(p); });
+    small.merged = true;
+  }
+  lines = lines.filter(l => !l.merged);
+  for (const line of lines) {
+    line.codes = line.cv != null && coverage[line.cv] ? coverage[line.cv] : [];
+    line.min = Math.min(...line.pkgs.filter(p => !p.extra).map(p => p.price));
+  }
+  lines.sort((a, b) => a.min - b.min || a.codes.length - b.codes.length);
+  const products = Array.from(new Set(lines.map(l => l.product)));
+  const words = products.map(p => p.split(/\s+/));
+  let common = 0;   // общие первые слова в названиях («Global Lite», «Global Max» → «Lite», «Max»)
+  while (products.length > 1 && words.every(w => w.length > common + 1 && w[common] === words[0][common])) common++;
+  lines.forEach((line, i) => {
+    line.title = products.length > 1 ? line.product.split(/\s+/).slice(common).join(' ') : '';
+    line.index = i;
+  });
+  return lines;
+}
+
+function lineLabel(line) {
+  const parts = [];
+  if (line.title) parts.push(line.title);
+  if (line.codes.length) parts.push(count(line.codes.length, 'countries'));
+  return parts.length ? parts : [t('variant') + ' ' + (line.index + 1)];
+}
+
+function sortPlans(list) {
+  return list.slice().sort((a, b) =>
+    (a.unlimited - b.unlimited) || (a.plus - b.plus) || (a.unlimited ? a.days - b.days : a.gb - b.gb) ||
+    a.days - b.days || a.price - b.price);
+}
+
+// Одинаковые тарифы (объём, срок, вид) от разных сетей: оставляем самый дешёвый
+function dedupe(pkgs) {
+  const best = new Map();
+  for (const p of pkgs) {
+    const key = [p.unlimited ? 'u' : 'd', p.plus ? 'p' : '', p.gb, p.days, p.cv == null ? '' : p.cv].join('|');
+    if (!best.has(key) || p.price < best.get(key).price) best.set(key, p);
+  }
+  return Array.from(best.values());
+}
+
+function pickBest(pkgs) {
+  const list = dedupe(pkgs);
+  // 1) пакеты с гигабайтами: на каждый объём один тариф
+  const bySize = new Map();
+  for (const p of list.filter(p => !p.unlimited)) {
+    if (!bySize.has(p.gb)) bySize.set(p.gb, []);
+    bySize.get(p.gb).push(p);
+  }
+  let data = [];
+  for (const options of bySize.values()) {
+    const cheapest = Math.min(...options.map(p => p.price));
+    const near = options.filter(p => p.price <= cheapest * BEST.sameSizeTolerance + 0.005);
+    near.sort((a, b) => b.days - a.days || a.price - b.price);
+    data.push(near[0]);
+  }
+  data.sort((a, b) => a.gb - b.gb);
+  let keep = data.filter(p => p.gb <= BEST.maxGb);
+  if (keep.length < BEST.minData) keep = data.slice(0, BEST.minData);
+  keep = keep.slice(0, BEST.maxData);
+  // 2) безлимит: обычный (если его нет — Plus), сроки рядом с 3, 7, 15 и 30 днями
+  let unl = list.filter(p => p.unlimited && !p.plus);
+  if (!unl.length) unl = list.filter(p => p.unlimited);
+  const picked = new Map();
+  for (const target of BEST.unlimitedDays) {
+    let best = null;
+    for (const p of unl) {
+      if (!best || Math.abs(p.days - target) < Math.abs(best.days - target) ||
+          (Math.abs(p.days - target) === Math.abs(best.days - target) && p.days > best.days)) best = p;
+    }
+    if (best && Math.abs(best.days - target) <= target / 2) picked.set(best.id, best);
+  }
+  const best = keep.concat(Array.from(picked.values()));
+  return sortPlans(best.length ? best : list);
+}
+
+// ── СОСТОЯНИЕ ЭКРАНА ───────────────────────────────────────────────────
+// view.kind: home | continent | plans.  plans.scope: country | regional | global
+let view = { kind: 'home' };
+let navStack = [];
+let viewToken = 0;
+let countriesState = 'loading';
+let searchQuery = '';
+let plans = null;          // { state, lines, lineIndex, showAll, error }
+let continentCountries = null;   // { state, list }
+let selectedPkg = null;
+let currentPage = 'catalog';
+
+const $ = id => document.getElementById(id);
+
+function go(next) {
+  navStack.push(view);
+  if (navStack.length > 20) navStack.shift();
+  open(next);
+}
+
+function back() {
+  if ($('modal').classList.contains('open')) return closeModal();
+  if (searchQuery) return setSearch('');
+  if (currentPage !== 'catalog') return showPage('catalog');
+  open(navStack.pop() || { kind: 'home' });
+}
+
+function open(next) {
+  view = next;
+  viewToken++;
+  if (searchQuery) setSearch('', true);
+  if (view.kind === 'continent') loadContinent(view.id);
+  else if (view.kind === 'plans') loadPlans();
+  render();
+  $('catalogScroll').scrollTop = 0;
+}
+
+async function loadContinent(id) {
+  const token = viewToken;
+  continentCountries = { state: 'loading', list: [] };
+  try {
+    const body = await api('type=countries&id=' + encodeURIComponent(id));
+    if (token !== viewToken) return;
+    const sets = Number(body.sets) || 0;
+    const partial = new Set(body.data.filter(c => sets > 1 && Number(c.n) < sets).map(c => String(c.id)));
+    const list = remember(body.data);
+    // extra — страны, которые входят не во все тарифы региона (только в расширенный)
+    continentCountries = { state: 'ok', list: list.filter(c => !partial.has(c.id)), extra: list.filter(c => partial.has(c.id)) };
+    if (!continentCountries.list.length) continentCountries = { state: 'ok', list, extra: [] };
+  } catch (e) {
+    if (token !== viewToken) return;
+    continentCountries = { state: 'error', list: [] };
+  }
+  render();
+}
+
+function plansQuery() {
+  if (view.scope === 'global') return 'type=global';
+  if (view.scope === 'regional') return 'type=regional&id=' + encodeURIComponent(view.id);
+  const c = KNOWN.get(String(view.id)) || { name: '', code: '' };
+  return `type=country&id=${encodeURIComponent(view.id)}&name=${encodeURIComponent(c.name)}&code=${encodeURIComponent(c.code)}`;
+}
+
+async function loadPlans() {
+  const token = viewToken;
+  plans = { state: 'loading', lines: [], coverage: [], lineIndex: 0, showAll: false };
+  try {
+    const body = await api(plansQuery());
+    if (token !== viewToken) return;
+    const pkgs = body.data.map(normalizePackage).filter(p => p.price > 0 && p.days > 0 && (p.unlimited || p.gb > 0));
+    const coverage = Array.isArray(body.coverage) ? body.coverage : [];
+    plans = { state: 'ok', lines: buildLines(pkgs, coverage), coverage, lineIndex: 0, showAll: false };
+  } catch (e) {
+    if (token !== viewToken) return;
+    plans = { state: 'error', lines: [], coverage: [], lineIndex: 0, showAll: false };
+  }
+  render();
+}
+
+// ── ОТРИСОВКА ──────────────────────────────────────────────────────────
+const GRID_ICON = '<svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>';
+
+function activeTile() {
+  if (searchQuery) return '';
+  if (view.kind === 'home') return 'all';
+  if (view.kind === 'continent') return 'c' + view.id;
+  if (view.kind === 'plans') {
+    if (view.scope === 'global') return 'global';
+    if (view.scope === 'regional') return 'c' + view.id;
+    return view.from ? 'c' + view.from : 'all';
+  }
+  return '';
+}
+
+let lastActiveTile = null, lastTilesScroll = 0;
+
+function renderTiles() {
+  const active = activeTile();
+  lastTilesScroll = $('tiles').scrollLeft;
+  const tile = (key, act, id, icon, label) =>
+    `<button type="button" class="tile${active === key ? ' active' : ''}" data-act="${act}" data-id="${esc(id)}">` +
+    `<span class="tile-icon">${icon}</span><span class="tile-label">${esc(label)}</span></button>`;
+  $('tiles').innerHTML =
+    tile('all', 'home', '', GRID_ICON, t('tile-all')) +
+    tile('global', 'global', '', regionIconHtml('ww'), t('tile-global')) +
+    CONTINENTS.map(c => tile('c' + c.id, 'continent', c.id, regionIconHtml(c.code), regionName(c))).join('');
+  const box = $('tiles'), on = box.querySelector('.tile.active');
+  if (active !== lastActiveTile && on) box.scrollLeft = on.offsetLeft - (box.clientWidth - on.offsetWidth) / 2;
+  else box.scrollLeft = lastTilesScroll;
+  lastActiveTile = active;
+}
+
+function stateHtml(kind, text) {
+  if (kind === 'loading') return `<div class="state"><div class="spin"></div>${esc(t('loading'))}</div>`;
+  if (kind === 'error') return `<div class="state">${esc(t('load-error'))}<br><button type="button" data-act="retry">${esc(t('retry'))}</button></div>`;
+  return `<div class="state">${esc(text)}</div>`;
+}
+
+function countryRow(c, from) {
+  return `<div class="row" data-act="country" data-id="${esc(c.id)}" data-from="${esc(from || '')}">` +
+    `${flagHtml(c.code)}<span class="nm">${esc(countryName(c))}</span><span class="chev">›</span></div>`;
+}
+
+function sortedByName(list) {
+  return list.slice().sort((a, b) => countryName(a).localeCompare(countryName(b), currentLang));
+}
+
+function renderHome() {
+  let html = '';
+  const popular = POPULAR.map(code => BY_CODE.get(code)).filter(Boolean);
+  if (popular.length) {
+    html += `<div class="block-head"><div class="block-title">${esc(t('popular'))}</div></div><div class="pop-grid">` +
+      popular.map(c => `<div class="pop-item" data-act="country" data-id="${esc(c.id)}">${flagHtml(c.code)}<span class="nm">${esc(countryName(c))}</span></div>`).join('') +
+      '</div>';
+  }
+  html += `<div class="block-head"><div class="block-title">${esc(t('all-countries-h'))}</div>` +
+    `<div class="block-count">${ALL_COUNTRIES.length || ''}</div></div>`;
+  if (countriesState !== 'ok') return html + stateHtml(countriesState);
+  return html + '<div class="rows">' + sortedByName(ALL_COUNTRIES).map(c => countryRow(c)).join('') + '</div>';
+}
+
+function crumb(icon, title, sub) {
+  return `<div class="crumb"><button type="button" class="back-btn" data-act="back" aria-label="Back">‹</button>${icon}` +
+    `<div style="min-width:0"><div class="crumb-title">${esc(title)}</div>${sub ? `<div class="crumb-sub">${esc(sub)}</div>` : ''}</div></div>`;
+}
+
+function renderContinent() {
+  const cont = continentById(view.id) || { id: view.id, code: '', name: '' };
+  const name = regionName(cont);
+  let html = crumb(regionIconHtml(cont.code), name) +
+    `<div class="rows" style="padding-top:10px;padding-bottom:4px"><div class="row featured" data-act="regional" data-id="${esc(cont.id)}">` +
+    `${regionIconHtml(cont.code)}<div class="col"><div class="pkg-featured-badge">${esc(t('regional-badge'))}</div>` +
+    `<span class="nm">${esc(name)} — ${esc(t('all-countries'))}</span><div class="sub">${esc(t('regional-sub'))}</div></div>` +
+    '<span class="chev">›</span></div></div>';
+  const st = continentCountries || { state: 'loading', list: [] };
+  html += `<div class="block-head"><div class="block-title">${esc(t('countries-h'))}</div>` +
+    `<div class="block-count">${st.list.length || ''}</div></div>`;
+  if (st.state !== 'ok') return html + stateHtml(st.state);
+  if (!st.list.length) return html + stateHtml('empty', t('not-found'));
+  html += '<div class="rows">' + sortedByName(st.list).map(c => countryRow(c, cont.id)).join('') + '</div>';
+  if (st.extra && st.extra.length) {
+    html += `<div class="block-head" style="padding-top:0"><div class="block-title">${esc(t('extra-h'))}</div>` +
+      `<div class="block-count">${st.extra.length}</div></div>` +
+      '<div class="rows">' + sortedByName(st.extra).map(c => countryRow(c, cont.id)).join('') + '</div>';
+  }
+  return html;
+}
+
+function placeOfPlans() {      // что покрывает открытый список тарифов
+  if (view.scope === 'global') return { icon: regionIconHtml('ww'), big: regionIconHtml('ww'), name: t('world') };
+  if (view.scope === 'regional') {
+    const cont = continentById(view.id) || { code: '', name: '' };
+    return { icon: regionIconHtml(cont.code), big: regionIconHtml(cont.code), name: regionName(cont) };
+  }
+  const c = KNOWN.get(String(view.id)) || { code: '', name: '' };
+  return { icon: flagHtml(c.code), big: flagHtml(c.code, true), name: countryName(c) };
+}
+
+function dataLabel(p) { return p.unlimited ? t('unlimited') : `${p.gb} ${t('gb')}`; }
+
+function coverageNames(codes) {
+  return codes.map(code => countryName(BY_CODE.get(code) || { code, name: code.toUpperCase() }))
+    .sort((a, b) => a.localeCompare(b, currentLang));
+}
+
+function currentLine() { return plans && plans.lines[plans.lineIndex]; }
+
+function visiblePlans() {
+  const line = currentLine();
+  if (!line) return [];
+  return plans.showAll ? sortPlans(dedupe(line.pkgs)) : pickBest(line.pkgs.filter(p => !p.extra));
+}
+
+// Страны, в которых работает именно этот тариф
+function codesOf(p, line) {
+  const own = p.cv != null && plans && plans.coverage[p.cv];
+  return own && own.length ? own : line.codes;
+}
+
+function renderPlans() {
+  const place = placeOfPlans();
+  if (!plans || plans.state !== 'ok') return crumb(place.icon, place.name) + stateHtml(plans ? plans.state : 'loading');
+  if (!plans.lines.length) return crumb(place.icon, place.name) + stateHtml('empty', t('no-plans'));
+  const line = currentLine();
+  let html = crumb(place.icon, place.name, line.codes.length && plans.lines.length === 1 ? count(line.codes.length, 'countries') : '');
+  if (plans.lines.length > 1) {
+    html += '<div class="lines">' + plans.lines.map((l, i) => {
+      const label = lineLabel(l);
+      return `<button type="button" class="line-chip${i === plans.lineIndex ? ' active' : ''}" data-act="line" data-id="${i}">` +
+        `<b>${esc(label[0])}</b>${label[1] ? esc(label[1]) + ' · ' : ''}${esc(priceFrom(l.min))}</button>`;
+    }).join('') + '</div>';
+  }
+  if (line.codes.length) {
+    html += `<details class="cov"><summary>${esc(count(line.codes.length, 'countries'))} · ${esc(t('cov-list'))}</summary>` +
+      `<p>${esc(coverageNames(line.codes).join(', '))}</p></details>`;
+  }
+  const list = visiblePlans();
+  const total = dedupe(line.pkgs).length;
+  html += `<div class="block-head"><div class="block-title">${esc(t('plans-h'))}</div>` +
+    `<div class="block-count">${esc(count(list.length, 'plans'))}</div></div>`;
+  if (!plans.showAll && list.length < total) html += `<div class="note">${esc(t('best-note'))}</div>`;
+  html += '<div class="plans">' + list.map(p =>
+    `<div class="plan" data-act="plan" data-id="${esc(p.id)}"><div>` +
+    `<div class="plan-data">${esc(dataLabel(p))}${p.plus ? '<small>PLUS</small>' : ''}</div>` +
+    `<div class="plan-meta">${esc(count(p.days, 'days'))}${p.extra ? ' · ' + esc(count(codesOf(p, line).length, 'countries')) : ''}</div></div>` +
+    `<div class="pkg-right"><div class="pkg-price">${esc(money(p.price))}</div>` +
+    `<div class="pkg-per">${esc(money(p.price / p.days))}/${esc(t('per-day'))}</div></div></div>`).join('') + '</div>';
+  if (plans.showAll) html += `<button type="button" class="ghost-btn" data-act="toggle-all">${esc(t('show-best'))}</button>`;
+  else if (list.length < total) html += `<button type="button" class="ghost-btn" data-act="toggle-all">${esc(t('show-all').replace('{n}', total))}</button>`;
+  else html += '<div style="height:16px"></div>';
+  return html;
+}
+
+function renderSearch() {
+  const found = search(searchQuery);
+  const total = found.regions.length + found.countries.length;
+  if (!total) {
+    return countriesState === 'loading' ? stateHtml('loading') : stateHtml('empty', t('not-found'));
+  }
+  let html = `<div class="block-head"><div class="block-title">${esc(t('results-h'))}</div><div class="block-count">${total}</div></div><div class="rows">`;
+  html += found.regions.map(r => r.code === 'ww'
+    ? `<div class="row featured" data-act="global">${regionIconHtml('ww')}<div class="col"><span class="nm">${esc(t('world'))}</span><div class="sub">${esc(t('tile-global'))}</div></div><span class="chev">›</span></div>`
+    : `<div class="row featured" data-act="continent" data-id="${esc(r.id)}">${regionIconHtml(r.code)}<div class="col"><span class="nm">${esc(regionName(r))}</span><div class="sub">${esc(t('regional-badge'))}</div></div><span class="chev">›</span></div>`
+  ).join('');
+  html += found.countries.map(c => countryRow(c)).join('');
+  return html + '</div>';
+}
+
+function render() {
+  const home = view.kind === 'home' && !searchQuery;
+  $('hero').classList.toggle('compact', !home);
+  renderTiles();
+  let html;
+  if (searchQuery) html = renderSearch();
+  else if (view.kind === 'continent') html = renderContinent();
+  else if (view.kind === 'plans') html = renderPlans();
+  else html = renderHome();
+  $('content').innerHTML = html;
+  updateBackButton();
+}
+
+function updateBackButton() {
+  if (!tg || !tg.BackButton) return;
+  const need = $('modal').classList.contains('open') || currentPage !== 'catalog' || view.kind !== 'home' || Boolean(searchQuery);
+  try { need ? tg.BackButton.show() : tg.BackButton.hide(); } catch (e) {}
+}
+
+// ── ПОИСК: поле ввода ──────────────────────────────────────────────────
+function setSearch(value, silent) {
+  searchQuery = String(value || '').trim();
+  if ($('searchInput').value.trim() !== searchQuery) $('searchInput').value = value || '';
+  $('searchClear').classList.toggle('on', Boolean($('searchInput').value));
+  if (!silent) { render(); if (searchQuery) $('catalogScroll').scrollTop = Math.min($('catalogScroll').scrollTop, $('hero').offsetHeight); }
+}
+
+// ── ОКНО ТАРИФА ────────────────────────────────────────────────────────
+function openModal(id) {
+  const line = currentLine();
+  selectedPkg = line && line.pkgs.find(p => p.id === String(id));
+  if (!selectedPkg) return;
+  const place = placeOfPlans();
+  const p = selectedPkg;
+  $('mFlag').innerHTML = place.big;
+  $('mName').textContent = place.name;
+  $('mRegion').textContent = `${dataLabel(p)}${p.plus ? ' Plus' : ''} · ${count(p.days, 'days')}`;
+  $('mData').textContent = dataLabel(p) + (p.plus ? ' Plus' : '');
+  $('mDays').textContent = count(p.days, 'days');
+  const codes = codesOf(p, line);
+  $('mCoverage').textContent = codes.length ? count(codes.length, 'countries') + ' ›' : place.name;
+  $('mCovRow').classList.toggle('tap', codes.length > 0);
+  $('mCovList').classList.remove('open');
+  $('mCovList').textContent = codes.length ? coverageNames(codes).join(', ') : '';
+  $('mPrice').textContent = money(p.price);
+  $('mPerDay').textContent = `${money(p.price / p.days)} / ${t('per-day')}`;
+  $('buySection').style.display = 'block';
+  $('paySection').style.display = 'none';
+  $('modal').classList.add('open');
+  updateBackButton();
+}
+
+function closeModal() {
+  $('modal').classList.remove('open');
+  $('buySection').style.display = 'block';
+  $('paySection').style.display = 'none';
+  updateBackButton();
+}
+
+function updatePayNotes() {
+  if (!selectedPkg) return;
+  const stars = Math.max(MIN_STARS, Math.round(selectedPkg.price * STARS_PER_USD));
+  $('starsNote').textContent = t('stars-note').replace('{n}', stars.toLocaleString(currentLang));
+  $('cryptoNote').textContent = t('crypto-note');
+}
+
+let payInProgress = false;
+
+// Заказ уходит в очередь API (/api/pending), бот забирает его за несколько секунд и присылает счёт в чат.
+// Цену бот считает сам по данным поставщика: то, что отправлено отсюда, на сумму не влияет.
+async function selectPayment(method) {
+  if (!selectedPkg || payInProgress) return;
+  const userId = tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : null;
+  if (!userId) { notify(t('open-via-bot')); return; }
+
+  const p = selectedPkg;
+  const pkgData = {
+    action: "pay", id: p.id, name: p.raw, gb: p.unlimited ? -1 : p.gb, days: p.days,
+    price: p.price, unlimited: p.unlimited, method,
+  };
+  payInProgress = true;
+  $('payStars').disabled = true; $('payCrypto').disabled = true;
+  try {
+    const res = await fetch(`${API_URL}/api/pending`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ telegram_id: userId, pkg: pkgData }),
+    });
+    const body = await res.json().catch(() => null);
+    if (!res.ok || !body || !body.ok) throw new Error("API " + res.status);
+    try { if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred("success"); } catch (e) {}
+    tg.close();
+  } catch (e) {
+    notify('⚠️ ' + t('order-fail'));
+  } finally {
+    payInProgress = false;
+    $('payStars').disabled = false; $('payCrypto').disabled = false;
+  }
+}
+
+// ── СТРАНИЦЫ И ЯЗЫК ────────────────────────────────────────────────────
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  $('page-' + name).classList.add('active');
+  $('nav-' + name).classList.add('active');
+  currentPage = name;
+  updateBackButton();
+}
 
 function applyLang() {
-  // Static elements
-  const els = {
-    't-hero-badge': 'hero-badge', 't-hero-t1': 'hero-t1', 't-hero-em': 'hero-em',
-    't-hero-sub': 'hero-sub', 't-stat-countries': 'stat-countries',
-    't-stat-speed': 'stat-speed', 't-stat-support': 'stat-support',
-    't-section-rates': 'section-rates',
-    't-nav-catalog': 'nav-catalog', 't-nav-orders': 'nav-orders', 't-nav-support': 'nav-support',
-    't-orders-tag': 'orders-tag',
-    't-support-tag': 'support-tag', 't-support-card-title': 'support-card-title',
-    't-support-text': 'support-text', 't-support-btn': 'support-btn',
-    't-activate-title': 'activate-title',
-    't-close-btn': 'close-btn', 't-modal-data': 'modal-data', 't-modal-days': 'modal-days',
-    't-modal-coverage': 'modal-coverage', 't-modal-network': 'modal-network',
-    't-modal-activation': 'modal-activation', 't-modal-instant': 'modal-instant',
-    't-modal-device': 'modal-device', 't-modal-devices-val': 'modal-devices-val',
-    't-buy-btn': 'buy-btn', 't-pay-stars': 'pay-stars', 't-pay-crypto': 'pay-crypto',
-  };
-  Object.entries(els).forEach(([id, key]) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = t(key);
-  });
-
-  // Orders title
-  const ot = document.getElementById('t-orders-title');
-  if (ot) ot.innerHTML = `${t('orders-t1')} <em style="font-style:italic;color:var(--glow);">${t('orders-em')}</em>`;
-
-  // Support title
-  const st = document.getElementById('t-support-title');
-  if (st) st.innerHTML = `${t('support-t1')} <em style="font-style:italic;color:var(--glow);">${t('support-em')}</em>`;
-
-  // Activate text
-  const at = document.getElementById('t-activate-text');
-  if (at) at.innerHTML = `<strong style="color:var(--mist);">iPhone:</strong> ${t('activate-text-iphone')}<br><br><strong style="color:var(--mist);">Android:</strong> ${t('activate-text-android')}`;
-
-  // Search placeholder
-  const si = document.getElementById('searchInput');
-  if (si) si.placeholder = t('search-ph');
-
-  // Tabs
-  renderTabs();
-
-  // Lang button
-  const lb = document.getElementById('langBtn');
-  if (lb) lb.textContent = `${LANG_FLAGS[currentLang]} ${currentLang.toUpperCase()} ▾`;
-
-  // Active lang item
-  document.querySelectorAll('.lang-item').forEach(el => {
-    el.classList.toggle('active', el.dataset.lang === currentLang);
-  });
-
-  // Re-render packages with new lang
-  renderPackages();
+  document.documentElement.lang = currentLang;
+  const ids = ['hero-badge', 'hero-t1', 'hero-em', 'hero-sub', 'stat-countries', 'stat-speed', 'stat-support',
+    'nav-catalog', 'nav-orders', 'nav-support', 'orders-tag', 'orders-card-title', 'orders-hint',
+    'support-tag', 'support-card-title', 'support-text', 'activate-title', 'close-btn',
+    'modal-data', 'modal-days', 'modal-coverage', 'modal-network', 'modal-activation', 'modal-instant',
+    'modal-device', 'modal-devices-val', 'buy-btn', 'pay-stars', 'pay-crypto'];
+  ids.forEach(key => { const el = $('t-' + key); if (el) el.textContent = t(key); });
+  $('ordersClose').textContent = t('orders-btn');
+  $('supportBtn').textContent = t('support-btn');
+  const accent = text => `<em style="font-style:italic;color:var(--glow);">${esc(text)}</em>`;
+  $('t-orders-title').innerHTML = `${esc(t('orders-t1'))} ${accent(t('orders-em'))}`;
+  $('t-support-title').innerHTML = `${esc(t('support-t1'))} ${accent(t('support-em'))}`;
+  $('t-activate-text').innerHTML = `<strong style="color:var(--mist);">iPhone:</strong> ${esc(t('activate-text-iphone'))}<br><br>` +
+    `<strong style="color:var(--mist);">Android:</strong> ${esc(t('activate-text-android'))}`;
+  $('searchInput').placeholder = t('search-ph');
+  $('langCode').textContent = currentLang.toUpperCase();
+  document.querySelectorAll('.lang-item').forEach(el => el.classList.toggle('active', el.dataset.lang === currentLang));
+  render();
+  if ($('modal').classList.contains('open') && selectedPkg) { const pay = $('paySection').style.display; openModal(selectedPkg.id); if (pay !== 'none') { $('buySection').style.display = 'none'; $('paySection').style.display = 'block'; updatePayNotes(); } }
 }
 
 function setLang(lang) {
   if (!I18N[lang]) return;
   currentLang = lang;
-  localStorage.setItem('linkora_miniapp_lang', lang);
-  document.getElementById('langMenu').classList.remove('open');
+  try { localStorage.setItem('linkora_miniapp_lang', lang); } catch (e) {}
+  $('langMenu').classList.remove('open');
   applyLang();
 }
 
-function toggleLangMenu() {
-  document.getElementById('langMenu').classList.toggle('open');
+// ── СОБЫТИЯ ────────────────────────────────────────────────────────────
+function onAction(el) {
+  const act = el.dataset.act, id = el.dataset.id;
+  if (act === 'home') { navStack = []; open({ kind: 'home' }); }
+  else if (act === 'global') go({ kind: 'plans', scope: 'global' });
+  else if (act === 'continent') go({ kind: 'continent', id });
+  else if (act === 'regional') go({ kind: 'plans', scope: 'regional', id });
+  else if (act === 'country') go({ kind: 'plans', scope: 'country', id, from: el.dataset.from || '' });
+  else if (act === 'back') back();
+  else if (act === 'line') { plans.lineIndex = Number(id) || 0; plans.showAll = false; render(); }
+  else if (act === 'toggle-all') { plans.showAll = !plans.showAll; render(); }
+  else if (act === 'plan') openModal(id);
+  else if (act === 'retry') {
+    if (view.kind === 'home') { countriesState = 'loading'; render(); loadAllCountries(); loadContinents(); }
+    else open(view);
+  }
 }
 
 document.addEventListener('click', e => {
-  const sw = document.getElementById('langSwitcher');
-  if (sw && !sw.contains(e.target)) {
-    document.getElementById('langMenu').classList.remove('open');
+  const actor = e.target.closest('[data-act]');
+  if (actor) return onAction(actor);
+  const langItem = e.target.closest('.lang-item');
+  if (langItem) return setLang(langItem.dataset.lang);
+  if (e.target.closest('#langBtn')) return $('langMenu').classList.toggle('open');
+  if (!e.target.closest('#langSwitcher')) $('langMenu').classList.remove('open');
+  const nav = e.target.closest('.nav-item');
+  if (nav) return showPage(nav.dataset.page);
+  if (e.target.closest('#ordersBtn')) return showPage('orders');
+  if (e.target.closest('#ordersClose')) { if (tg && tg.initData) { try { tg.close(); return; } catch (err) {} } return showPage('catalog'); }
+  if (e.target.closest('#supportBtn')) {
+    const url = 'https://t.me/linkorasupport';
+    try { if (tg && tg.openTelegramLink && tg.initData) return tg.openTelegramLink(url); } catch (err) {}
+    return void window.open(url, '_blank');
   }
+  if (e.target.closest('#searchClear')) { setSearch(''); $('searchInput').focus(); return; }
+  if (e.target === $('modal') || e.target.closest('#t-close-btn')) return closeModal();
+  if (e.target.closest('#mCovRow.tap')) return $('mCovList').classList.toggle('open');
+  if (e.target.closest('#t-buy-btn')) { $('buySection').style.display = 'none'; $('paySection').style.display = 'block'; return updatePayNotes(); }
+  if (e.target.closest('#payStars')) return selectPayment('stars');
+  if (e.target.closest('#payCrypto')) return selectPayment('crypto');
 });
 
-// ── APP ──────────────────────────────────────────────────
-const tg = window.Telegram && window.Telegram.WebApp;
-if (tg) { tg.ready(); tg.expand(); }
+$('searchInput').addEventListener('input', e => setSearch(e.target.value));
+$('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') e.target.blur(); });
 
-const API_URL = "https://linkora-esim-api-jakj.vercel.app";
-const STARS_PER_USD = 80; // должен совпадать с payments.py в боте
-
-function updatePayNotes() {
-  if (!selectedPkg) return;
-  const stars = Math.max(50, Math.round(selectedPkg.price * STARS_PER_USD));
-  const sn = document.getElementById("starsNote");
-  const cn = document.getElementById("cryptoNote");
-  if (sn) sn.textContent = t('stars-note').replace('{n}', stars.toLocaleString());
-  if (cn) cn.textContent = t('crypto-note');
-}
-let PACKAGES = [], CONTINENTS = [], loadingPackages = false;
-let activeContinent = "all", searchQuery = "", selectedPkg = null, currentPage = "catalog";
-let currentRequest = null;
-
-function renderTabs() {
-  const CONT_FLAGS = { "Asia":"🌏","Europe":"🇪🇺","North America":"🌎","South America":"🌎","Africa":"🌍","Oceania":"🌏","Middle East":"🕌" };
-  const CONT_NAMES = {
-    ru: { "Asia":"Азия","Europe":"Европа","North America":"Северная Америка","South America":"Южная Америка","Africa":"Африка","Oceania":"Океания","Middle East":"Ближний Восток" },
-    en: { "Asia":"Asia","Europe":"Europe","North America":"North America","South America":"South America","Africa":"Africa","Oceania":"Oceania","Middle East":"Middle East" },
-    zh: { "Asia":"亚洲","Europe":"欧洲","North America":"北美洲","South America":"南美洲","Africa":"非洲","Oceania":"大洋洲","Middle East":"中东" },
-    es: { "Asia":"Asia","Europe":"Europa","North America":"América del Norte","South America":"América del Sur","Africa":"África","Oceania":"Oceanía","Middle East":"Oriente Medio" },
-    de: { "Asia":"Asien","Europe":"Europa","North America":"Nordamerika","South America":"Südamerika","Africa":"Afrika","Oceania":"Ozeanien","Middle East":"Naher Osten" },
-  };
-  const names = CONT_NAMES[currentLang] || CONT_NAMES.ru;
-  const tabs = document.getElementById("tabs");
-  const extra = CONTINENTS.map(c =>
-    `<div class="tab" onclick="filterContinent(this,'${c.id}')">${CONT_FLAGS[c.name]||'🌐'} ${names[c.name]||c.name}</div>`
-  ).join('');
-  tabs.innerHTML = `
-    <div class="tab ${activeContinent==='all'?'active':''}" onclick="filterTab(this,'all')">${t('tab-all')}</div>
-    <div class="tab ${activeContinent==='global'?'active':''}" onclick="filterTab(this,'global')">${t('tab-global')}</div>
-    ${extra}
-  `;
-}
-
-// --- Лёгкий кэш (ускоряет повторные открытия мини-аппа) ---
-const CACHE_TTL = 30 * 60 * 1000; // 30 минут
-function cacheGet(key) {
-  try {
-    const raw = localStorage.getItem('linkora_cache_' + key);
-    if (!raw) return null;
-    const obj = JSON.parse(raw);
-    if (Date.now() - obj.ts > CACHE_TTL) return null;
-    return obj.data;
-  } catch(e) { return null; }
-}
-function cacheSet(key, data) {
-  try { localStorage.setItem('linkora_cache_' + key, JSON.stringify({ ts: Date.now(), data })); } catch(e) {}
-}
-
-async function loadGlobalPackages() {
-  if (loadingPackages) return;
-  loadingPackages = true;
-
-  // 1) Мгновенно показываем из кэша, если он свежий
-  const cached = cacheGet('global');
-  if (cached && cached.length) { PACKAGES = cached; renderPackages(); }
-  else { showLoading(); }
-
-  // 2) Обновляем с сервера (в фоне, если кэш уже показан)
-  try {
-    const res = await fetch(`${API_URL}/api/packages?type=global`);
-    const data = await res.json();
-    if (data.ok) {
-      PACKAGES = data.data.map(p => ({ ...p, continent: "global", region: p.country }));
-      cacheSet('global', PACKAGES);
-    }
-  } catch(e) {}
-  loadingPackages = false;
-  renderPackages();
-}
-
-async function loadContinents() {
-  // Мгновенно из кэша
-  const cached = cacheGet('continents');
-  if (cached && cached.length) { CONTINENTS = cached; renderTabs(); }
-  // Обновляем в фоне
-  try {
-    const res = await fetch(`${API_URL}/api/packages?type=continents`);
-    const data = await res.json();
-    if (data.ok) { CONTINENTS = data.data; cacheSet('continents', CONTINENTS); renderTabs(); }
-  } catch(e) {}
-}
-
-async function loadCountryPackages(id, name, code) {
-  showLoading();
-  try {
-    const res = await fetch(`${API_URL}/api/packages?type=country&id=${id}&name=${encodeURIComponent(name)}&code=${code}`);
-    const data = await res.json();
-    if (data.ok) return data.data.map(p => ({ ...p, region: name }));
-  } catch(e) {} finally { }
-  return [];
-}
-
-function showLoading() {
-  document.getElementById("packages").innerHTML = `<div class="empty"><div class="empty-icon" style="animation:pulse 1.5s infinite;">🌿</div><p>${t('loading')}</p></div>`;
-}
-
-async function filterContinent(el, continentId) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById("packages").innerHTML = `<div class="empty"><div style="font-size:32px;margin-bottom:10px;">⏳</div><div>${t('loading-countries')}</div></div>`;
-
-  if (currentRequest) currentRequest.cancelled = true;
-  const thisRequest = { cancelled: false };
-  currentRequest = thisRequest;
-
-  try {
-    const res = await fetch(`${API_URL}/api/packages?type=countries&id=${continentId}`);
-    if (thisRequest.cancelled) return;
-    const data = await res.json();
-    if (thisRequest.cancelled) return;
-    const countries = data.data || [];
-
-    if (!countries.length) {
-      document.getElementById("packages").innerHTML = `<div class="empty"><div>${t('not-found')}</div></div>`;
-      return;
-    }
-
-    const continentObj = CONTINENTS.find(c => String(c.id) === String(continentId));
-    const contName = continentObj ? (continentObj.name_ru || continentObj.name) : "";
-    const contFlag = continentObj ? (continentObj.flag || "🌐") : "🌐";
-
-    const regionalBtn = `<div class="pkg-card featured" onclick="loadRegionalPackages('${continentId}','${contName}','${contFlag}')">
-      <div class="pkg-left">
-        <div class="pkg-flag">${contFlag}</div>
-        <div>
-          <div class="pkg-featured-badge">${t('regional-badge')}</div>
-          <div class="pkg-name">${contName} — ${t('all-countries')}</div>
-          <div class="pkg-meta">${t('regional-sub')}</div>
-        </div>
-      </div>
-      <div class="pkg-right" style="color:var(--glow);font-size:20px;font-family:var(--serif);">›</div>
-    </div>`;
-
-    const countriesHtml = countries.map(c => {
-      const imgUrl = c.image_url || c.flag_url || "";
-      const code = imgUrl.split("/").pop().replace(".png","").replace(".svg","").toUpperCase();
-      const flag = code.length===2 ? [...code].map(ch=>String.fromCodePoint(0x1F1E6+ch.charCodeAt(0)-65)).join("") : "🌐";
-      const safeName = c.name.replace(/'/g, " ");
-      return `<div class="pkg-card" onclick="selectCountry('${c.id}','${safeName}','${code}')">
-        <div class="pkg-left">
-          <div class="pkg-flag">${flag}</div>
-          <div><div class="pkg-name">${c.name}</div><div class="pkg-meta">${t('tap-rates')}</div></div>
-        </div>
-        <div class="pkg-right" style="color:#4ade80;font-size:20px;">›</div>
-      </div>`;
-    }).join('');
-
-    document.getElementById("packages").innerHTML = regionalBtn + countriesHtml;
-  } catch(e) {
-    if (!thisRequest.cancelled) {
-      document.getElementById("packages").innerHTML = `<div class="empty"><div>${t('load-error')}</div></div>`;
-    }
-  }
-}
-
-async function loadRegionalPackages(continentId, continentName, continentFlag) {
-  document.getElementById("packages").innerHTML = `<div class="empty"><div style="font-size:32px;margin-bottom:10px;">⏳</div><div>${t('loading-regional')}</div></div>`;
-  try {
-    const res = await fetch(`${API_URL}/api/packages?type=regional&id=${continentId}`);
-    const data = await res.json();
-    if (!data.ok || !data.data.length) {
-      document.getElementById("packages").innerHTML = `<div class="empty"><div>${t('no-regional')}</div></div>`;
-      return;
-    }
-    PACKAGES = data.data.map(p => ({ ...p, region: continentName, continent: "regional" }));
-    activeContinent = "regional";
-    renderPackages();
-  } catch(e) {
-    document.getElementById("packages").innerHTML = `<div class="empty"><div>${t('load-error')}</div></div>`;
-  }
-}
-
-async function selectCountry(id, name, code) {
-  const pkgs = await loadCountryPackages(id, name, code);
-  PACKAGES = pkgs;
-  activeContinent = "country";
-  renderPackages();
-}
-
-function renderPackages() {
-  const filtered = PACKAGES.filter(p => {
-    const matchC = activeContinent === "all" || activeContinent === "country" || activeContinent === "regional" || p.continent === activeContinent;
-    const q = searchQuery.toLowerCase();
-    const matchS = !q || p.name.toLowerCase().includes(q) || (p.region||"").toLowerCase().includes(q);
-    return matchC && matchS;
-  });
-
-  document.getElementById("pkgCount").textContent = filtered.length + " " + t('rates-count');
-
-  if (!filtered.length) {
-    document.getElementById("packages").innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><div>${t('not-found')}</div></div>`;
-    return;
-  }
-
-  document.getElementById("packages").innerHTML = filtered.map(p => `
-    <div class="pkg-card ${p.featured ? 'featured' : ''}" onclick="openModal('${p.id}')">
-      <div class="pkg-left">
-        <div class="pkg-flag">${p.flag}</div>
-        <div>
-          ${p.featured ? `<div class="pkg-featured-badge">${t('regional-badge')}</div>` : ''}
-          <div class="pkg-name">${p.name}</div>
-          <div class="pkg-meta">${p.unlimited ? '∞' : p.gb + ' GB'} · ${p.days} ${t('days-short')} · ${p.region||p.country}</div>
-        </div>
-      </div>
-      <div class="pkg-right">
-        <div class="pkg-price">$${p.price.toFixed(2)}</div>
-        <div class="pkg-per">$${(p.price/p.days).toFixed(2)}/${t('per-day')}</div>
-      </div>
-    </div>
-  `).join('');
-}
-
-async function filterTab(el, val) {
-  if (currentRequest) currentRequest.cancelled = true;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  activeContinent = val;
-  if (val === 'global' || val === 'all') await loadGlobalPackages();
-  else renderPackages();
-}
-
-function filterPackages() {
-  searchQuery = document.getElementById("searchInput").value;
-  renderPackages();
-}
-
-function openModal(id) {
-  selectedPkg = PACKAGES.find(p => String(p.id) === String(id));
-  if (!selectedPkg) return;
-  document.getElementById("mFlag").textContent = selectedPkg.flag;
-  document.getElementById("mName").textContent = selectedPkg.name;
-  document.getElementById("mRegion").textContent = selectedPkg.region;
-  document.getElementById("mData").textContent = selectedPkg.unlimited ? "∞ " + t('regional-badge') : selectedPkg.gb + " GB";
-  document.getElementById("mDays").textContent = selectedPkg.days + " " + t('modal-days').toLowerCase();
-  document.getElementById("mCoverage").textContent = selectedPkg.region;
-  document.getElementById("mPrice").textContent = "$" + selectedPkg.price.toFixed(2);
-  document.getElementById("mPerDay").textContent = "$" + (selectedPkg.price / selectedPkg.days).toFixed(2) + " / " + t('per-day');
-  document.getElementById("modal").classList.add("open");
-  if (tg) tg.BackButton.show();
-}
-
-function closeModal() {
-  document.getElementById("modal").classList.remove("open");
-  document.getElementById("buySection").style.display = "block";
-  document.getElementById("paySection").style.display = "none";
-  if (tg) tg.BackButton.hide();
-}
-
-function handleOverlayClick(e) {
-  if (e.target === document.getElementById("modal")) closeModal();
-}
-
-function handleBuy() {
-  document.getElementById("buySection").style.display = "none";
-  document.getElementById("paySection").style.display = "block";
-  updatePayNotes();
-}
-
-let payInProgress = false;
-
-async function selectPayment(method) {
-  if (!selectedPkg || payInProgress) return;
-
-  // sendData работает только из reply-кнопки клавиатуры.
-  // Наш мини-апп открывается inline-кнопкой, поэтому шлём заказ
-  // в API (/api/pending) — бот заберёт его в течение 5 секунд.
-  const userId = tg && tg.initDataUnsafe && tg.initDataUnsafe.user
-    ? tg.initDataUnsafe.user.id : null;
-  if (!userId) { alert(t('open-via-bot')); return; }
-
-  const pkgData = {
-    action: "pay", id: String(selectedPkg.id), name: selectedPkg.name,
-    gb: selectedPkg.unlimited ? -1 : selectedPkg.gb, days: selectedPkg.days,
-    price: selectedPkg.price, unlimited: selectedPkg.unlimited || false, method
-  };
-
-  payInProgress = true;
-  const btnS = document.getElementById("payStars");
-  const btnC = document.getElementById("payCrypto");
-  btnS.disabled = true; btnC.disabled = true;
-  btnS.style.opacity = "0.5"; btnC.style.opacity = "0.5";
-
-  try {
-    const res = await fetch(`${API_URL}/api/pending`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ telegram_id: userId, pkg: pkgData })
-    });
-    if (!res.ok) throw new Error("API " + res.status);
-    if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred("success");
-    // Закрываем мини-апп — бот пришлёт инвойс/ссылку на оплату в чат
-    if (tg) tg.close();
-  } catch (e) {
-    alert("⚠️ Не удалось оформить заказ. Проверь интернет и попробуй ещё раз.");
-  } finally {
-    payInProgress = false;
-    btnS.disabled = false; btnC.disabled = false;
-    btnS.style.opacity = ""; btnC.style.opacity = "";
-  }
-}
-
-function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  document.getElementById('nav-' + name).classList.add('active');
-  currentPage = name;
-
-  if (name === 'orders') renderOrders();
-}
-
-function renderOrders() {
-  const list = document.getElementById('orders-list');
-  list.innerHTML = `<div class="empty"><div class="empty-icon">🌿</div><p>${t('no-orders')}</p><p style="font-size:12px;margin-top:6px;opacity:0.6;">${t('buy-first')}</p></div>`;
-}
-
-function openSupport() {
-  if (tg) tg.openTelegramLink('https://t.me/linkorasupport');
-}
-
-if (tg) {
-  tg.BackButton.onClick(function() {
-    if (document.getElementById("modal").classList.contains("open")) closeModal();
-  });
-}
-
-document.getElementById("payStars").onclick = () => selectPayment("stars");
-document.getElementById("payCrypto").onclick = () => selectPayment("crypto");
+if (tg && tg.BackButton) { try { tg.BackButton.onClick(back); } catch (e) {} }
 
 // ── PARTICLES ──────────────────────────────────────────
 const canvas = document.getElementById('canvas');
@@ -1088,13 +1565,14 @@ function animateParticles() {
 }
 animateParticles();
 
-// Init
+// ── ЗАПУСК ─────────────────────────────────────────────────────────────
 applyLang();
-loadGlobalPackages();
 loadContinents();
-renderOrders();
-
-if(tg){ try{tg.setHeaderColor('#050d07');}catch(e){} tg.setBackgroundColor&&tg.setBackgroundColor('#050d07'); }
+loadAllCountries();
+if (tg) {
+  try { tg.setHeaderColor('#050d07'); } catch (e) {}
+  try { if (tg.setBackgroundColor) tg.setBackgroundColor('#050d07'); } catch (e) {}
+}
 </script>
 </body>
 </html>
