@@ -365,6 +365,12 @@ body {
 .m-cov.open { display: block; }
 .pay-btn:disabled { opacity: 0.5; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* ── бот не на связи ── */
+.offline-bar { display: none; flex-shrink: 0; padding: 9px 20px; background: rgba(251,191,36,0.1); border-bottom: 1px solid rgba(251,191,36,0.22); color: #fbbf24; font-size: 12.5px; line-height: 1.4; text-align: center; text-wrap: balance; position: relative; z-index: 9; }
+.offline-bar.on { display: block; }
+.offline-box p { font-size: 13.5px; line-height: 1.6; color: #fbbf24; background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.22); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; }
+#offlineBox, #paySection { scroll-margin-bottom: 16px; }
 </style>
 </head>
 <body>
@@ -396,6 +402,8 @@ body {
       </button>
     </div>
   </div>
+
+  <div class="offline-bar" id="offlineBar"><span id="t-offline-banner"></span></div>
 
   <!-- CATALOG -->
   <div id="page-catalog" class="page active">
@@ -519,6 +527,10 @@ body {
             <span class="pay-chip">💎 USDT</span>
           </div>
         </div>
+        <div id="offlineBox" class="offline-box" style="display:none;">
+          <p id="t-offline-text"></p>
+          <button class="pay-btn pay-btn-crypto" id="offlineRetry" type="button"></button>
+        </div>
         <div id="paySection" style="display:none;">
           <button class="pay-btn pay-btn-stars" id="payStars" type="button">⭐ <span id="t-pay-stars"></span></button>
           <div class="stars-note" id="starsNote"></div>
@@ -563,7 +575,10 @@ const I18N = {
     'not-found': 'Ничего не найдено', 'no-plans': 'Для этого направления пока нет тарифов',
     'search-ph': 'Страна или регион', 'per-day': 'день', 'unlimited': 'Безлимит', 'gb': 'ГБ',
     'show-all': 'Показать все тарифы ({n})', 'show-best': 'Показать только лучшие',
-    'best-note': 'Показаны самые выгодные тарифы', 'cov-list': 'список стран', 'variant': 'Вариант', 'from': 'от', 'extra-h': 'Ещё в расширенном тарифе',
+    'best-note': 'Показаны самые выгодные тарифы', 'cov-list': 'список стран', 'variant': 'Вариант', 'from': 'от',
+    'offline-banner': 'Оплата временно недоступна. Каталог можно смотреть.',
+    'offline-text': 'Магазин сейчас не на связи, поэтому счёт не придёт. Попробуй через несколько минут или напиши в поддержку.',
+    'offline-retry': 'Проверить снова', 'extra-h': 'Ещё в расширенном тарифе',
     'open-via-bot': 'Открой каталог через кнопку 🛍 в боте @esimruu_bot',
     'order-fail': 'Не удалось оформить заказ. Проверь интернет и попробуй ещё раз.',
   },
@@ -597,7 +612,10 @@ const I18N = {
     'not-found': 'Nothing found', 'no-plans': 'No plans for this destination yet',
     'search-ph': 'Country or region', 'per-day': 'day', 'unlimited': 'Unlimited', 'gb': 'GB',
     'show-all': 'Show all plans ({n})', 'show-best': 'Show best plans only',
-    'best-note': 'Showing the best-value plans', 'cov-list': 'list of countries', 'variant': 'Option', 'from': 'from', 'extra-h': 'Also in the wider plan',
+    'best-note': 'Showing the best-value plans', 'cov-list': 'list of countries', 'variant': 'Option', 'from': 'from',
+    'offline-banner': 'Payments are temporarily unavailable. You can still browse the catalog.',
+    'offline-text': 'The shop is offline right now, so the invoice would not arrive. Try again in a few minutes or contact support.',
+    'offline-retry': 'Check again', 'extra-h': 'Also in the wider plan',
     'open-via-bot': 'Open the catalog with the 🛍 button in the bot @esimruu_bot',
     'order-fail': 'Could not place the order. Check your connection and try again.',
   },
@@ -631,7 +649,10 @@ const I18N = {
     'not-found': '未找到结果', 'no-plans': '该目的地暂无套餐',
     'search-ph': '国家或地区', 'per-day': '天', 'unlimited': '无限流量', 'gb': 'GB',
     'show-all': '显示全部套餐（{n}）', 'show-best': '只显示优选套餐',
-    'best-note': '已为您筛选最划算的套餐', 'cov-list': '国家列表', 'variant': '方案', 'from': '起', 'extra-h': '扩展套餐另含',
+    'best-note': '已为您筛选最划算的套餐', 'cov-list': '国家列表', 'variant': '方案', 'from': '起',
+    'offline-banner': '暂时无法付款，您仍可浏览目录。',
+    'offline-text': '商店目前不在线，账单无法送达。请几分钟后再试，或联系客服。',
+    'offline-retry': '重新检查', 'extra-h': '扩展套餐另含',
     'open-via-bot': '请通过机器人 @esimruu_bot 中的 🛍 按钮打开目录',
     'order-fail': '下单失败。请检查网络后重试。',
   },
@@ -665,7 +686,10 @@ const I18N = {
     'not-found': 'Sin resultados', 'no-plans': 'Aún no hay planes para este destino',
     'search-ph': 'País o región', 'per-day': 'día', 'unlimited': 'Ilimitado', 'gb': 'GB',
     'show-all': 'Ver todos los planes ({n})', 'show-best': 'Ver solo los mejores',
-    'best-note': 'Mostramos los planes con mejor precio', 'cov-list': 'lista de países', 'variant': 'Opción', 'from': 'desde', 'extra-h': 'Además en el plan ampliado',
+    'best-note': 'Mostramos los planes con mejor precio', 'cov-list': 'lista de países', 'variant': 'Opción', 'from': 'desde',
+    'offline-banner': 'El pago no está disponible por ahora. Puedes seguir viendo el catálogo.',
+    'offline-text': 'La tienda no está en línea ahora, así que la factura no llegaría. Inténtalo en unos minutos o escribe a soporte.',
+    'offline-retry': 'Comprobar de nuevo', 'extra-h': 'Además en el plan ampliado',
     'open-via-bot': 'Abre el catálogo con el botón 🛍 del bot @esimruu_bot',
     'order-fail': 'No se pudo crear el pedido. Revisa tu conexión e inténtalo de nuevo.',
   },
@@ -699,7 +723,10 @@ const I18N = {
     'not-found': 'Nichts gefunden', 'no-plans': 'Für dieses Ziel gibt es noch keine Tarife',
     'search-ph': 'Land oder Region', 'per-day': 'Tag', 'unlimited': 'Unbegrenzt', 'gb': 'GB',
     'show-all': 'Alle Tarife anzeigen ({n})', 'show-best': 'Nur die besten anzeigen',
-    'best-note': 'Angezeigt werden die günstigsten Tarife', 'cov-list': 'Länderliste', 'variant': 'Option', 'from': 'ab', 'extra-h': 'Zusätzlich im erweiterten Tarif',
+    'best-note': 'Angezeigt werden die günstigsten Tarife', 'cov-list': 'Länderliste', 'variant': 'Option', 'from': 'ab',
+    'offline-banner': 'Zahlung vorübergehend nicht möglich. Den Katalog kannst du weiter ansehen.',
+    'offline-text': 'Der Shop ist gerade offline, die Rechnung würde nicht ankommen. Versuche es in ein paar Minuten erneut oder schreibe dem Support.',
+    'offline-retry': 'Erneut prüfen', 'extra-h': 'Zusätzlich im erweiterten Tarif',
     'open-via-bot': 'Öffne den Katalog über den Button 🛍 im Bot @esimruu_bot',
     'order-fail': 'Die Bestellung konnte nicht erstellt werden. Prüfe deine Verbindung und versuche es erneut.',
   },
@@ -1389,7 +1416,9 @@ function openModal(id) {
   $('mPerDay').textContent = `${money(p.price / p.days)} / ${t('per-day')}`;
   $('buySection').style.display = 'block';
   $('paySection').style.display = 'none';
+  $('offlineBox').style.display = 'none';
   $('modal').classList.add('open');
+  checkShop();
   updateBackButton();
 }
 
@@ -1397,6 +1426,7 @@ function closeModal() {
   $('modal').classList.remove('open');
   $('buySection').style.display = 'block';
   $('paySection').style.display = 'none';
+  $('offlineBox').style.display = 'none';
   updateBackButton();
 }
 
@@ -1405,6 +1435,52 @@ function updatePayNotes() {
   const stars = Math.max(MIN_STARS, Math.round(selectedPkg.price * STARS_PER_USD));
   $('starsNote').textContent = t('stars-note').replace('{n}', stars.toLocaleString(currentLang));
   $('cryptoNote').textContent = t('crypto-note');
+}
+
+// ── НА СВЯЗИ ЛИ БОТ ────────────────────────────────────────────────────
+// Счёт выставляет бот. Если он выключен, заказ некому обработать, поэтому каталог
+// заранее спрашивает у API, на связи ли бот, и не даёт оформить оплату впустую.
+let shopOnline = null;      // true / false; null — узнать не удалось, считаем, что на связи
+let shopCheckedAt = 0;
+let shopCheckNo = 0;
+
+async function checkShop(force) {
+  if (!force && Date.now() - shopCheckedAt < 30000) return shopOnline;
+  shopCheckedAt = Date.now();
+  const no = ++shopCheckNo;
+  let online = null;
+  try {
+    // при ручной проверке обходим минутный кэш ответа
+    const res = await fetch(`${API_URL}/api/status${force ? '?t=' + Date.now() : ''}`);
+    const body = res.ok ? await res.json() : null;
+    if (body && body.ok) online = body.online !== false;
+  } catch (e) {}
+  if (no !== shopCheckNo) return shopOnline;   // пока ждали ответ, уже есть более свежий
+  shopOnline = online;
+  showShopState();
+  return shopOnline;
+}
+
+function payStep() {     // открыт ли в окне тарифа шаг оплаты
+  return $('modal').classList.contains('open') && $('buySection').style.display === 'none';
+}
+
+function showPayStep() {
+  $('buySection').style.display = 'none';
+  const offline = shopOnline === false;
+  $('offlineBox').style.display = offline ? 'block' : 'none';
+  $('paySection').style.display = offline ? 'none' : 'block';
+  updatePayNotes();
+}
+
+function revealPayStep() {   // на невысоких экранах кнопки оплаты и предупреждение оказываются ниже края окна
+  const el = shopOnline === false ? $('offlineBox') : $('paySection');
+  try { el.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e) {}
+}
+
+function showShopState() {
+  $('offlineBar').classList.toggle('on', shopOnline === false);
+  if (payStep()) showPayStep();
 }
 
 let payInProgress = false;
@@ -1430,6 +1506,12 @@ async function selectPayment(method) {
       body: JSON.stringify({ telegram_id: userId, pkg: pkgData }),
     });
     const body = await res.json().catch(() => null);
+    if (body && body.error === 'bot_offline') {   // бот выключился, пока клиент выбирал
+      shopOnline = false; shopCheckedAt = Date.now(); shopCheckNo++;
+      showShopState();
+      revealPayStep();
+      return;
+    }
     if (!res.ok || !body || !body.ok) throw new Error("API " + res.status);
     try { if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred("success"); } catch (e) {}
     tg.close();
@@ -1470,7 +1552,10 @@ function applyLang() {
   $('langCode').textContent = currentLang.toUpperCase();
   document.querySelectorAll('.lang-item').forEach(el => el.classList.toggle('active', el.dataset.lang === currentLang));
   render();
-  if ($('modal').classList.contains('open') && selectedPkg) { const pay = $('paySection').style.display; openModal(selectedPkg.id); if (pay !== 'none') { $('buySection').style.display = 'none'; $('paySection').style.display = 'block'; updatePayNotes(); } }
+  $('t-offline-banner').textContent = t('offline-banner');
+  $('t-offline-text').textContent = t('offline-text');
+  $('offlineRetry').textContent = t('offline-retry');
+  if ($('modal').classList.contains('open') && selectedPkg) { const paying = payStep(); openModal(selectedPkg.id); if (paying) showPayStep(); }
 }
 
 function setLang(lang) {
@@ -1518,7 +1603,12 @@ document.addEventListener('click', e => {
   if (e.target.closest('#searchClear')) { setSearch(''); $('searchInput').focus(); return; }
   if (e.target === $('modal') || e.target.closest('#t-close-btn')) return closeModal();
   if (e.target.closest('#mCovRow.tap')) return $('mCovList').classList.toggle('open');
-  if (e.target.closest('#t-buy-btn')) { $('buySection').style.display = 'none'; $('paySection').style.display = 'block'; return updatePayNotes(); }
+  if (e.target.closest('#t-buy-btn')) { showPayStep(); revealPayStep(); return void checkShop(); }
+  if (e.target.closest('#offlineRetry')) {
+    const btn = $('offlineRetry');
+    btn.disabled = true;   // кнопка гаснет хотя бы на полсекунды, чтобы было видно, что проверка прошла
+    return void Promise.all([checkShop(true), new Promise(r => setTimeout(r, 500))]).then(() => { btn.disabled = false; });
+  }
   if (e.target.closest('#payStars')) return selectPayment('stars');
   if (e.target.closest('#payCrypto')) return selectPayment('crypto');
 });
@@ -1569,6 +1659,8 @@ animateParticles();
 applyLang();
 loadContinents();
 loadAllCountries();
+checkShop();
+document.addEventListener('visibilitychange', () => { if (!document.hidden) checkShop(); });
 if (tg) {
   try { tg.setHeaderColor('#050d07'); } catch (e) {}
   try { if (tg.setBackgroundColor) tg.setBackgroundColor('#050d07'); } catch (e) {}
