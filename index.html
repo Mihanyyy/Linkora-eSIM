@@ -371,6 +371,19 @@ body {
 .offline-bar.on { display: block; }
 .offline-box p { font-size: 13.5px; line-height: 1.6; color: #fbbf24; background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.22); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; }
 #offlineBox, #paySection { scroll-margin-bottom: 16px; }
+
+/* ── подойдёт ли телефон ── */
+#mDevRow { border-bottom: none; gap: 12px; }
+.dev-cta { color: var(--glow); white-space: nowrap; }
+.m-dev { padding: 2px 0 4px; scroll-margin-bottom: 16px; }
+.m-dev p { margin: 0 0 8px; }
+.m-dev p:last-child { margin-bottom: 0; }
+.m-dev .dial { display: flex; align-items: center; gap: 12px; margin: 10px 0 12px; color: var(--white); font-size: 13.5px; font-weight: 400; }
+.dial-code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 20px; font-weight: 500; letter-spacing: 2px; line-height: 1; color: var(--glow); background: rgba(82,183,136,0.1); border: 1px solid rgba(82,183,136,0.3); border-radius: 10px; padding: 9px 14px; -webkit-user-select: all; user-select: all; }
+.m-dev .yes, .m-dev .no { position: relative; padding-left: 20px; color: var(--white); font-weight: 400; }
+.m-dev .yes::before, .m-dev .no::before { position: absolute; left: 0; top: 0; font-weight: 600; }
+.m-dev .yes::before { content: '✓'; color: var(--leaf); }
+.m-dev .no::before { content: '✕'; color: #fbbf24; }
 </style>
 </head>
 <body>
@@ -515,7 +528,14 @@ body {
         <div class="m-cov" id="mCovList"></div>
         <div class="detail-row"><span class="detail-row-label">📶 <span id="t-modal-network"></span></span><span class="detail-row-val">5G / LTE</span></div>
         <div class="detail-row"><span class="detail-row-label">⚡ <span id="t-modal-activation"></span></span><span class="detail-row-val" id="t-modal-instant"></span></div>
-        <div class="detail-row"><span class="detail-row-label">📲 <span id="t-modal-device"></span></span><span class="detail-row-val" id="t-modal-devices-val"></span></div>
+        <div class="detail-row tap" id="mDevRow"><span class="detail-row-label">📲 <span id="t-device-q"></span></span><span class="detail-row-val dev-cta"><span id="t-device-check"></span> ›</span></div>
+        <div class="m-cov m-dev" id="mDevHint">
+          <p id="t-device-intro"></p>
+          <div class="dial"><span id="t-device-dial"></span><b class="dial-code">*#06#</b></div>
+          <p class="yes" id="t-device-yes"></p>
+          <p class="no" id="t-device-no"></p>
+          <p id="t-device-more"></p>
+        </div>
       </div>
       <div>
         <div class="price-big" id="mPrice"></div>
@@ -564,7 +584,13 @@ const I18N = {
     'close-btn': '✕ Закрыть',
     'modal-data': 'Интернет', 'modal-days': 'Срок', 'modal-coverage': 'Покрытие', 'modal-network': 'Сеть',
     'modal-activation': 'Активация', 'modal-instant': 'Мгновенная',
-    'modal-device': 'Устройство', 'modal-devices-val': 'iPhone / Android',
+    'device-q': 'Подойдёт ли телефон?',
+    'device-check': 'Проверить',
+    'device-intro': 'eSIM работает не на всех телефонах. Проверь свой за 10 секунд.',
+    'device-dial': 'Набери',
+    'device-yes': 'Есть строка EID — телефон подходит.',
+    'device-no': 'Строки EID нет — поищи в настройках «Добавить eSIM». Нет и там — телефон не подойдёт.',
+    'device-more': 'Телефон с привязкой к оператору может не принять eSIM. Не уверен — напиши в поддержку до оплаты.',
     'buy-btn': 'Купить eSIM', 'pay-stars': 'Telegram Stars', 'pay-crypto': 'Crypto (USDT)',
     'stars-note': '≈ {n} ⭐ · дороже цены в $ — комиссия Telegram', 'crypto-note': 'точная цена в $ — выгоднее',
     'tile-all': 'Все', 'tile-global': 'Глобальные', 'world': 'Весь мир',
@@ -601,7 +627,13 @@ const I18N = {
     'close-btn': '✕ Close',
     'modal-data': 'Data', 'modal-days': 'Validity', 'modal-coverage': 'Coverage', 'modal-network': 'Network',
     'modal-activation': 'Activation', 'modal-instant': 'Instant',
-    'modal-device': 'Device', 'modal-devices-val': 'iPhone / Android',
+    'device-q': 'Will my phone work?',
+    'device-check': 'Check',
+    'device-intro': 'eSIM does not work on every phone. Check yours in 10 seconds.',
+    'device-dial': 'Dial',
+    'device-yes': 'There is an EID line — your phone is fine.',
+    'device-no': 'No EID — look for “Add eSIM” in Settings. Not there either — this phone will not work.',
+    'device-more': 'A carrier-locked phone may reject the eSIM. Not sure? Message support before paying.',
     'buy-btn': 'Buy eSIM', 'pay-stars': 'Telegram Stars', 'pay-crypto': 'Crypto (USDT)',
     'stars-note': '≈ {n} ⭐ · above the $ price because of the Telegram fee', 'crypto-note': 'exact $ price — better value',
     'tile-all': 'All', 'tile-global': 'Global', 'world': 'Worldwide',
@@ -638,7 +670,13 @@ const I18N = {
     'close-btn': '✕ 关闭',
     'modal-data': '流量', 'modal-days': '有效期', 'modal-coverage': '覆盖范围', 'modal-network': '网络',
     'modal-activation': '激活', 'modal-instant': '即时',
-    'modal-device': '设备', 'modal-devices-val': 'iPhone / Android',
+    'device-q': '我的手机能用吗？',
+    'device-check': '检查',
+    'device-intro': '并非所有手机都支持 eSIM，10 秒即可检查。',
+    'device-dial': '在拨号界面输入',
+    'device-yes': '出现 EID 一行，说明手机支持 eSIM。',
+    'device-no': '没有 EID：请在设置中查找“添加 eSIM”。也没有的话，这部手机无法使用。',
+    'device-more': '有运营商锁的手机可能无法使用 eSIM。不确定时，请在付款前联系客服。',
     'buy-btn': '购买 eSIM', 'pay-stars': 'Telegram Stars', 'pay-crypto': '加密货币 (USDT)',
     'stars-note': '≈ {n} ⭐ · 因 Telegram 手续费略高于美元价格', 'crypto-note': '按美元原价付款 — 更划算',
     'tile-all': '全部', 'tile-global': '全球', 'world': '全球',
@@ -675,7 +713,13 @@ const I18N = {
     'close-btn': '✕ Cerrar',
     'modal-data': 'Datos', 'modal-days': 'Duración', 'modal-coverage': 'Cobertura', 'modal-network': 'Red',
     'modal-activation': 'Activación', 'modal-instant': 'Inmediata',
-    'modal-device': 'Dispositivo', 'modal-devices-val': 'iPhone / Android',
+    'device-q': '¿Sirve mi móvil?',
+    'device-check': 'Comprobar',
+    'device-intro': 'La eSIM no funciona en todos los móviles. Compruébalo en 10 segundos.',
+    'device-dial': 'Marca',
+    'device-yes': 'Aparece la línea EID: tu móvil es compatible.',
+    'device-no': 'No hay EID: busca «Añadir eSIM» en Ajustes. Si tampoco está, este móvil no sirve.',
+    'device-more': 'Un móvil bloqueado por operador puede rechazar la eSIM. ¿Dudas? Escribe a soporte antes de pagar.',
     'buy-btn': 'Comprar eSIM', 'pay-stars': 'Telegram Stars', 'pay-crypto': 'Cripto (USDT)',
     'stars-note': '≈ {n} ⭐ · algo más caro que en $ por la comisión de Telegram', 'crypto-note': 'precio exacto en $ — sale más barato',
     'tile-all': 'Todos', 'tile-global': 'Global', 'world': 'Todo el mundo',
@@ -712,7 +756,13 @@ const I18N = {
     'close-btn': '✕ Schließen',
     'modal-data': 'Daten', 'modal-days': 'Laufzeit', 'modal-coverage': 'Abdeckung', 'modal-network': 'Netz',
     'modal-activation': 'Aktivierung', 'modal-instant': 'Sofort',
-    'modal-device': 'Gerät', 'modal-devices-val': 'iPhone / Android',
+    'device-q': 'Passt mein Handy?',
+    'device-check': 'Prüfen',
+    'device-intro': 'eSIM funktioniert nicht auf jedem Handy. Prüfe deins in 10 Sekunden.',
+    'device-dial': 'Wähle',
+    'device-yes': 'Eine Zeile „EID“ erscheint: Dein Handy passt.',
+    'device-no': 'Keine EID: Suche in den Einstellungen nach „eSIM hinzufügen“. Fehlt auch das, passt dieses Handy nicht.',
+    'device-more': 'Ein Handy mit SIM-Lock kann die eSIM ablehnen. Unsicher? Schreib dem Support vor dem Bezahlen.',
     'buy-btn': 'eSIM kaufen', 'pay-stars': 'Telegram Stars', 'pay-crypto': 'Krypto (USDT)',
     'stars-note': '≈ {n} ⭐ · wegen der Telegram-Gebühr teurer als der $-Preis', 'crypto-note': 'exakter $-Preis — günstiger',
     'tile-all': 'Alle', 'tile-global': 'Global', 'world': 'Weltweit',
@@ -1396,7 +1446,7 @@ function setSearch(value, silent) {
 }
 
 // ── ОКНО ТАРИФА ────────────────────────────────────────────────────────
-function openModal(id) {
+function openModal(id, keepHint) {
   const line = currentLine();
   selectedPkg = line && line.pkgs.find(p => p.id === String(id));
   if (!selectedPkg) return;
@@ -1412,6 +1462,7 @@ function openModal(id) {
   $('mCovRow').classList.toggle('tap', codes.length > 0);
   $('mCovList').classList.remove('open');
   $('mCovList').textContent = codes.length ? coverageNames(codes).join(', ') : '';
+  if (!keepHint) $('mDevHint').classList.remove('open');
   $('mPrice').textContent = money(p.price);
   $('mPerDay').textContent = `${money(p.price / p.days)} / ${t('per-day')}`;
   $('buySection').style.display = 'block';
@@ -1424,6 +1475,7 @@ function openModal(id) {
 
 function closeModal() {
   $('modal').classList.remove('open');
+  $('mDevHint').classList.remove('open');
   $('buySection').style.display = 'block';
   $('paySection').style.display = 'none';
   $('offlineBox').style.display = 'none';
@@ -1539,7 +1591,8 @@ function applyLang() {
     'nav-catalog', 'nav-orders', 'nav-support', 'orders-tag', 'orders-card-title', 'orders-hint',
     'support-tag', 'support-card-title', 'support-text', 'activate-title', 'close-btn',
     'modal-data', 'modal-days', 'modal-coverage', 'modal-network', 'modal-activation', 'modal-instant',
-    'modal-device', 'modal-devices-val', 'buy-btn', 'pay-stars', 'pay-crypto'];
+    'device-q', 'device-check', 'device-intro', 'device-dial', 'device-yes', 'device-no', 'device-more',
+    'buy-btn', 'pay-stars', 'pay-crypto'];
   ids.forEach(key => { const el = $('t-' + key); if (el) el.textContent = t(key); });
   $('ordersClose').textContent = t('orders-btn');
   $('supportBtn').textContent = t('support-btn');
@@ -1555,7 +1608,7 @@ function applyLang() {
   $('t-offline-banner').textContent = t('offline-banner');
   $('t-offline-text').textContent = t('offline-text');
   $('offlineRetry').textContent = t('offline-retry');
-  if ($('modal').classList.contains('open') && selectedPkg) { const paying = payStep(); openModal(selectedPkg.id); if (paying) showPayStep(); }
+  if ($('modal').classList.contains('open') && selectedPkg) { const paying = payStep(); openModal(selectedPkg.id, true); if (paying) showPayStep(); }
 }
 
 function setLang(lang) {
@@ -1603,6 +1656,11 @@ document.addEventListener('click', e => {
   if (e.target.closest('#searchClear')) { setSearch(''); $('searchInput').focus(); return; }
   if (e.target === $('modal') || e.target.closest('#t-close-btn')) return closeModal();
   if (e.target.closest('#mCovRow.tap')) return $('mCovList').classList.toggle('open');
+  if (e.target.closest('#mDevRow')) {   // как проверить, что телефон поддерживает eSIM
+    const hint = $('mDevHint');
+    if (hint.classList.toggle('open')) { try { hint.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (err) {} }
+    return;
+  }
   if (e.target.closest('#t-buy-btn')) { showPayStep(); revealPayStep(); return void checkShop(); }
   if (e.target.closest('#offlineRetry')) {
     const btn = $('offlineRetry');
