@@ -384,6 +384,62 @@ body {
 .m-dev .yes::before, .m-dev .no::before { position: absolute; left: 0; top: 0; font-weight: 600; }
 .m-dev .yes::before { content: '✓'; color: var(--leaf); }
 .m-dev .no::before { content: '✕'; color: #fbbf24; }
+
+/* ── подбор тарифа: кнопка на главной, три вопроса, «наш выбор» ── */
+.picking .search-wrap, .picking .tiles-wrap { display: none; }
+.pick-cta { margin: 6px 16px 2px; display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; cursor: pointer; border: 1px solid rgba(82,183,136,0.32); background: linear-gradient(135deg, rgba(45,106,79,0.34) 0%, rgba(10,26,12,0.8) 100%); transition: all 0.25s var(--ease); min-width: 0; }
+.pick-cta:active { transform: scale(0.985); border-color: rgba(82,183,136,0.5); }
+.pick-ico { flex: 0 0 auto; width: 42px; height: 42px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; color: var(--glow); }
+.pick-ico img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.pick-ico svg { display: none; width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.pick-ico.noimg { background: rgba(82,183,136,0.12); border: 1px solid rgba(82,183,136,0.25); }
+.pick-ico.noimg svg { display: block; }
+.pick-cta .col { flex: 1; min-width: 0; }
+.pick-cta .nm { display: block; font-size: 15px; font-weight: 500; color: var(--white); }
+.pick-cta .sub { font-size: 12px; color: var(--gray); margin-top: 2px; line-height: 1.35; }
+.pick-cta .chev { flex: 0 0 auto; color: var(--leaf); font-size: 18px; font-family: var(--serif); }
+
+.pick-steps { display: flex; gap: 6px; padding: 12px 16px 0; }
+.pick-steps i { flex: 1; height: 3px; border-radius: 2px; background: rgba(82,183,136,0.15); }
+.pick-steps i.on { background: var(--leaf); }
+.pick-q { font-family: var(--serif); font-size: 26px; font-weight: 300; color: var(--mist); line-height: 1.15; padding: 20px 20px 14px; }
+.pick-search { margin: 0 16px 8px; }
+.pick-days { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 0 16px; }
+.pick-day { padding: 13px 2px 10px; border-radius: 12px; background: var(--card); border: 1px solid var(--border); font-family: var(--sans); cursor: pointer; text-align: center; min-width: 0; transition: all 0.25s var(--ease); }
+.pick-day:active { transform: scale(0.96); border-color: rgba(82,183,136,0.45); }
+.pick-day b { display: block; font-family: var(--serif); font-size: 26px; font-weight: 300; color: var(--glow); line-height: 1; }
+.pick-day span { display: block; font-size: 11px; color: var(--gray); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pick-day.other b { font-family: var(--sans); font-size: 22px; line-height: 26px; }
+.pick-custom { display: none; gap: 8px; padding: 10px 16px 0; }
+.pick-custom.on { display: flex; }
+.pick-custom input { flex: 1; min-width: 0; background: rgba(10,26,12,0.85); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; color: var(--white); font-size: 16px; outline: none; font-family: var(--sans); -webkit-appearance: none; appearance: none; -moz-appearance: textfield; }
+.pick-custom input::-webkit-outer-spin-button, .pick-custom input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.pick-custom input:focus { border-color: rgba(82,183,136,0.5); }
+.pick-custom input::placeholder { color: rgba(107,158,122,0.75); }
+.pick-custom button { flex: 0 0 auto; padding: 0 20px; border-radius: 12px; border: 1px solid rgba(82,183,136,0.4); background: rgba(45,106,79,0.35); color: var(--glow); font-family: var(--sans); font-size: 14px; cursor: pointer; }
+.row.use { padding: 13px 14px; }
+.row.use .nm { white-space: normal; font-weight: 500; }
+.row.use .sub { margin-top: 3px; line-height: 1.4; }
+.row.use .rate { font-size: 12px; color: var(--leaf); margin-top: 3px; }
+.use-ico { flex: 0 0 auto; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font-size: 26px; line-height: 1; }
+.use-ico img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+.pick-res { margin: 12px 16px 0; padding: 12px; border-radius: 16px; border: 1px solid rgba(82,183,136,0.4); background: linear-gradient(135deg, rgba(45,106,79,0.28) 0%, rgba(10,26,12,0.7) 100%); }
+.pick-res-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 9px; }
+.pick-res-head .pkg-featured-badge { margin-bottom: 0; white-space: nowrap; }
+.pick-edit { background: none; border: none; padding: 4px 0; color: var(--leaf); font-family: var(--sans); font-size: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; text-align: right; }
+.pick-res .plan { background: rgba(5,13,7,0.55); border-color: rgba(82,183,136,0.3); }
+.pick-why { font-size: 12px; color: var(--gray); line-height: 1.5; padding: 9px 4px 0; }
+.pick-why.warn { color: #fbbf24; }
+.pick-help { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: calc(100% - 32px); margin: 12px 16px 0; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--border); background: rgba(10,26,12,0.55); color: var(--glow); font-family: var(--sans); font-size: 13px; text-align: left; cursor: pointer; }
+.pick-help:active { background: rgba(82,183,136,0.08); }
+.pick-help i { font-style: normal; font-family: var(--serif); font-size: 18px; line-height: 1; color: var(--leaf); }
+#pickResults .row .ricon { flex: 0 0 auto; width: 38px; height: 38px; font-size: 26px; }
+#pickResults .row .col .sub { margin-top: 1px; }
+
+/* ── безлимит: после дневного порога скорость снижается ── */
+.unl-note { display: none; font-size: 12.5px; line-height: 1.55; color: #fbbf24; background: rgba(251,191,36,0.07); border: 1px solid rgba(251,191,36,0.2); border-radius: 12px; padding: 11px 14px; margin: -8px 0 14px; }
+.unl-note.on { display: block; }
 </style>
 </head>
 <body>
@@ -523,6 +579,7 @@ body {
         <div class="detail-card"><div class="detail-card-label" id="t-modal-data"></div><div class="detail-card-val" id="mData"></div></div>
         <div class="detail-card"><div class="detail-card-label" id="t-modal-days"></div><div class="detail-card-val" id="mDays"></div></div>
       </div>
+      <div class="unl-note" id="mUnlNote"></div>
       <div class="detail-rows">
         <div class="detail-row" id="mCovRow"><span class="detail-row-label">🌐 <span id="t-modal-coverage"></span></span><span class="detail-row-val" id="mCoverage"></span></div>
         <div class="m-cov" id="mCovList"></div>
@@ -591,6 +648,32 @@ const I18N = {
     'device-yes': 'Есть строка EID — телефон подходит.',
     'device-no': 'Строки EID нет — поищи в настройках «Добавить eSIM». Нет и там — телефон не подойдёт.',
     'device-more': 'Телефон с привязкой к оператору может не принять eSIM. Не уверен — напиши в поддержку до оплаты.',
+    'pick-cta': 'Подобрать тариф',
+    'pick-cta-sub': '3 вопроса — и покажем подходящий',
+    'pick-title': 'Подбор тарифа',
+    'pick-step': 'Шаг {n} из 3',
+    'pick-q1': 'Куда едешь?',
+    'pick-multi': 'Несколько стран',
+    'pick-q2': 'На сколько дней?',
+    'pick-other': 'Другое',
+    'pick-next': 'Дальше',
+    'pick-days-ph': 'Сколько дней',
+    'pick-q3': 'Для чего нужен интернет?',
+    'use-light': 'Карты и мессенджеры',
+    'use-light-sub': 'переписка, такси, навигация',
+    'use-medium': 'Соцсети и фото',
+    'use-medium-sub': 'лента, сторис, музыка',
+    'use-heavy': 'Видео и раздача',
+    'use-heavy-sub': 'YouTube, видеозвонки, ноутбук',
+    'pick-rate': '≈{n} ГБ в день',
+    'pick-badge': 'Наш выбор',
+    'pick-edit': 'Изменить ответы',
+    'pick-why': 'Расчёт с запасом: {days} × ≈{rate} ГБ в день ≈ {need} ГБ',
+    'unl-note': 'Безлимит: 1 ГБ в день на полной скорости, потом до следующего дня скорость падает до 512\u00A0кбит/\u2060с. Хватает на мессенджеры и карты, для видео мало.',
+    'unl-plus-note': 'Безлимит Plus: 2 ГБ в день на полной скорости, потом до следующего дня скорость падает до 2\u00A0Мбит/\u2060с. Видео в обычном качестве идёт.',
+    'pick-short-data': 'Нужно около {need} ГБ. Таких тарифов здесь нет, это самый большой.',
+    'pick-short-days': 'Тарифов на {days} здесь нет, это самый долгий. На остаток поездки понадобится второй.',
+    'pick-help': 'Помочь выбрать тариф',
     'buy-btn': 'Купить eSIM', 'pay-stars': 'Telegram Stars', 'pay-crypto': 'Crypto (USDT)',
     'stars-note': '≈ {n} ⭐ · дороже цены в $ — комиссия Telegram', 'crypto-note': 'точная цена в $ — выгоднее',
     'tile-all': 'Все', 'tile-global': 'Глобальные', 'world': 'Весь мир',
@@ -634,6 +717,32 @@ const I18N = {
     'device-yes': 'There is an EID line — your phone is fine.',
     'device-no': 'No EID — look for “Add eSIM” in Settings. Not there either — this phone will not work.',
     'device-more': 'A carrier-locked phone may reject the eSIM. Not sure? Message support before paying.',
+    'pick-cta': 'Find my plan',
+    'pick-cta-sub': '3 questions and we will show the right one',
+    'pick-title': 'Plan finder',
+    'pick-step': 'Step {n} of 3',
+    'pick-q1': 'Where are you going?',
+    'pick-multi': 'Several countries',
+    'pick-q2': 'For how many days?',
+    'pick-other': 'Other',
+    'pick-next': 'Next',
+    'pick-days-ph': 'Number of days',
+    'pick-q3': 'What do you need internet for?',
+    'use-light': 'Maps and messengers',
+    'use-light-sub': 'chats, taxis, navigation',
+    'use-medium': 'Social media and photos',
+    'use-medium-sub': 'feeds, stories, music',
+    'use-heavy': 'Video and hotspot',
+    'use-heavy-sub': 'YouTube, video calls, laptop',
+    'pick-rate': '≈{n} GB a day',
+    'pick-badge': 'Our pick',
+    'pick-edit': 'Change answers',
+    'pick-why': 'Estimate with a margin: {days} × ≈{rate} GB a day ≈ {need} GB',
+    'unl-note': 'Unlimited: 1 GB a day at full speed, then the speed drops to 512\u00A0kbps until the next day. Enough for messengers and maps, not for video.',
+    'unl-plus-note': 'Unlimited Plus: 2 GB a day at full speed, then the speed drops to 2\u00A0Mbps until the next day. Standard-quality video still plays.',
+    'pick-short-data': 'You need about {need} GB. There is no plan that big here, this is the largest one.',
+    'pick-short-days': 'There is no plan for {days} here, this is the longest one. You will need a second one for the rest of the trip.',
+    'pick-help': 'Help me choose a plan',
     'buy-btn': 'Buy eSIM', 'pay-stars': 'Telegram Stars', 'pay-crypto': 'Crypto (USDT)',
     'stars-note': '≈ {n} ⭐ · above the $ price because of the Telegram fee', 'crypto-note': 'exact $ price — better value',
     'tile-all': 'All', 'tile-global': 'Global', 'world': 'Worldwide',
@@ -677,6 +786,32 @@ const I18N = {
     'device-yes': '出现 EID 一行，说明手机支持 eSIM。',
     'device-no': '没有 EID：请在设置中查找“添加 eSIM”。也没有的话，这部手机无法使用。',
     'device-more': '有运营商锁的手机可能无法使用 eSIM。不确定时，请在付款前联系客服。',
+    'pick-cta': '帮我选套餐',
+    'pick-cta-sub': '回答 3 个问题，为您推荐合适的套餐',
+    'pick-title': '套餐推荐',
+    'pick-step': '第 {n} 步，共 3 步',
+    'pick-q1': '您要去哪里？',
+    'pick-multi': '多个国家',
+    'pick-q2': '去多少天？',
+    'pick-other': '其他',
+    'pick-next': '下一步',
+    'pick-days-ph': '天数',
+    'pick-q3': '主要用流量做什么？',
+    'use-light': '地图和聊天',
+    'use-light-sub': '消息、打车、导航',
+    'use-medium': '社交和照片',
+    'use-medium-sub': '刷动态、看快拍、听音乐',
+    'use-heavy': '视频和热点',
+    'use-heavy-sub': 'YouTube、视频通话、笔记本电脑',
+    'pick-rate': '每天约 {n} GB',
+    'pick-badge': '为您推荐',
+    'pick-edit': '修改答案',
+    'pick-why': '留有余量的估算：{days} × 每天约 {rate} GB ≈ {need} GB',
+    'unl-note': '无限流量：每天 1 GB 全速流量，之后降至 512\u00A0kbps，次日恢复。聊天和地图够用，看视频不够。',
+    'unl-plus-note': '无限流量 Plus：每天 2 GB 全速流量，之后降至 2\u00A0Mbps，次日恢复。仍可观看标清视频。',
+    'pick-short-data': '大约需要 {need} GB。这里没有这么大的套餐，这是流量最多的一款。',
+    'pick-short-days': '这里没有 {days} 的套餐，这是有效期最长的一款。剩余行程需要再买一个。',
+    'pick-help': '帮我选套餐',
     'buy-btn': '购买 eSIM', 'pay-stars': 'Telegram Stars', 'pay-crypto': '加密货币 (USDT)',
     'stars-note': '≈ {n} ⭐ · 因 Telegram 手续费略高于美元价格', 'crypto-note': '按美元原价付款 — 更划算',
     'tile-all': '全部', 'tile-global': '全球', 'world': '全球',
@@ -720,6 +855,32 @@ const I18N = {
     'device-yes': 'Aparece la línea EID: tu móvil es compatible.',
     'device-no': 'No hay EID: busca «Añadir eSIM» en Ajustes. Si tampoco está, este móvil no sirve.',
     'device-more': 'Un móvil bloqueado por operador puede rechazar la eSIM. ¿Dudas? Escribe a soporte antes de pagar.',
+    'pick-cta': 'Elegir mi plan',
+    'pick-cta-sub': '3 preguntas y te mostramos el adecuado',
+    'pick-title': 'Elegir plan',
+    'pick-step': 'Paso {n} de 3',
+    'pick-q1': '¿A dónde viajas?',
+    'pick-multi': 'Varios países',
+    'pick-q2': '¿Cuántos días?',
+    'pick-other': 'Otro',
+    'pick-next': 'Siguiente',
+    'pick-days-ph': 'Número de días',
+    'pick-q3': '¿Para qué necesitas internet?',
+    'use-light': 'Mapas y mensajería',
+    'use-light-sub': 'chats, taxis, navegación',
+    'use-medium': 'Redes sociales y fotos',
+    'use-medium-sub': 'feed, historias, música',
+    'use-heavy': 'Vídeo y compartir datos',
+    'use-heavy-sub': 'YouTube, videollamadas, portátil',
+    'pick-rate': '≈{n} GB al día',
+    'pick-badge': 'Nuestra elección',
+    'pick-edit': 'Cambiar respuestas',
+    'pick-why': 'Cálculo con margen: {days} × ≈{rate} GB al día ≈ {need} GB',
+    'unl-note': 'Ilimitado: 1 GB al día a máxima velocidad; después baja a 512\u00A0kbps hasta el día siguiente. Suficiente para mensajería y mapas, no para vídeo.',
+    'unl-plus-note': 'Ilimitado Plus: 2 GB al día a máxima velocidad; después baja a 2\u00A0Mbps hasta el día siguiente. El vídeo en calidad estándar sigue funcionando.',
+    'pick-short-data': 'Necesitas unos {need} GB. Aquí no hay un plan tan grande, este es el mayor.',
+    'pick-short-days': 'Aquí no hay planes para {days}, este es el más largo. Para el resto del viaje necesitarás otro.',
+    'pick-help': 'Ayúdame a elegir un plan',
     'buy-btn': 'Comprar eSIM', 'pay-stars': 'Telegram Stars', 'pay-crypto': 'Cripto (USDT)',
     'stars-note': '≈ {n} ⭐ · algo más caro que en $ por la comisión de Telegram', 'crypto-note': 'precio exacto en $ — sale más barato',
     'tile-all': 'Todos', 'tile-global': 'Global', 'world': 'Todo el mundo',
@@ -763,6 +924,32 @@ const I18N = {
     'device-yes': 'Eine Zeile „EID“ erscheint: Dein Handy passt.',
     'device-no': 'Keine EID: Suche in den Einstellungen nach „eSIM hinzufügen“. Fehlt auch das, passt dieses Handy nicht.',
     'device-more': 'Ein Handy mit SIM-Lock kann die eSIM ablehnen. Unsicher? Schreib dem Support vor dem Bezahlen.',
+    'pick-cta': 'Tarif finden',
+    'pick-cta-sub': '3 Fragen, und wir zeigen den passenden',
+    'pick-title': 'Tariffinder',
+    'pick-step': 'Schritt {n} von 3',
+    'pick-q1': 'Wohin reist du?',
+    'pick-multi': 'Mehrere Länder',
+    'pick-q2': 'Für wie viele Tage?',
+    'pick-other': 'Andere',
+    'pick-next': 'Weiter',
+    'pick-days-ph': 'Anzahl Tage',
+    'pick-q3': 'Wofür brauchst du Internet?',
+    'use-light': 'Karten und Messenger',
+    'use-light-sub': 'Chats, Taxi, Navigation',
+    'use-medium': 'Social Media und Fotos',
+    'use-medium-sub': 'Feed, Storys, Musik',
+    'use-heavy': 'Video und Hotspot',
+    'use-heavy-sub': 'YouTube, Videoanrufe, Laptop',
+    'pick-rate': '≈{n} GB pro Tag',
+    'pick-badge': 'Unsere Wahl',
+    'pick-edit': 'Antworten ändern',
+    'pick-why': 'Rechnung mit Reserve: {days} × ≈{rate} GB pro Tag ≈ {need} GB',
+    'unl-note': 'Unbegrenzt: 1 GB pro Tag mit voller Geschwindigkeit, danach bis zum nächsten Tag 512\u00A0kbit/\u2060s. Reicht für Messenger und Karten, nicht für Videos.',
+    'unl-plus-note': 'Unbegrenzt Plus: 2 GB pro Tag mit voller Geschwindigkeit, danach bis zum nächsten Tag 2\u00A0Mbit/\u2060s. Videos in Standardqualität laufen weiter.',
+    'pick-short-data': 'Du brauchst etwa {need} GB. So einen großen Tarif gibt es hier nicht, das ist der größte.',
+    'pick-short-days': 'Für {days} gibt es hier keinen Tarif, das ist der längste. Für den Rest der Reise brauchst du einen zweiten.',
+    'pick-help': 'Hilf mir bei der Tarifwahl',
     'buy-btn': 'eSIM kaufen', 'pay-stars': 'Telegram Stars', 'pay-crypto': 'Krypto (USDT)',
     'stars-note': '≈ {n} ⭐ · wegen der Telegram-Gebühr teurer als der $-Preis', 'crypto-note': 'exakter $-Preis — günstiger',
     'tile-all': 'Alle', 'tile-global': 'Global', 'world': 'Weltweit',
@@ -1047,7 +1234,7 @@ async function loadContinents() {
       .filter(c => c && c.id != null).map(c => ({ id: String(c.id), code: String(c.code || '').toLowerCase(), name: String(c.name || '') }));
   } catch (e) {}
   renderTiles();
-  if (searchQuery) render();
+  if (searchQuery || view.kind === 'pick') render();
 }
 
 async function loadAllCountries() {
@@ -1061,7 +1248,7 @@ async function loadAllCountries() {
   }
   ALL_COUNTRIES = remember(list);
   countriesState = ALL_COUNTRIES.length ? 'ok' : 'error';
-  if (view.kind === 'home' || searchQuery) render();
+  if (view.kind === 'home' || view.kind === 'pick' || searchQuery) render();
 }
 
 // ── ТАРИФЫ: разбор, линейки, отбор лучших ──────────────────────────────
@@ -1170,8 +1357,81 @@ function pickBest(pkgs) {
   return sortPlans(best.length ? best : list);
 }
 
+// ── ПОДБОР ТАРИФА ──────────────────────────────────────────────────────
+// Три вопроса: куда, на сколько дней, для чего. Без нейросетей: расход в день × число дней,
+// затем самый выгодный тариф каталога, которого хватит и по объёму, и по сроку.
+// Расход интернета, ГБ в день — с запасом. Откуда цифры (расход приложений в час): карты 5 МБ, мессенджеры
+// и звонки голосом до 30 МБ, сайты 60–75 МБ, лента Instagram ~0,4 ГБ, Reels и TikTok 0,7–1 ГБ,
+// YouTube 480p ~0,5 ГБ и 1080p ~2 ГБ, видеозвонок 0,3–0,5 ГБ.
+//   light  — час карт, переписка, час сайтов и такси: около 0,2 ГБ, с запасом 0,5
+//   medium — то же плюс час ленты и музыка: около 0,7 ГБ, с запасом 1
+//   heavy  — то же плюс час-два видео или раздача на ноутбук: 2–2,5 ГБ, с запасом 3
+const USE_GB = { light: 0.5, medium: 1, heavy: 3 };
+// Картинки для ответов (папка icons рядом с приложением); если картинка не загрузилась — значок из USE_EMOJI
+const USE_ICON = { light: 'icons/use-light.png', medium: 'icons/use-medium.png', heavy: 'icons/use-heavy.png' };
+const USE_EMOJI = { light: '💬', medium: '📸', heavy: '🎬' };
+function useIconHtml(use) {
+  return `<span class="use-ico"><img src="${USE_ICON[use]}" alt="" onerror="this.replaceWith('${USE_EMOJI[use]}')"></span>`;
+}
+const PICK_DAYS = [3, 5, 7, 10, 14, 21, 30];
+// Значок кнопки «Подобрать тариф»: картинка icons/pick.png, а если её нет — нарисованный компас
+const PICK_ICON = '<span class="pick-ico"><img src="icons/pick.png" alt="" onerror="this.parentNode.classList.add(\'noimg\');this.remove()">' +
+  '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.6 8.4l-2.1 5.1-5.1 2.1 2.1-5.1z"/></svg></span>';
+
+// Возвращает { plan, need, short }: тариф, сколько ГБ нужно на поездку и чего не хватило
+// (short: '' — всё подходит, 'data' — нет такого объёма, 'days' — нет такого срока).
+function recommend(pkgs, days, use) {
+  const need = Math.max(1, Math.round(days * (USE_GB[use] || USE_GB.medium) * 10) / 10);   // до десятых: 45 × 0,7 = 31,5, а не 31,49999
+  const list = dedupe(pkgs.filter(p => !p.extra));
+  if (!list.length) return null;
+  const size = p => p.unlimited ? 1e9 : p.gb;
+  // Расход примерный: 4,5 ГБ при нужных 4,9 тоже годятся. Безлимит подходит всем, кроме одного случая:
+  // для видео и раздачи обычный безлимит не годится (после 1 ГБ в день скорость 512 кбит/с), годится только Plus.
+  const enough = p => p.unlimited ? (use !== 'heavy' || p.plus) : p.gb >= need * 0.9;
+  let pool = list.filter(p => p.days >= days), short = '';
+  if (!pool.length) {                                // таких длинных тарифов нет: берём самые длинные
+    const longest = Math.max(...list.map(p => p.days));
+    pool = list.filter(p => p.days === longest);
+    short = 'days';
+  }
+  const fit = pool.filter(enough);
+  let plan;
+  if (fit.length) {
+    // при равной цене пакет с гигабайтами лучше безлимита: у него полная скорость без дневного порога
+    const cheapest = fit.sort((a, b) => a.price - b.price || a.unlimited - b.unlimited || size(b) - size(a) || b.days - a.days)[0];
+    // как и в списке лучших: тот же объём на более долгий срок, если он дороже не больше чем на 15%
+    plan = fit.filter(p => size(p) === size(cheapest) && p.plus === cheapest.plus &&
+      p.price <= cheapest.price * BEST.sameSizeTolerance + 0.005).sort((a, b) => b.days - a.days || a.price - b.price)[0];
+  } else {
+    plan = pool.sort((a, b) => size(b) - size(a) || a.price - b.price)[0];
+    short = short || 'data';
+  }
+  return { plan, need, short };
+}
+
+// Безлимит у поставщика (eSIMCard) с дневным порогом: «Unlimited» — 1 ГБ в день на полной скорости,
+// затем 512 кбит/с; «Unlimited Plus» — 2 ГБ в день, затем 2 Мбит/с. Об этом пишем в окне тарифа и в подборе.
+function unlimitedNote(p) { return p && p.unlimited ? t(p.plus ? 'unl-plus-note' : 'unl-note') : ''; }
+
+// Линейка, в которой подходящий тариф дешевле всего
+function pickLine(lines, pick) {
+  let best = 0, bestKey = null;
+  lines.forEach((line, i) => {
+    const r = recommend(line.pkgs, pick.days, pick.use);
+    if (!r) return;
+    const key = [r.short ? 1 : 0, r.plan.price];
+    if (!bestKey || key[0] < bestKey[0] || (key[0] === bestKey[0] && key[1] < bestKey[1])) { best = i; bestKey = key; }
+  });
+  return best;
+}
+
+function fmtNum(n) {
+  try { return Number(n).toLocaleString(currentLang, { maximumFractionDigits: 1 }); } catch (e) { return String(n); }
+}
+
 // ── СОСТОЯНИЕ ЭКРАНА ───────────────────────────────────────────────────
-// view.kind: home | continent | plans.  plans.scope: country | regional | global
+// view.kind: home | continent | plans | pick.  plans.scope: country | regional | global
+// pick — подбор тарифа: step 1 (куда), 2 (на сколько дней), 3 (для чего); ответ — plans с полем pick
 let view = { kind: 'home' };
 let navStack = [];
 let viewToken = 0;
@@ -1242,6 +1502,7 @@ async function loadPlans() {
     const pkgs = body.data.map(normalizePackage).filter(p => p.price > 0 && p.days > 0 && (p.unlimited || p.gb > 0));
     const coverage = Array.isArray(body.coverage) ? body.coverage : [];
     plans = { state: 'ok', lines: buildLines(pkgs, coverage), coverage, lineIndex: 0, showAll: false };
+    if (view.pick) plans.lineIndex = pickLine(plans.lines, view.pick);
   } catch (e) {
     if (token !== viewToken) return;
     plans = { state: 'error', lines: [], coverage: [], lineIndex: 0, showAll: false };
@@ -1298,7 +1559,8 @@ function sortedByName(list) {
 }
 
 function renderHome() {
-  let html = '';
+  let html = `<div class="pick-cta" data-act="pick">${PICK_ICON}<div class="col">` +
+    `<span class="nm">${esc(t('pick-cta'))}</span><div class="sub">${esc(t('pick-cta-sub'))}</div></div><span class="chev">›</span></div>`;
   const popular = POPULAR.map(code => BY_CODE.get(code)).filter(Boolean);
   if (popular.length) {
     html += `<div class="block-head"><div class="block-title">${esc(t('popular'))}</div></div><div class="pop-grid">` +
@@ -1338,15 +1600,16 @@ function renderContinent() {
   return html;
 }
 
-function placeOfPlans() {      // что покрывает открытый список тарифов
-  if (view.scope === 'global') return { icon: regionIconHtml('ww'), big: regionIconHtml('ww'), name: t('world') };
-  if (view.scope === 'regional') {
-    const cont = continentById(view.id) || { code: '', name: '' };
+function placeInfo(v) {        // страна, регион или весь мир: значок и название
+  if (v.scope === 'global') return { icon: regionIconHtml('ww'), big: regionIconHtml('ww'), name: t('world') };
+  if (v.scope === 'regional') {
+    const cont = continentById(v.id) || { code: '', name: '' };
     return { icon: regionIconHtml(cont.code), big: regionIconHtml(cont.code), name: regionName(cont) };
   }
-  const c = KNOWN.get(String(view.id)) || { code: '', name: '' };
+  const c = KNOWN.get(String(v.id)) || { code: '', name: '' };
   return { icon: flagHtml(c.code), big: flagHtml(c.code, true), name: countryName(c) };
 }
+function placeOfPlans() { return placeInfo(view); }      // что покрывает открытый список тарифов
 
 function dataLabel(p) { return p.unlimited ? t('unlimited') : `${p.gb} ${t('gb')}`; }
 
@@ -1369,6 +1632,29 @@ function codesOf(p, line) {
   return own && own.length ? own : line.codes;
 }
 
+function planCard(p, line) {
+  return `<div class="plan" data-act="plan" data-id="${esc(p.id)}"><div>` +
+    `<div class="plan-data">${esc(dataLabel(p))}${p.plus ? '<small>PLUS</small>' : ''}</div>` +
+    `<div class="plan-meta">${esc(count(p.days, 'days'))}${p.extra ? ' · ' + esc(count(codesOf(p, line).length, 'countries')) : ''}</div></div>` +
+    `<div class="pkg-right"><div class="pkg-price">${esc(money(p.price))}</div>` +
+    `<div class="pkg-per">${esc(money(p.price / p.days))}/${esc(t('per-day'))}</div></div></div>`;
+}
+
+// «Наш выбор»: тариф, подобранный по ответам, и откуда взялась цифра
+function pickBlock(line) {
+  const pick = view.pick, r = recommend(line.pkgs, pick.days, pick.use);
+  if (!r) return '';
+  const days = count(pick.days, 'days'), need = Math.max(1, Math.round(r.need));
+  const why = t('pick-why').replace('{days}', days).replace('{rate}', fmtNum(USE_GB[pick.use] || USE_GB.medium)).replace('{need}', need);
+  const warn = r.short === 'days' ? t('pick-short-days').replace('{days}', days)
+    : r.short === 'data' ? t('pick-short-data').replace('{need}', need) : '';
+  return `<div class="pick-res"><div class="pick-res-head"><span class="pkg-featured-badge">${esc(t('pick-badge'))}</span>` +
+    `<button type="button" class="pick-edit" data-act="back">${esc(t('pick-edit'))}</button></div>` +
+    planCard(r.plan, line) + `<div class="pick-why">${esc(why)}</div>` +
+    (warn ? `<div class="pick-why warn">${esc(warn)}</div>` : '') +
+    (r.plan.unlimited ? `<div class="pick-why warn">${esc(unlimitedNote(r.plan))}</div>` : '') + '</div>';
+}
+
 function renderPlans() {
   const place = placeOfPlans();
   if (!plans || plans.state !== 'ok') return crumb(place.icon, place.name) + stateHtml(plans ? plans.state : 'loading');
@@ -1386,21 +1672,83 @@ function renderPlans() {
     html += `<details class="cov"><summary>${esc(count(line.codes.length, 'countries'))} · ${esc(t('cov-list'))}</summary>` +
       `<p>${esc(coverageNames(line.codes).join(', '))}</p></details>`;
   }
+  if (view.pick) html += pickBlock(line);
+  else html += `<button type="button" class="pick-help" data-act="pick-here"><span>${esc(t('pick-help'))}</span><i>›</i></button>`;
   const list = visiblePlans();
   const total = dedupe(line.pkgs).length;
   html += `<div class="block-head"><div class="block-title">${esc(t('plans-h'))}</div>` +
     `<div class="block-count">${esc(count(list.length, 'plans'))}</div></div>`;
   if (!plans.showAll && list.length < total) html += `<div class="note">${esc(t('best-note'))}</div>`;
-  html += '<div class="plans">' + list.map(p =>
-    `<div class="plan" data-act="plan" data-id="${esc(p.id)}"><div>` +
-    `<div class="plan-data">${esc(dataLabel(p))}${p.plus ? '<small>PLUS</small>' : ''}</div>` +
-    `<div class="plan-meta">${esc(count(p.days, 'days'))}${p.extra ? ' · ' + esc(count(codesOf(p, line).length, 'countries')) : ''}</div></div>` +
-    `<div class="pkg-right"><div class="pkg-price">${esc(money(p.price))}</div>` +
-    `<div class="pkg-per">${esc(money(p.price / p.days))}/${esc(t('per-day'))}</div></div></div>`).join('') + '</div>';
+  html += '<div class="plans">' + list.map(p => planCard(p, line)).join('') + '</div>';
   if (plans.showAll) html += `<button type="button" class="ghost-btn" data-act="toggle-all">${esc(t('show-best'))}</button>`;
   else if (list.length < total) html += `<button type="button" class="ghost-btn" data-act="toggle-all">${esc(t('show-all').replace('{n}', total))}</button>`;
   else html += '<div style="height:16px"></div>';
   return html;
+}
+
+// ── ПОДБОР ТАРИФА: три экрана с вопросами ──────────────────────────────
+function pickHead(step, place) {
+  const info = place ? placeInfo(place) : { icon: PICK_ICON, name: t('pick-title') };
+  return crumb(info.icon, info.name, t('pick-step').replace('{n}', step)) +
+    '<div class="pick-steps">' + [1, 2, 3].map(i => `<i${i <= step ? ' class="on"' : ''}></i>`).join('') + '</div>';
+}
+
+function pickPlaceRow(scope, id, icon, name, sub) {
+  return `<div class="row" data-act="pick-place" data-scope="${scope}" data-id="${esc(id)}">${icon}` +
+    (sub ? `<div class="col"><span class="nm">${esc(name)}</span><div class="sub">${esc(sub)}</div></div>` : `<span class="nm">${esc(name)}</span>`) +
+    '<span class="chev">›</span></div>';
+}
+function pickRegionRow(r) {
+  return r.code === 'ww' ? pickPlaceRow('global', '', regionIconHtml('ww'), t('world'), t('tile-global'))
+    : pickPlaceRow('regional', r.id, regionIconHtml(r.code), regionName(r), t('regional-sub'));
+}
+
+// Шаг 1: страны и регионы под полем ввода (обновляется при каждой букве, поле при этом не трогаем)
+function pickPlacesHtml(query) {
+  if (countriesState !== 'ok') return stateHtml(countriesState);
+  if (query) {
+    const found = search(query);
+    const rows = found.countries.slice(0, 30).map(c => pickPlaceRow('country', c.id, flagHtml(c.code), countryName(c)))
+      .concat(found.regions.map(pickRegionRow));
+    return rows.length ? `<div class="rows" style="padding-top:4px">${rows.join('')}</div>` : stateHtml('empty', t('not-found'));
+  }
+  const popular = POPULAR.map(code => BY_CODE.get(code)).filter(Boolean);
+  let html = '';
+  if (popular.length) {
+    html += `<div class="block-head" style="padding-top:8px"><div class="block-title">${esc(t('popular'))}</div></div><div class="pop-grid">` +
+      popular.map(c => `<div class="pop-item" data-act="pick-place" data-scope="country" data-id="${esc(c.id)}">${flagHtml(c.code)}<span class="nm">${esc(countryName(c))}</span></div>`).join('') +
+      '</div>';
+  }
+  html += `<div class="block-head"><div class="block-title">${esc(t('pick-multi'))}</div></div>` +
+    '<div class="rows">' + CONTINENTS.concat([GLOBAL]).map(pickRegionRow).join('') + '</div>';
+  return html;
+}
+
+function renderPick() {
+  if (view.step === 1) {
+    return pickHead(1) + `<div class="pick-q">${esc(t('pick-q1'))}</div>` +
+      '<div class="search-box pick-search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>' +
+      `<input type="text" inputmode="search" id="pickInput" class="search-input" autocomplete="off" autocapitalize="off" autocorrect="off" ` +
+      `spellcheck="false" enterkeyhint="search" placeholder="${esc(t('search-ph'))}" value="${esc(view.q || '')}"></div>` +
+      `<div id="pickResults">${pickPlacesHtml(String(view.q || '').trim())}</div>`;
+  }
+  if (view.step === 2) {
+    return pickHead(2, view.place) + `<div class="pick-q">${esc(t('pick-q2'))}</div><div class="pick-days">` +
+      PICK_DAYS.map(n => `<button type="button" class="pick-day" data-act="pick-days" data-id="${n}"><b>${n}</b><span>${esc(wordForm(n, 'days'))}</span></button>`).join('') +
+      `<button type="button" class="pick-day other" data-act="pick-other"><b>…</b><span>${esc(t('pick-other'))}</span></button></div>` +
+      `<div class="pick-custom" id="pickCustom"><input type="number" inputmode="numeric" pattern="[0-9]*" min="1" max="365" id="pickDays" ` +
+      `placeholder="${esc(t('pick-days-ph'))}"><button type="button" data-act="pick-days-custom">${esc(t('pick-next'))}</button></div>`;
+  }
+  return pickHead(3, view.place) + `<div class="pick-q">${esc(t('pick-q3'))}</div><div class="rows">` +
+    Object.keys(USE_GB).map(use => `<div class="row use" data-act="pick-use" data-id="${use}">${useIconHtml(use)}` +
+      `<div class="col"><span class="nm">${esc(t('use-' + use))}</span><div class="sub">${esc(t('use-' + use + '-sub'))}</div>` +
+      `<div class="rate">${esc(t('pick-rate').replace('{n}', fmtNum(USE_GB[use])))}</div></div><span class="chev">›</span></div>`).join('') + '</div>';
+}
+
+function pickDays(n) {         // ответ на второй вопрос
+  n = Math.round(Number(n));
+  if (!(n >= 1 && n <= 365)) { const box = $('pickDays'); if (box) box.focus(); return; }
+  go({ kind: 'pick', step: 3, place: view.place, days: n });
 }
 
 function renderSearch() {
@@ -1421,13 +1769,21 @@ function renderSearch() {
 function render() {
   const home = view.kind === 'home' && !searchQuery;
   $('hero').classList.toggle('compact', !home);
+  $('catalogScroll').classList.toggle('picking', view.kind === 'pick' && !searchQuery);
   renderTiles();
   let html;
   if (searchQuery) html = renderSearch();
+  else if (view.kind === 'pick') html = renderPick();
   else if (view.kind === 'continent') html = renderContinent();
   else if (view.kind === 'plans') html = renderPlans();
   else html = renderHome();
+  const typing = document.activeElement && document.activeElement.id === 'pickInput';
   $('content').innerHTML = html;
+  if (typing && $('pickInput')) {      // экран перерисовался, пока человек печатал страну: возвращаем курсор в поле
+    const box = $('pickInput');
+    box.focus();
+    try { box.setSelectionRange(box.value.length, box.value.length); } catch (e) {}
+  }
   updateBackButton();
 }
 
@@ -1457,6 +1813,8 @@ function openModal(id, keepHint) {
   $('mRegion').textContent = `${dataLabel(p)}${p.plus ? ' Plus' : ''} · ${count(p.days, 'days')}`;
   $('mData').textContent = dataLabel(p) + (p.plus ? ' Plus' : '');
   $('mDays').textContent = count(p.days, 'days');
+  $('mUnlNote').textContent = unlimitedNote(p);
+  $('mUnlNote').classList.toggle('on', p.unlimited);
   const codes = codesOf(p, line);
   $('mCoverage').textContent = codes.length ? count(codes.length, 'countries') + ' ›' : place.name;
   $('mCovRow').classList.toggle('tap', codes.length > 0);
@@ -1631,8 +1989,15 @@ function onAction(el) {
   else if (act === 'line') { plans.lineIndex = Number(id) || 0; plans.showAll = false; render(); }
   else if (act === 'toggle-all') { plans.showAll = !plans.showAll; render(); }
   else if (act === 'plan') openModal(id);
+  else if (act === 'pick') go({ kind: 'pick', step: 1 });
+  else if (act === 'pick-here') go({ kind: 'pick', step: 2, place: { scope: view.scope, id: view.id || '', from: view.from || '' } });
+  else if (act === 'pick-place') go({ kind: 'pick', step: 2, place: { scope: el.dataset.scope, id: id || '', from: '' } });
+  else if (act === 'pick-days') pickDays(id);
+  else if (act === 'pick-other') { $('pickCustom').classList.add('on'); $('pickDays').focus(); }
+  else if (act === 'pick-days-custom') pickDays($('pickDays').value);
+  else if (act === 'pick-use') go(Object.assign({ kind: 'plans' }, view.place, { pick: { days: view.days, use: id } }));
   else if (act === 'retry') {
-    if (view.kind === 'home') { countriesState = 'loading'; render(); loadAllCountries(); loadContinents(); }
+    if (view.kind === 'home' || view.kind === 'pick') { countriesState = 'loading'; render(); loadAllCountries(); loadContinents(); }
     else open(view);
   }
 }
@@ -1672,6 +2037,16 @@ document.addEventListener('click', e => {
 });
 
 $('searchInput').addEventListener('input', e => setSearch(e.target.value));
+document.addEventListener('input', e => {       // шаг 1 подбора: список под полем меняется, само поле остаётся на месте
+  if (e.target.id !== 'pickInput' || view.kind !== 'pick') return;
+  view.q = e.target.value;
+  $('pickResults').innerHTML = pickPlacesHtml(view.q.trim());
+});
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  if (e.target.id === 'pickInput') e.target.blur();
+  if (e.target.id === 'pickDays') pickDays(e.target.value);
+});
 $('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') e.target.blur(); });
 
 if (tg && tg.BackButton) { try { tg.BackButton.onClick(back); } catch (e) {} }
