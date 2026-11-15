@@ -701,6 +701,7 @@ const I18N = {
     'offline-retry': 'Проверить снова', 'extra-h': 'Ещё в расширенном тарифе',
     'open-via-bot': 'Открой каталог через кнопку 🛍 в боте @esimruu_bot',
     'order-fail': 'Не удалось оформить заказ. Проверь интернет и попробуй ещё раз.',
+    'order-auth': 'Не получилось подтвердить аккаунт Telegram. Закрой каталог и открой его заново из бота.',
   },
   en: {
     'hero-badge': '200+ countries', 'hero-t1': 'Freedom to be', 'hero-em': 'online everywhere',
@@ -770,6 +771,7 @@ const I18N = {
     'offline-retry': 'Check again', 'extra-h': 'Also in the wider plan',
     'open-via-bot': 'Open the catalog with the 🛍 button in the bot @esimruu_bot',
     'order-fail': 'Could not place the order. Check your connection and try again.',
+    'order-auth': 'Could not confirm your Telegram account. Close the catalog and open it again from the bot.',
   },
   zh: {
     'hero-badge': '200+ 个国家和地区', 'hero-t1': '随时随地', 'hero-em': '自由上网',
@@ -839,6 +841,7 @@ const I18N = {
     'offline-retry': '重新检查', 'extra-h': '扩展套餐另含',
     'open-via-bot': '请通过机器人 @esimruu_bot 中的 🛍 按钮打开目录',
     'order-fail': '下单失败。请检查网络后重试。',
+    'order-auth': '无法确认您的 Telegram 账号。请关闭目录，然后从机器人重新打开。',
   },
   es: {
     'hero-badge': '200+ países', 'hero-t1': 'Libertad de estar', 'hero-em': 'conectado',
@@ -908,6 +911,7 @@ const I18N = {
     'offline-retry': 'Comprobar de nuevo', 'extra-h': 'Además en el plan ampliado',
     'open-via-bot': 'Abre el catálogo con el botón 🛍 del bot @esimruu_bot',
     'order-fail': 'No se pudo crear el pedido. Revisa tu conexión e inténtalo de nuevo.',
+    'order-auth': 'No se pudo confirmar tu cuenta de Telegram. Cierra el catálogo y ábrelo de nuevo desde el bot.',
   },
   de: {
     'hero-badge': '200+ Länder', 'hero-t1': 'Freiheit,', 'hero-em': 'überall online',
@@ -977,6 +981,7 @@ const I18N = {
     'offline-retry': 'Erneut prüfen', 'extra-h': 'Zusätzlich im erweiterten Tarif',
     'open-via-bot': 'Öffne den Katalog über den Button 🛍 im Bot @esimruu_bot',
     'order-fail': 'Die Bestellung konnte nicht erstellt werden. Prüfe deine Verbindung und versuche es erneut.',
+    'order-auth': 'Dein Telegram-Konto konnte nicht bestätigt werden. Schließe den Katalog und öffne ihn erneut über den Bot.',
   },
 };
 
@@ -1930,9 +1935,15 @@ async function selectPayment(method) {
     const res = await fetch(`${API_URL}/api/pending`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ telegram_id: userId, pkg: pkgData }),
+      // init_data — строка, которую Telegram подписал при открытии каталога: по ней API проверяет,
+      // что заказ делает именно этот аккаунт (защита очереди, включается на стороне API)
+      body: JSON.stringify({ telegram_id: userId, pkg: pkgData, init_data: tg.initData || '' }),
     });
     const body = await res.json().catch(() => null);
+    if (res.status === 401 && body && (body.error === 'auth' || body.error === 'stale')) {
+      notify('⚠️ ' + t('order-auth'));          // подпись не подошла или каталог открыт больше суток назад
+      return;
+    }
     if (body && body.error === 'bot_offline') {   // бот выключился, пока клиент выбирал
       shopOnline = false; shopCheckedAt = Date.now(); shopCheckNo++;
       showShopState();
