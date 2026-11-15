@@ -440,6 +440,17 @@ body {
 /* ── безлимит: после дневного порога скорость снижается ── */
 .unl-note { display: none; font-size: 12.5px; line-height: 1.55; color: #fbbf24; background: rgba(251,191,36,0.07); border: 1px solid rgba(251,191,36,0.2); border-radius: 12px; padding: 11px 14px; margin: -8px 0 14px; }
 .unl-note.on { display: block; }
+
+/* ── цена в Stars на карточке тарифа ── */
+.plan-left { min-width: 0; }
+.plan-meta { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pkg-right { flex: 0 0 auto; text-align: right; }
+.pkg-stars { font-size: 11.5px; color: var(--gray); margin-top: 5px; white-space: nowrap; }
+
+/* ── значки в строках окна тарифа (картинки из папки icons; если не загрузились — прежние смайлики) ── */
+.detail-row-label { display: inline-flex; align-items: center; gap: 9px; min-width: 0; }
+.row-ico { flex: 0 0 auto; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 15px; line-height: 1; }
+.row-ico img { width: 100%; height: 100%; object-fit: contain; display: block; }
 </style>
 </head>
 <body>
@@ -581,11 +592,11 @@ body {
       </div>
       <div class="unl-note" id="mUnlNote"></div>
       <div class="detail-rows">
-        <div class="detail-row" id="mCovRow"><span class="detail-row-label">🌐 <span id="t-modal-coverage"></span></span><span class="detail-row-val" id="mCoverage"></span></div>
+        <div class="detail-row" id="mCovRow"><span class="detail-row-label"><span class="row-ico"><img src="icons/row-coverage.png" alt="" onerror="this.replaceWith('🌐')"></span><span id="t-modal-coverage"></span></span><span class="detail-row-val" id="mCoverage"></span></div>
         <div class="m-cov" id="mCovList"></div>
-        <div class="detail-row"><span class="detail-row-label">📶 <span id="t-modal-network"></span></span><span class="detail-row-val">5G / LTE</span></div>
-        <div class="detail-row"><span class="detail-row-label">⚡ <span id="t-modal-activation"></span></span><span class="detail-row-val" id="t-modal-instant"></span></div>
-        <div class="detail-row tap" id="mDevRow"><span class="detail-row-label">📲 <span id="t-device-q"></span></span><span class="detail-row-val dev-cta"><span id="t-device-check"></span> ›</span></div>
+        <div class="detail-row"><span class="detail-row-label"><span class="row-ico"><img src="icons/row-network.png" alt="" onerror="this.replaceWith('📶')"></span><span id="t-modal-network"></span></span><span class="detail-row-val">5G / LTE</span></div>
+        <div class="detail-row"><span class="detail-row-label"><span class="row-ico"><img src="icons/row-activation.png" alt="" onerror="this.replaceWith('⚡')"></span><span id="t-modal-activation"></span></span><span class="detail-row-val" id="t-modal-instant"></span></div>
+        <div class="detail-row tap" id="mDevRow"><span class="detail-row-label"><span class="row-ico"><img src="icons/row-phone.png" alt="" onerror="this.replaceWith('📲')"></span><span id="t-device-q"></span></span><span class="detail-row-val dev-cta"><span id="t-device-check"></span> ›</span></div>
         <div class="m-cov m-dev" id="mDevHint">
           <p id="t-device-intro"></p>
           <div class="dial"><span id="t-device-dial"></span><b class="dial-code">*#06#</b></div>
@@ -1632,12 +1643,19 @@ function codesOf(p, line) {
   return own && own.length ? own : line.codes;
 }
 
+// Цена в Stars — та же формула, что у бота: цена в $ × курс, но не меньше минимума. Бот считает
+// сам при оплате, поэтому здесь «≈».
+function starsOf(price) { return Math.max(MIN_STARS, Math.round(price * STARS_PER_USD)); }
+function starsLabel(price) { return `≈ ${starsOf(price).toLocaleString(currentLang)} ⭐`; }
+
+// Карточка тарифа: слева объём, срок и цена за день, справа цена в $ и в Stars
 function planCard(p, line) {
-  return `<div class="plan" data-act="plan" data-id="${esc(p.id)}"><div>` +
+  return `<div class="plan" data-act="plan" data-id="${esc(p.id)}"><div class="plan-left">` +
     `<div class="plan-data">${esc(dataLabel(p))}${p.plus ? '<small>PLUS</small>' : ''}</div>` +
-    `<div class="plan-meta">${esc(count(p.days, 'days'))}${p.extra ? ' · ' + esc(count(codesOf(p, line).length, 'countries')) : ''}</div></div>` +
+    `<div class="plan-meta"><span class="pm-term">${esc(count(p.days, 'days'))}${p.extra ? ' · ' + esc(count(codesOf(p, line).length, 'countries')) : ''}</span>` +
+    (p.extra ? '' : `<span class="pm-per"> · ${esc(money(p.price / p.days))}/${esc(t('per-day'))}</span>`) + '</div></div>' +
     `<div class="pkg-right"><div class="pkg-price">${esc(money(p.price))}</div>` +
-    `<div class="pkg-per">${esc(money(p.price / p.days))}/${esc(t('per-day'))}</div></div></div>`;
+    `<div class="pkg-stars">${esc(starsLabel(p.price))}</div></div></div>`;
 }
 
 // «Наш выбор»: тариф, подобранный по ответам, и откуда взялась цифра
@@ -1822,7 +1840,7 @@ function openModal(id, keepHint) {
   $('mCovList').textContent = codes.length ? coverageNames(codes).join(', ') : '';
   if (!keepHint) $('mDevHint').classList.remove('open');
   $('mPrice').textContent = money(p.price);
-  $('mPerDay').textContent = `${money(p.price / p.days)} / ${t('per-day')}`;
+  $('mPerDay').textContent = `${starsLabel(p.price)} · ${money(p.price / p.days)} / ${t('per-day')}`;
   $('buySection').style.display = 'block';
   $('paySection').style.display = 'none';
   $('offlineBox').style.display = 'none';
@@ -1842,8 +1860,7 @@ function closeModal() {
 
 function updatePayNotes() {
   if (!selectedPkg) return;
-  const stars = Math.max(MIN_STARS, Math.round(selectedPkg.price * STARS_PER_USD));
-  $('starsNote').textContent = t('stars-note').replace('{n}', stars.toLocaleString(currentLang));
+  $('starsNote').textContent = t('stars-note').replace('{n}', starsOf(selectedPkg.price).toLocaleString(currentLang));
   $('cryptoNote').textContent = t('crypto-note');
 }
 
